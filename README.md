@@ -1,6 +1,6 @@
 # **dh_Toolkit**
 
-dh_Toolkit started as a couple of utility scripts I developed for the Reaper DAW. They were built using [Lokasenna-GUI v2] (https://github.com/jalovatt/Lokasenna_GUI). I decided to make some enhancements to the Lokasenna GUI by adding app scaling and theming. I accomplished this by designing dh_Toolkit to be used in conjunction with Lokasenna GUI without altering the Lokasenna GUI. I also added some slightly modified Lokasenna widget classes (stored in dhToolkit/classes directory).
+dh_Toolkit started as a couple of utility scripts I developed for the Reaper DAW. They were built using [Lokasenna-GUI v2](https://github.com/jalovatt/Lokasenna_GUI). I decided to make some enhancements to the Lokasenna GUI by adding app scaling and theming. I accomplished this by designing dh_Toolkit to be used in conjunction with Lokasenna GUI without altering the Lokasenna GUI. I also added some slightly modified Lokasenna widget classes (stored in dhToolkit/classes directory).
 
 For greater details see the [project documentation](https://denhorn52.github.io/dh_Toolkit/)
 
