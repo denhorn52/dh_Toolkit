@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Class - dh_Tabs</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+  
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_Tabs</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a> 
+    </div>
+   
+    <div class="pageBody">
+    
+        <div class="heading">5.10 dh_Tabs:</div>
+
+        <div class="sectionDefault">
+            Same as Lokasenna Tabs except changed most property names.  
+        </div>
+        <div class="sectionDefault">             
+            When defining a Tabs element you use the "opts" property to specify either a comma separated string of tab names, or a table of strings as tab names. During element creation "opts" gets parsed into the element's "optarray" property which hold the values that are displayed. After element creation "opts" is no longer used. "optarray" now holds the list of tab names. 
+        </div>
+
+<div class="chartCont">
+<pre>----------------------------------------------------------------------------
+   [color_name] brackets indicate that the color is hardcoded.                      
+----------------------------------------------------------------------------
+Class:           |    Lokasenna Tabs         |       dh_Tabs      
+attribute:       | property_name   default   | property_name   default
+----------------------------------------------------------------------------
+font tab active:   font_a          3 (sans16)  font_tab_active    sans24
+font tab inactive: font_b          4 (sans16)  font_tab_inactive  sans22
+
+tab names:         opts            {}          opts               {}
+
+-- colors --
+background:        bg              elm_bg      col_bg             elm_bg   
+text:              col_ txt        txt         col_text           txt
+active tab:        col_tab_a       wng_bg      col_tab_active     tab_active 
+inactive tab:      col_tab_b       tab_bg      col_tab_inactive   tab_inactive
+
+----------------------------------------------------------------------------</pre>
+</div> 
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+</html>
+
+
+
+

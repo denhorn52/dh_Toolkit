@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Class - dh_Options</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+  
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_Options</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a> 
+    </div>
+    
+    <div class="pageBody">
+   
+        <div class="heading">5.07 dh_Options:</div>
+
+        <div class="sectionDefault">
+            This file provides two separate element classes:
+        </div>
+      
+        <div class="sectionIndented">
+            <div class="sectionListItem">             
+                dh_Radio:       A list of options from which the user can only choose one at a time.
+            </div>              
+            <div class="sectionListItem">             
+                dh_Checklist:   A list of options from which the user can choose any, all or none.
+            </div>
+        </div>
+          
+        <div class="sectionDefault">                         
+            <span class="textEmphasis110">Same as Lokasenna Options except:</span> 
+        </div> 
+        
+        <div class="sectionIndented">
+          Provides ability to define border color and width. They can now be set separately from the caption text and background colors.
+        </div>
+        <div class="sectionIndented">
+          If "frame" is true and "border_width" > 0 then a border will be drawn using "col_border" with the specified "border_width".
+        </div>
+        <div class="sectionIndented">             
+          If "field" is true the background will use the "col_field" color (or "wnd_bg" if "col_field" isn't specified.)
+        </div>
+        <div class="sectionIndented">             
+          If the "radius" > 0 it will round the corners of the option panel. If using a border the radius will apply to the inner edge of the border. 
+        </div>            
+        <div class="sectionIndented">             
+          The "col_opt_outline" and "col_opt_fill" properties can be used to tweak the colors of the option bubbles if so desired.
+        </div>
+
+        <div class="sectionIndented">                     
+          Checklist.onmouseup sets self.optindex to the index of the selected item. 
+       Index now available to use in onmouseup override. This may be useful if you
+       need to see which item was clicked.
+        </div>        
+        <div class="sectionIndented">             
+          Note: Caption is optional. If used it will use "col_cap_bg" and "col_cap_text" colors. Personally, I would rather use a label.
+        </div>
+        <div class="sectionIndented">             
+          When defining an Options element you use the "opts" property to specify either a comma separated string of options, or a table of strings as options. During element creation "opts" gets parsed into the element's "optarray" property which hold the values that are displayed. After element creation "opts" is no longer used. Any manipulation to the options will be to "optarray". 
+        </div>        
+
+    
+<div class="chartCont">
+<pre>----------------------------------------------------------------------------
+   [color_name] brackets indicate that the color is hardcoded.                      
+----------------------------------------------------------------------------
+Class:           |    Lokasenna Options      |       dh_Options      
+attribute:       | property_name   default   | property_name   default
+----------------------------------------------------------------------------
+caption:           caption         nil         caption         nil
+caption font:      font_a          2 (sans20)  font_caption    sans20
+text font:         font_b          3 (sans16)  font_text       sans20
+direction:         dir             v           dir             v
+padding top left:  pad             4           pad             4
+
+draw frame:        frame           true        frame           true
+draw field:        n/a             n/a         field           false
+border width:      n/a             n/a         border_width    1
+round corners:     n/a             n/a         radius          0
+
+options:           opts            {}          opts            {}
+option size:       opt_size        20          opt_size        20
+
+-- colors --
+caption bg:        cap_bg          wnd_bg      col_cap_bg      wnd_bg       
+caption text:      col_cap         txt         col_cap_text    txt
+options text:      col_txt         txt         col_text        txt
+frame/border:      [elm_frame]     n/a         col_border      elm_frame
+field:             n/a             n/a         col_field       wnd_bg
+option outline:    [elm_frame]     n/a         col_opt_outline txt
+option fill:       col_fill        elm_fill    col_opt_fill    txt
+----------------------------------------------------------------------------</pre>
+</div> 
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+</html>
+

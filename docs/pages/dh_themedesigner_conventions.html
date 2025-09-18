@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Theme Designer</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">Conventions</div>
+      </div>
+      <a href="dh_themedesigner.html" ><div class="backArrow"></div></a> 
+    </div>
+    
+    <div class="pageBody">
+    
+<div class="heading">3.07 Conventions:</div> 
+     
+<p>               
+A script contains elements that are used for user interaction 
+and display: button, label, knob, etc. 
+These elements are defined in class files: dh_Button.lua, dh_Label, etc. 
+</p>
+<p>
+The elements have color attributes which are defined as properties 
+in the class files, and which are assigned a default theme color. 
+</p>
+<p>
+The theme colors are a table of GUI colors.
+Each color can have a description which is essentially the name 
+of the attribute.
+Each color has a color name which is a shortened form of the description: 
+</p>
+
+<div class="classesChart text110 left050 top000">
+<pre>----------------------------------------------------
+ class: dh_Button.lua  
+---------------------------------------------------- 
+ Color attribute  | Color property  | GUI color name  
+----------------------------------------------------
+  button face        col_bg            btn_face       
+  button outline     col_outline       btn_outline
+  button text        col_text          btn_txt
+----------------------------------------------------</pre>
+</div>
+
+     <br><br>
+     </div> <!-- end pageBody -->
+  </body>
+
+</html>

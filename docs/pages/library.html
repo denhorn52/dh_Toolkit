@@ -11,24 +11,93 @@
 
   <body>
     
-    <div class="pageHeadingCont">
+    <div class="pageHeadingContainer">
       <a href="../index.html" ><div class="logoPage"></div></a>
-      
       <div class="centered-xy"> 
-        <!--<div class="tocHeading">dh_Toolkit</div>-->
-        <div class="pageHeading">2.00 Library</div>
+        <div class="pageHeading">Library</div>
       </div>
     </div>
     
-    <div class="topSpacer"></div>
-    <div class="sectionHeading">
-      Description:
-    </div><br>
-    <p>
-    Replace this text after test.
+    <div class="pageBody">
     
-    </p>
+<div class="heading">4.00 Library:</div> 
+           
+<p>           
+The library/common directory contains the files used to 
+implement scaling and theming of scripts utilizing 
+the Lokasenna GUI library, and the dh_Toolkit library. 
+The library/classes directory contain modified Lokasenna classes (see Classes section). 
+</p>
 
+<div class="heading">4.01 library/common directory</div>
+
+<div class="sectionDefault">  <!-- # 2 --> 
+
+ 
+<div class="subHeading">dh_Toolkit_core.lua:</div>
+        
+<p>           
+This module is the heart of dh_Toolkit. It manages the scaling 
+of the script window, managing themes, and saving and loading 
+the settings pertaining to both. It provides a "Preferences" window 
+for choosing scaling and themes. For proper usage refer 
+to the highly commented dh_Template files in the "scripts" directory.
+</p>
+                
+<div class="subHeading">dh_Toolkit_themes.lua:</div>
+            
+<p>           
+This module contains several pre-defined themes, some functions 
+for handling colors and setting the theme, and some additional 
+font-size definitions along with a function for scaling the font sets. 
+You probably will not need to directly access any of these.
+</p>
+                
+<div class="subHeading">dh_Toolkit_shared.lua:</div>
+            
+<p>           
+This module contains some functions required by the core, 
+and some utility functions. See the file for further explanation. 
+The most likely to be used by the developer are:
+</p>
+
+<div class="sectionDefault left100">  
+    <div class="sectionListItem">   
+      function dh_Toolkit_shared.return_focus_to_reaper()
+    </div>    
+    <div class="sectionListItem">   
+      function dh_Toolkit_shared.hash_table_length(t) 
+    </div>
+    <div class="sectionListItem">   
+      function dh_Toolkit_shared.table_index_from_value(tbl, val)
+    </div>
+    <div class="sectionListItem">   
+      function dh_Toolkit_shared.validate_name(name, show_msg)
+    </div>
+    <div class="sectionListItem">   
+      Improved roundrect function. Reaper's gfx graphics library draws circles that are always an odd number of pixels in diameter. A circle with radius of 9 will yield a diameter of 19; a radius of 10 will yield a diameter of 21. Lokasenna's roundrect function will yield a round rectangle one pixel greater in width and height than specified. I originally designed this for dh_Slider, but found it easier to just accept the one pixel difference using Lokasenna's implementation. I am currently using it in dh_Panel. Perhaps a bit nit-picky, but what the heck. 
+    </div>                
+    <div class="sectionListItem">   
+      There are several other functions which are used by dh_ThemeDesigner which are made public. You probably won't need to use them, but see file for description.
+    </div> 
+</div>                                                                                   
+
+</div> <!-- end # 2 -->  
+
+<div class="heading">4.02 library/classes directory</div>
+
+<p>           
+dh_Toolkit defines element classes derived from the Lokasenna classes. 
+They differ mainly with renaming of some property names, 
+and/or default colors, and in some cases additional functionality. 
+They are prefixed with "dh_". For basic functionality and 
+usage of the Lokasenna GUI and its classes refer to its 
+<a href="https://github.com/jalovatt/Lokasenna_GUI/wiki">website</a>. 
+Any differences are noted on page <a href="classes.html">"4.02 Classes"</a>.
+</p> 
+
+     <br><br>
+     </div>  <!-- end pageBody -->
   </body>
 
 </html>

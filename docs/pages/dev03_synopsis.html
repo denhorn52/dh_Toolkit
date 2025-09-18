@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Synopsis of the GUI</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      <div class="centered-xy"> 
+        <div class="pageHeading">Synopsis of the GUI</div>
+      </div>
+      <a href="dev00_design_notes.html" ><div class="backArrow"></div></a>             
+    </div>
+    
+    <div class="pageBody">
+    
+<div class="heading">6.03 Synopsis of the GUI:</div>            
+        
+<div class="subHeading">Z layers:</div>        
+      
+<p>
+    Lokasenna GUI uses layers designated by "z". 
+    Elements are assigned to a layer by setting the element's "z" value.
+    Lower "z" values are in front of (drawn later) than elements with higher "z" values.
+    A layer can have more than one element. Note: an element
+    that requires frequent redrawing should be on its own layer since all of 
+    the elements sharing that layer are redrawn.
+</p>
+
+<!--  ====  core.lua ==== -->        
+
+<div class="subHeading">Gleaned from core.lua:</div>
+
+<div class="sectionDefault"> <!-- # 1 -->
+
+    <div class="sectionListItem">
+        GUI.elms = { } -- holds all GUI elements
+    </div>
+    <div class="sectionListItem">    
+        GUI.elms_list = { } -- holds list of element names sorted by z layer. keys are z layers; values are list of elements on each layer.
+    </div>
+    <div class="sectionListItem">        
+        GUI.update_elms_list = function(init)<br>
+            This function updates GUI.elm_list.<br> 
+            If init is true then it calls each element's init function (but it doesn't redraw them).
+    </div>
+    <div class="sectionListItem">        
+        GUI.Init( ) calls:<br>
+            gfx.init(GUI.name, GUI.w, GUI.h, GUI.dock or 0, GUI.x, GUI.y)
+    </div>
+    <div class="sectionIndented">                 
+        GUI.update_elms_list(true)
+        <div class="sectionBlock top000 left100"> 
+            Iterates GUI.elms. When true calls GUI.elms[key]:init()
+        </div>
+    </div>
+
+<!--  ====  GUI.Main ==== -->
+
+    <div class="sectionListItem">                    
+        GUI.Main( ) calls: (see note1)<br>
+    </div>
+
+    <div class="sectionIndented">                    
+    
+        <div class="sectionListItem">                    
+            GUI.Main_Update_State( ) checks if script window w or h changed:
+        </div>
+    
+        <div class="sectionListItem left150">                                      
+            Yes: updates GUI.cur_w and GUI.cur_h, sets GUI.resized = true, and calls GUI.onresize().
+        </div>
+        <div class="sectionListItem left150">                                     
+            No: sets GUI.resized = false
+        </div>
+        
+        <div class="sectionListItem">                                    
+            GUI.Main_Update_Elms( )
+        </div>
+        <div class="sectionIndented">                                                                 
+            Iterates GUI.elms_list in reverse z-order and updates each non-hidden, non-frozen element.
+        </div> 
+        <div class="sectionListItem">
+            Runs user function if defined (see Note 2).
+        </div>
+        <div class="sectionListItem">
+           GUI.update_elms_list( )
+        </div>
+        <div class="sectionIndented">    
+             Rebuilds GUI.elms_list, but it doesn't initialize elements.
+        </div>
+        <div class="sectionListItem">
+            GUI.Main_Draw( )<br>
+        </div>
+        <div class="sectionIndented">
+            if need_redraw or global_redraw then:
+        </div>
+        <div class="sectionIndented">
+        <div class="sectionListItemIndented">    
+            iterates GUI.elms_list from highest z to lowest
+        </div> 
+        <div class="sectionListItemIndented">                                       
+            calls GUI.elms[elm]:draw( ) for elements on non-hidden layers.
+        </div>
+        </div>
+    </div> 
+    
+</div> <!-- end # 1 -->
+
+<hr>           
+<p>
+Note 1:<br>                          
+GUI.Main is run on every update loop of the GUI script.<br>
+GUI.Main calls GUI.Main_Update_State( ) which calls reaper.defer(GUI.Main) 
+&lt;Line 372 of core.lua&gt;.
+</p>
+<p>            
+Note 2:<br>
+If defining a user function you can name it however you want. 
+dh_Toolkit scripts call the user function "dhMain". It is called by:
+</p>
+
+<div class="preCont">
+<pre>GUI.func = dhMain</pre>
+</div>
+
+<p>
+Anything you would put inside a reaper.defer( ) loop should go here. 
+</p>
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+  </body>
+
+</html>
+

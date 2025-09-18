@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Theme Designer</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      <div class="centered-xy"> 
+        <div class="pageHeading">Colors Tab</div>
+      </div>
+      <a href="dh_themedesigner.html" ><div class="backArrow"></div></a>       
+    </div>
+    
+    <div class="pageBody">
+    
+<div class="heading">3.04 Colors Tab:</div><br>   
+
+<div class="imgContainer"><img src="../images/tab4-only.png" alt="Tab 4 Colors"></div>
+
+<p>
+Displays the theme colors. Clicking on a color swatch updates the Toolbar section. 
+See section "3.06 Colors Default Uses" for more details of default color uses.                
+</p>
+
+<p>
+The <span class="textEmphasis110">"Lokasenna defined"</span> 
+column shows the original Lokasenna defined GUI colors.
+</p>
+            
+<p>
+The <span class="textEmphasis110">"dh_Toolkit defined"</span> 
+columns show the additional colors defined by dh_Toolkit. 
+The Lokasenna colors work fine for a monochrome theme, 
+but I find that it lacks the necessary range when using colored themes. 
+Many of these colors are meant to be used for a specific purpose, 
+e.g., "Track fill" for slider track fill. They can, however, be 
+used elsewhere. Some colors, such as "Button face", are used by 
+multiple classes.
+</p>
+
+<p>
+<span class="textEmphasis">"Button face", "Button outline", and "Button text"</span> were originally 
+intended to style the button colors. They are also to color attributes 
+of other classes such as button face, knob face, and slider thumb.
+</p>
+
+<p>
+<span class="textEmphasis">"Element active"</span> is used for outlining focused elements. 
+As of 07-22-2025 this only applies to dh_Menubox, dh_Textbox, and dh_TextEditor. 
+It requires a high contrast with the background color. 
+The default "elm_fill" is insufficient in many cases.        
+</p>
+
+<p>
+<span class="textEmphasis">"Element text"</span> is used for the text elements: dh_Listbox, dh_Menubox, 
+dh_Textbox, and dh_TextEditor. It is necessary because the 
+the Lokasenna defined text color won't show well in many themes. 
+</p>
+
+<p>
+<span class="textEmphasis">"Element thumb" and "Element track"</span> are used to color the 
+scrollbar colors of dh_Listbox and dh_TextEditor.           
+</p>
+
+<p>
+<span class="textEmphasis">"Panel background", "Panel border", and "Panel text"</span> can be used 
+for panels and option boxes to add an extra level of interest 
+to the GUI.
+</p>
+
+<p>
+<span class="textEmphasis">"Selected text"</span> is used to highlight the selected text of 
+dh_Listbox, dh_Textbox, and dh_TextEditor. 
+This is the only color in which the alpha value can be adjusted 
+by using the "sel_alpha" slider on tab3. 
+For a more detailed explanation see 
+<a href="dh_themedesigner_sel_txt.html" >&nbsp;3.08 Selected Text Highlights.</a>
+</p>
+
+<p>
+<span class="textEmphasis">"Tab_active" and "Tab_inactive"</span> is used to style the 
+tab colors of the Tab element.
+</p>
+
+<p>    
+<span class="textEmphasis">"Track_fill"</span> is used to style the track fill color of the Slider element.
+</p>
+
+<hr>
+<div class="sectionDefault">
+Most of the dh_Toolkit defined colors have been assigned as the 
+default colors of the dh_Toolkit elements. Therefore each color 
+needs to be painted with a theme compatible color. 
+It is possible that the same color values are used by multiple 
+theme colors. For instance, it is possible that "Text", "Button text", 
+and "Panel text" are all the same. Another case is slider track fill. 
+Lokasenna slider uses "Element fill" as the default, and 
+dh_Toolkit slider uses "Track fill" as the default. If "Element fill" 
+works for the dh_Toolkit slider simply paint "Track fill" 
+the same as "Element fill". The following chart shows the 
+Lokasenna colors that are comparable to the dh_Toolkit colors. 
+A good place to start a theme would be to paint the dh_Toolkit 
+color with the Lokasenna default and proceed from there.
+
+</div>
+
+
+<div class="chartCont leftPad top000">                
+<pre>-----------------------------------------------
+ dh_Toolkit Color Name:   Lokasenna Default:
+-----------------------------------------------
+  Button face               Elm frame
+  Button text               Text
+  Button outline            Elm outline
+  Element active            Elm fill
+  Element text              Text
+  Element thumb             Elm fill
+  Element track             Tab BG
+  Panel background          Window BG
+  Panel border              Elm frame
+  Panel text                Text
+  Selected text             Elm fill
+  Tab_active                Window BG
+  Tab_inactive              Tab BG
+  Track_fill                Elm fill
+-----------------------------------------------</pre>
+</div>
+                       
+    <br><br>
+    </div> <!-- end pageBody -->
+  </body>
+
+</html>

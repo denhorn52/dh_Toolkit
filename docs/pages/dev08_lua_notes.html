@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Lua Notes</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">Lua Notes</div>
+      </div>
+      <a href="dh_themedesigner.html" ><div class="backArrow"></div></a>       
+    </div>
+    
+    <div class="pageBody">
+
+<div class="heading">6.08 Lua Notes:</div> 
+
+<p>
+While learning to code in Lua I was somewhat dismayed by the 
+amount of inconsistent, and sometimes contradictory documentation I came across. 
+Two things that had me scratching my head I will address here.
+</p>
+
+<!-- ####    LUA  TYPES   #### -->
+
+<div class="heading">Lua types:</div>
+
+<!--  VARIABLES -->
+
+<div class="sectionDefault">
+
+<span class="textEmphasis110">Variables:</span><br>
+
+<div class="left050">
+Variables are data stored at a memory location. The data type 
+is either a value type or a reference type. The data stored 
+is the value, and the reference is the address.<br>
+</div>
+
+<ul> 
+<li>When a variable is declared [local A] it is given a name, and its value is nil.</li> 
+<li>When a variable is assigned [local A = 2] it is given an address, 
+and the data is stored at that address.
+The data will have a type.</li>  
+<li>When a variable is read it goes to the memory address to read the data.</li>  
+</ul>
+
+<div class="left050"> 
+If a variable is assigned to another variable [local B = A] 
+the result depends on the type of the pre-existing variable A. 
+</div>
+<div class="left050">
+If A is of a value type, B is assigned a new address and a copy  
+of the data in A is put in the address referenced by B. 
+</div>
+<div class="left050">
+If A is of a reference type, B is assigned the address of A 
+and references the same data as A.
+</div>
+
+</div>
+
+<!--  VALUE TYPES -->
+
+<div class="sectionDefault">
+
+<span class="textEmphasis110">Value types:</span><br>
+<div class="left050">
+number, string, nil, and boolean are value types.<br> 
+Assigning a variable with a value type to another variable 
+COPIES the value.
+</div>
+
+<!-- <div class="preCont left050 top000 text110"> -->
+<div class="preCont">    
+<pre>a = 25   -- a holds the value 25
+b = a    -- b now has the value 25
+a = 32   -- a now holds the value 32
+         -- b still has the value 25</pre>
+</div>  
+       
+</div>
+
+<!-- REFERENCE TYPES -->
+
+<div class="sectionDefault">
+
+<span class="textEmphasis110">Reference types:</span><br>
+
+<div class="left050">
+table, function, userdata, and thread are reference types.<br> 
+Assigning a variable of reference type to another variable 
+COPIES the reference.
+</div>
+
+<div class="preCont">    
+<pre>a = {1,2,3,4}  -- 'a' holds the memory address where the value {1,2,3,4} is located. 
+b = a          -- 'b' now holds the memory address where {1,2,3,4} is located. 
+a = {5,6,7,8}  -- the memory address that 'a' references now holds the value {5,6,7,8}
+               -- the memory address that 'b' references has the value {5,6,7,8}</pre>
+</div>         
+
+</div>
+
+<!-- ####  TENARY OPERATION #### -->
+
+<div class="heading">Ternary operation:</div>
+
+<div class="sectionDefault"> <!-- Ternary section -->
+
+<div class="sectionDefault">
+I have come across code statements that addled me. Upon investigation 
+I realized that they were attempts to utilize a ternary 
+(composed of three parts) operation.
+</div>
+
+<div class="sectionDefault">
+A ternary operator is an expression that returns one result if 
+a condition is true, but a different result if the condition is false. 
+It is a concise form of the logic achieved by using an if-then_else statement.
+</div>
+
+<div class="preCont">    
+<pre>if condition then
+    return value_if_true
+else
+    return value_if_false
+end</pre>
+</div>
+
+<div class="sectionDefault">
+The "ternary" operation does differ from the aforementioned 
+if-then-else statement. It is more comparable to:
+</div>
+  
+<div class="preCont">    
+<pre>if (condition == true) and (value_if_true == true) then
+    return value_if_true
+else
+    return value_if_false
+end</pre> 
+</div>
+
+<div class="sectionDefault">
+Lua lacks a built-in ternary operator, but it can be mimicked 
+by using the logical and...or operators. This works as a side effect 
+of how Lua evaluates the and...or operators. 
+</div>
+
+<div class="sectionDefault"> <!-- Rules -->
+
+<div><span class="textEmphasis110">Rules:</span></div>
+
+<ul>
+<li>All three parts of the ternary expression can be a value, a variable, or an expression.</li>   
+<li>Lua returns the last operand evaluated that results in a true condition.</li> 
+<li>An and operation evaluates all its operands.If all are true it returns true.</li>
+<li>An or operation stops evaluation at the first operand that is true.</li> 
+<li>In Lua all values except for nil and false are considered to be true.</li>
+<li>The expression is evaluated from left to right.</li>
+</ul>
+
+<div><span class="textEmphasis110">Syntax:</span></div>
+
+<div class="preCont">    
+<pre>result = condition and value_if_true or value_if_false</pre>
+</div>
+
+<div class="sectionDefault">
+For brevity let's rewrite it as:
+</div>
+
+<div class="preCont">    
+<pre>result = A and B or C</pre>
+</div> 
+
+<div class="sectionDefault">
+Since all operands of an and operation must be evaluated we can rewrite it as:
+</div> 
+
+<div class="preCont">    
+<pre>result = (A and B) or C</pre>
+</div>
+<br> 
+
+<!-- ########################################## -->
+  
+<div><span class="textEmphasis110">Results:</span></div>
+
+
+<div class="sectionDefault">
+If both A and B are true the expression (A and B) is considered true 
+and C is not evaluated. The last operand evaluated is returned.
+</div>
+
+<ul>
+<li>
+If B is a value or variable that value or variable is returned.
+</li>
+
+<li>
+If B is an expression the result of that expression is returned.
+
+
+<div class="left150">
+Say B is 4 + 2. 4 + 2 equates to 6 which is considered true.<br> 
+Therefore Lua will return 6.<br>
+</div>
+</li>
+
+<li>
+If B is an expression that returns a boolean then that boolean is returned.
+</li>
+</ul>
+
+<div class="sectionDefault">
+If either A or B is false the expression (A or B) is considered false 
+and C is evaluated. The return result is evaluated as above.
+</div>
+
+<!-- ########################################## -->
+
+</div> <!-- Rules -->
+
+</div> <!-- Ternary section --> 
+
+<br>
+<div class="sectionDefault">
+<span class="textEmphasis110">Note:</span> 
+I think my original confusion was because of the length and 
+complexity of the "ternary" statement I came across. Sometimes,  
+for clarity's sake, it would be better to use an if-then-else statent.
+
+</div>
+
+    <br><br>
+    </div> <!-- end pageBody -->
+  </body>
+
+</html>

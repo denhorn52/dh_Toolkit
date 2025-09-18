@@ -1,14 +1,30 @@
+/* css for dh_Toolkit documentation 
+All content outside of page header is in page body.
+Section headings are aligned to left of pageBody.
+Sub headings are aligned to left of its container.
+All text shoule be in p.
+p, text sections, and images are padded left (via margin)..
+Use sectionIndented for 1.5em left margin.
+OR sectionText left150?
+*/
+
+:root {
+  --left-pad: 0.5em;
+  --block-indent: 1.0em;
+}
 
 *, *:before, *:after {
    box-sizing: inherit;
 }
 
 body {
+    top: 0;
 	font-style: normal;
 	text-align: left;
-	/*padding: 0.2em;*/
 	/*font-family: verdana, helvetica, arial, sans-serif;*/
-	/*font-family: MainText;*/
+	font-family: sans-serif;
+	overflow: hidden;
+	background-color: rgb(236, 236, 224);
 }
 
 .centered-xy {
@@ -18,95 +34,85 @@ body {
     transform: translate(-50%,-50%);
 }
 
-.toc {
-  padding: 0.2em;
-}
-
 /* ---- TOC ---- */
 
-.logoTOC {
-  position: absolute;
-  /*position: relative;*/
-  top: 8px;
-  left: 8px;
-  width: 72px;
-  height: 72px;
-  
-  background-image: url('images/logo_72.png');
-  background-size: cover;
-  z-index: 10;
-}
-
-.tocHeadingCont {
+.tocHeadingContainer {
   position: relative;
   top: 0;
   left: 0;
   width: 100%;
   height: 88px;
-  /*text-align: left;*/
   border: 2px solid black;
   background-color: #d8d8d8;
   z-index: 1;
 }
-/*
+
 .tocHeading {
-  width: 100%;
-  text-align: center;
-  font-size: 1.5em;
-  font-weight: 700;
-}
-*/
-.tocHeading {
-  /*width: 100%;*/
   text-align: center;
   font-size: 1.5em;
   font-weight: 700;
 }
 
-.tocItem {
-  font-size: 1.1em;
-  line-height: 1.75;
-}
-
-/* ---- PAGES ---- */
-
-.logoPage {
+.logoTOC {
   position: absolute;
-  /*position: relative;*/
   top: 8px;
   left: 8px;
-  width: 48px;
-  height: 48px;
-  
+  width: 72px;
+  height: 72px;
   background-image: url('images/logo_72.png');
   background-size: cover;
   z-index: 10;
 }
 
-.pageHeadingCont {
-  /*position: relative;*/
-  position: fixed;
+.logoGithub {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 72px;
+  height: 72px;
+  background-image: url('images/github-mark.png');
+  background-size: cover;
+  z-index: 10;
+}
+
+.tocBody {
+  width: 100%,
+  top: 88px;
+  height: calc(96vh - 88px);
+  padding-left: 2em;
+  padding-right: 2em;  
+  overflow-y: scroll;
+  overscroll-behavior: none;
+  /*border: 4px solid red;*/
+}
+
+.tocItem {
+  font-size: 1.0em;
+  line-height: 2;
+}
+
+.tocSubItem {
+  font-size: 1.0em;
+  line-height: 2;
+  margin-left: 1.5em;
+}
+
+/* ---- PAGE  HEADING ---- */
+
+.pageHeadingContainer {
+  position: relative;
   top: 0;
   left: 0;
-  width: calc(100% - 12px);
+  /*width: calc(100% - 12px);*/
+  width: 100%;  
   height: 64px;
   /*text-align: left;*/
-  margin: 4px;
+  /*margin: 4px;*/
   border: 2px solid black;
   background-color: #d8d8d8;
   z-index: 1;
 }
-/*
-.pageHeading {
-  width: 100%;
-  text-align: center;
-  font-size: 1.5em;
-  font-weight: 700;
-  border: 2px solid black;
-  background-color: #d8d8d8;
-  padding: 0.5em;
-}
-*/
+
 .pageHeading {
   /*width: 100%;*/
   text-align: center;
@@ -114,19 +120,293 @@ body {
   font-weight: 700;
 }
 
-.topSpacer {
-  width: 100%;
-  height: 64px;
+.logoPage {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 48px;
+  height: 48px;
+  background-image: url('images/logo_72.png');
+  background-size: cover;
+  z-index: 10;
 }
 
-.sectionHeading {
+.backArrow {
+  position: absolute;
+  top: 8px;  
+  right: 8px;
+  width: 48px;
+  height: 48px;
+  background-image: url('images/arrow_72.png');
+  background-size: cover;  
+  z-index: 10;
+}
+
+/* ---- PAGE  BODY ---- */
+
+.pageBody {
+  width: 100%,
+  top: 64px;
+  height: calc(96vh - 64px);
+  padding-left: 1em;
+  padding-right: 1.5em;
+  overflow-x: auto;
+  overflow-y: auto;
+  overscroll-behavior: none;
+  /*border: 4px solid red;*/
+}
+
+/* ---- CONTENT ---- */
+
+.heading {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-top: 0.75em;
+}
+
+.subHeading {
   font-size: 1.25em;
   font-weight: 700;
-  line-height: 1.4;
+  margin-top: 0.75em;
 }
 
+/* p is not the same as sectionDefault as p adds blank line after. */
 p {
-  text-indent: 1em each-line;
+  margin-top: 0.5em;
+  margin-left: var(--left-pad);
+  line-height: 1.4em;
+}
+
+.sectionDefault {
+  margin-top: 0.5em;
+  margin-left: var(--left-pad);
+  line-height: 1.4em;
+}
+
+.sectionIndented {
+  margin-top: 0.5em;
+  margin-left: calc(var(--left-pad) + var(--block-indent));
+  line-height: 1.4em;
+}
+
+.sectionListItem {
+  margin-top: 0.5em;
+  margin-left: var(--left-pad);
+  line-height: 1.4em;
+  text-indent: 1.0em hanging;
+}
+
+.sectionListItemIndented {
+  margin-top: 0.5em;
+  margin-left: calc(var(--left-pad) + var(--block-indent));
+  line-height: 1.4em;
+  text-indent: 1.0em hanging;
+}
+
+/* Use this to reset sub blocks. 
+   Use rules to modify as needed. */
+.sectionBlock {
+  margin-top: 0em;
+  margin-left: 0em;
+}
+
+.inlineBlock {
+  display:inline-block;
+}
+
+/* ---- RULES TO CHANGE DEFAULT BEHAVIOR ---- */
+/* headings default is 0 margin left */
+
+.leftPad {
+  margin-left: var(--left-pad);
+}
+
+.left000 {
+  margin-left: 0.5em;
+}
+
+.left050 {
+  margin-left: 0.5em;
+}
+
+.left100 {
+  margin-left: 1.0em;
+}
+
+.left150 {
+  margin-left: 1.50em;
+}
+
+.top000 {
+  margin-top: 0em;  
+}
+
+.top050 {
+  margin-top: 0.5em;  
+}
+
+.top075 {
+  margin-top: 0.75em;  
+}
+
+.top100 {
+  margin-top: 1.0em;  
+}
+
+.lineheight120 {
+  line-height: 1.2em;
+}
+.lineheight125 {
+  line-height: 1.25em;
+}
+
+.text110{
+  font-size: 1.1em;  
+}
+
+.text125{
+  font-size: 1.25em;  
+}
+
+.textEmphasis {
+  font-size: 1.0em;  
+  font-weight: 700;
+}
+
+.textEmphasis110 {
+  font-size: 1.1em;  
+  font-weight: 700;
+}
+
+.textEmphasis125 {
+  font-size: 1.25em;  
+  font-weight: 700;
+}
+
+.textEmphasis150 {
+  font-size: 1.5em;  
+  font-weight: 700;
+}
+
+.hanging050 {
+  text-indent: 0.5em hanging;
+}
+
+/* ---- Images ---- */
+
+.imgTitle {
+  font-size: 1em;
+  /*margin-left: 0.5em;*/
+  margin-left: calc(var(--left-pad) + 0.5em);
+  padding-bottom: 0.2em;
+}
+
+.imgContainer {
+  width: 90%;
+  /*margin-left: 0.5em;*/
+  margin-left: var(--left-pad);
+}
+
+.imgContainer img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---- PRE / CODE ---- */
+
+pre {
+  font-family: monospace;
+}
+
+.zpreCont {
+  /*width: calc(100% - 3vw); */   
+  background-color: #ddd;
+  line-height: 1.2em;
+  margin-top: 0.5em;
+  padding: 0.5em;
+  overflow-x: auto; 
+  overflow-y: auto;
+}
+
+.preCont {
+  /*width: calc(100% - 3vw); */   
+  background-color: #ddd;
+  /*font-size:1.1em;*/
+  line-height: 1.4em;
+  margin-top: 0.5em;
+  margin-left: 0.5em;
+  padding: 0 1em 0 1em;
+  overflow-x: auto; 
+  overflow-y: auto;
+}
+
+.chartCont {
+  /*width: calc(100% - 3vw);
+  height: 80vh;*/
+  font-size: 1.0em; 
+  line-height: 1.25em;
+  /*margin-top: 0.5em;*/
+  padding: 0.5em;
+  overflow-x: auto;
+  overflow-y: auto;
+  /*overscroll-behavior-x: none;*/  
+  /*border: 2px solid red;*/
+}
+
+.classesChart {
+  width: calc(100% - 3vw);
+  height: 80vh;
+  margin-left: 0.5em; 
+  line-height: 1.2em;
+  overflow-x: auto;
+  overflow-y: auto;
+  /*overscroll-behavior-x: none;*/  
+  /*border: 2px solid red;*/
+}
+
+/* ######## */
+
+.preChart {
+  width: calc(100% - 3vw);    
+  background-color: #ddd;
+  margin-left: calc(var(--left-pad);
+  /*padding-left: 0.5em;*/
+  line-height: 1.25em;
+  overflow-x: auto;  
+}
+
+.codeCont {
+  width: calc(100% - 5vw);    
+  background-color: #ddd;
+  /*margin-left: 1.5em;*/
+  padding-top: 0.1em;
+  overflow-x: auto;  
+}
+
+code {
+  border-radius: 3px;
+  font-family: monospace;
+  padding-left: 1.5em;
 
 }
+
+/* ######## */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

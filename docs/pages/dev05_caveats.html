@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Caveats and Cautions</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      <div class="centered-xy"> 
+        <div class="pageHeading">Caveats and Cautions</div>
+      </div>
+    </div>
+    
+    <div class="pageBody">
+        
+<div class="heading">6.05 Caveats and Cautions:</div>        
+      
+<p>
+During development there were times when a script would crash. There were
+also times where it would also crash Reaper.
+I believe the crashes were related to one of the following:
+</p>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">json.encode using json.lua</span><br>
+dh_Toolkit scripts use json.lua by <a href="https://github.com/rxi/json.lua">rxi</a> 
+to encode data for saving to Reaper ExtState. Trying to encode 
+values which are unrepresentable in JSON will never result 
+in type conversion or other magic: sparse arrays, tables with mixed key types 
+or invalid numbers (NaN, -inf, inf) will raise an error.        
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">reaper's "gfx" graphics engine</span><br>
+Menubar and Menubox mouseup events call gfx.showmenu.
+Calling gfx.showmenu will crash Reaper if string parameter is nil or empty. 
+Needs at least one space " ".
+gfx.drawstring is similar. It needs at least an empty string "".  
+Be sure to provide proper string to elements requiring them.        
+</div>
+        
+<br>        
+<hr>        
+<div class="sectionDefault">
+Clicking on Menubar or Menubox calls gfx.showmenu which displays
+a popup menu. The font and font-size used in the popup menus
+are determined by the operating system and cannot be changed by
+the script.
+ </div>         
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+  </body>
+
+</html>
+
+

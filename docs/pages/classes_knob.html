@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Class - dh_Knob</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+    
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_Knob</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a> 
+    </div>
+
+    <div class="pageBody">
+
+ <div class="heading">5.02 dh_Knob:</div>
+    
+<div class="sectionDefault">             
+Draws a knob with optional caption. 
+Caption and entire knob element use the same background and text colors.<br> 
+Same as Lokasenna Knob except changed some property names.<br>
+Added property "centered".<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if centered is false then x and y are to edges of knob.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if centered is true then x and y are to center of knob.<br>
+</div>
+<div class="sectionListItem">             
+When increasing font_text size one needs to also increase 
+knob w and h, or else text overlaps.
+</div>        
+
+<div class="chartCont">
+<pre>----------------------------------------------------------------------------
+   [color_name] brackets indicate that the color is hardcoded.                      
+----------------------------------------------------------------------------
+Class:           |    Lokasenna Knob         |       dh_Knob      
+attribute:       | property_name   default   | property_name   default
+----------------------------------------------------------------------------
+caption:           caption         nil         caption         nil
+caption font:      font_a          3 (sans16)  font_caption    sans20
+values font:       font_b          4 (sans16)  font_text       sans16
+centered:          n/a             n/a         centered        true
+       
+-- colors --
+background:        bg              wnd_bg      col_bg          wnd_bg 
+text:              col_txt         txt         col_text        txt
+knob outline:      [elm_outline]               col_outline     btn_outline
+knob body:         col_body        elm_frame   col_body        btn_face 
+knob pointer:      col_head        elm_fill    col_head *      txt
+
+* color_head is also highlighted text color.  
+----------------------------------------------------------------------------</pre>
+</div> 
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+</html>

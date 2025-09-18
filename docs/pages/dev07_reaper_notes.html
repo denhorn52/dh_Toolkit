@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Reaper Notes</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      <div class="centered-xy"> 
+        <div class="pageHeading">Reaper Notes</div>
+      </div>
+    </div>
+    
+    <div class="pageBody">
+        
+<div class="heading">6.07 Reaper Notes:</div>        
+                                
+<div class="sectionListItem">
+<span class="textEmphasis110">Using reaper.SetProjectExtState to persist data:</span>
+</div>
+
+<p>
+Save a key/value pair for a specific extension, to be restored the next time this specific project is loaded.
+</p>
+
+<div class="preCont">
+<pre>integer reaper.SetProjExtState(ReaProject proj, string extname, string key, string value)
+
+Params:
+	ReaProject proj:  The project-number. 0 for the current project.
+	string extname:   The section, in which the key/value is stored. Use name of script.
+	string key:  	  The key, that stores the value. Example: "settings"
+	string value:	  The value, that's stored in the key.
+			
+If key is NULL or "", all extended data for that extname will be deleted. 
+If val is NULL or "", the data previously associated with that key will be deleted. 
+Returns the size of the state for this extname.
+If val is "" it returns size = 2.
+</pre>
+</div>
+                
+<p>
+If data is a table it can be compiled into string using json_encode.
+</p>
+                
+<p>
+IMPORTANT: Table must be an indexed table or keyed table.
+  Mixed tables will crash script and may crash reaper.
+Although I use json.lua, any stringify method should work.
+
+Trying to encode values which are unrepresentable in JSON will never result in type conversion or other magic: 
+sparse arrays, tables with mixed key types or invalid numbers (NaN, -inf, inf) will raise an error.
+</p>
+        
+<br><hr>
+<p>
+Note: gfx draws circle, hence roundrect, one pixel larger than design size. 
+A circle with radius of 9 will yield a diameter of 19; a radius of 10 will yield a diameter of 21.
+</p>
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+  </body>
+
+</html>
+
+

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Class - dh_Listbox</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+  
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_Listbox</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a> 
+    </div>
+    
+    <div class="pageBody">
+    
+<div class="heading">5.04 dh_Listbox:</div>
+
+<div class="sectionDefault">
+Same as Lokasenna Listbox except for: 
+</div>    
+ 
+ 
+    
+        <div class="sectionIndented">
+            Changed some property names and default values.
+        </div>
+        <div class="sectionIndented">             
+            Added ability to change line height and scrollbar width.
+        </div>
+        <div class="sectionIndented">             
+            Added ability to change frame color.
+        </div> 
+        <div class="sectionIndented">             
+            Added ability to change selected text highlight color. The GUI color "sel_txt" is an alpha adjusted color. The property "col_sel_text" specifies the highlight color. That color is ADDED to the list background color to produce the highlight. If "sel_txt" color is specified it will use the "sel_txt" alpha and color. Otherwise it will use the specified color with a default alpha of 0.5.
+        </div>           
+        <div class="sectionIndented">
+            Added ability to customize the scrollbar colors.
+        </div>      
+        <div class="sectionIndented">                   
+            Added property "curr_sel" to hold index of last selected item. May be useful when no "multi-select". Modified onmouseup to set "curr_sel".
+        </div>
+        <div class="sectionIndented">                   
+            Modified GUI.dh_Listbox:val to return list item index and list item value when no "multi-select".
+        </div>
+        <div class="sectionIndented">
+            Note: Caption is optional. If used it will use the colors in properties "col_cap_bg" and "col_cap_text".
+        </div>                        
+
+
+
+<div class="chartCont">
+<pre>----------------------------------------------------------------------------
+   [color_name] brackets indicate that the color is hardcoded.                      
+----------------------------------------------------------------------------
+Class:           |    Lokasenna Listbox      |       dh_Listbox      
+attribute:       | property_name   default   | property_name   default
+----------------------------------------------------------------------------
+caption:           caption         nil         caption         nil
+caption font:      font_a          3 (sans16)  font_caption    sans20
+text font:         font_b          4 (sans16)  font_text       sans22
+line height        n/a                         line_height     1.25
+padding top left:  pad             4           pad             4
+scrollbar width:   [8]                         scrollbar_width 8
+
+list:              list            {}          list            {}
+
+-- colors --
+caption bg:        cap_bg          wnd_bg      col_cap_bg      wnd_bg    
+caption text:      color           txt         col_cap_text    txt
+list bg:           bg              elm_bg      col_bg          elm_bg 
+list frame:        [elm_frame]                 col_frame       elm_frame
+list text:         color           txt         col_text        elm_txt
+selected text:     [elm_fill]                  col_sel_text    sel_txt
+
+scrollbar track:   [tab_bg]                    col_track       elm_track
+scrollbar outline: [elm_outline]               col_sb_outline  elm_outline
+scrollbar thumb:   col_fill        elm_fill    col_thumb       elm_thumb
+----------------------------------------------------------------------------</pre>
+</div> 
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+</html>

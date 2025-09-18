@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Lokasenna Notes</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      <div class="centered-xy"> 
+        <div class="pageHeading">Lokasenna Notes</div>
+      </div>
+    </div>
+    
+    <div class="pageBody">
+        
+<div class="heading">6.06 Lokasenna Notes:</div>        
+                                
+<div class="sectionDefault">
+I saw this somewhere in the Lokasenna documentation:
+</div> 
+       
+<div class="sectionIndented">
+Functions can be declared 'local' if they are called (directly) by Lokasenna GUI, e.g., clicking a button.
+If called from within another function they must be global (no 'local') or it crashes script.
+</div> 
+               
+<div class="sectionDefault">
+Example: my_function called from a button click.
+</div> 
+            
+<div class="preCont">    
+<pre>local function Button01_Click()
+    my_function()
+end
+
+-- If this is declared as local it crashes script.
+function my_function()
+    -- do stuff --
+end</pre>
+</div>
+
+<div class="sectionDefault">
+What I have found is that "local my_function( )" works 
+if it is defined before the "Button01_Click" function definition.
+</div>
+
+<div class="preCont">    
+<pre>local function my_function()
+    -- do stuff --
+end
+
+local function Button01_Click()
+    my_function()
+end</pre>
+</div>
+
+<br><hr>
+<p>
+Normally, menubar items provides for assigning a function to be called 
+when clicking on a menu item. dh_ThemeDesigner overrides the mouseup event 
+to allow for declaring parameters within the menu definition 
+to be passed along with the function.
+</p>
+
+<br><hr>
+<p>
+The text element classes dh_Listbox, dh_Textbox, and dh_TextEditor 
+provide for highlighting selected text. As a default they use the 
+color and alpha value of the GUI color "sel_txt". For a more 
+detailed explanation see 
+<a href="dh_themedesigner_sel_txt.html" >&nbsp;3.08 Selected Text Highlights.</a>
+</p>
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+  </body>
+
+</html>
+

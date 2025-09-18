@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Class - dh_Label</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+  
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_Label</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a> 
+    </div>
+    
+    <div class="pageBody">
+    
+        <div class="heading">5.03 dh_Label:</div>
+    
+        <div class="sectionDefault">             
+Same as Lokasenna Label except for changed property names.
+        </div>     
+
+        <div class="sectionDefault">             
+Note: init and draw functions added then subtracted 2 pixels 
+from gfx.x and gfx.h. This caused labels to be displayed 
+at design x minus 2 causing problems with tight layout. 
+Changed to eliminate add/subtract. 
+Doesn't seem to be causing any problems.
+        </div>
+
+<div class="chartCont">
+<pre>----------------------------------------------------------------------------
+   [color_name] brackets indicate that the color is hardcoded.                      
+----------------------------------------------------------------------------
+Class:           |    Lokasenna Label        |       dh_Label      
+attribute:       | property_name   default   | property_name   default
+----------------------------------------------------------------------------
+text:              caption         ""          text            ""
+font:              font            2 (sans20)  font            sans22
+
+-- colors --
+background:        bg              wnd_bg      col_bg          wnd_bg 
+text:              color           txt         col_text        txt
+----------------------------------------------------------------------------</pre>
+</div> 
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+</html>

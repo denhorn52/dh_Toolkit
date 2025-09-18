@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Class - dh_TextEditor</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+  
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_TextEditor</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a> 
+    </div>
+   
+    <div class="pageBody">
+    
+<div class="heading">5.12 dh_TextEditor:</div>
+    
+<div class="sectionDefault">
+    Same as Lokasenna Textbox except for:
+</div>  
+
+        <div class="sectionIndented">    
+            Changed most of the property names for consistency with other dh_Toolkit classes.
+        </div>
+        <div class="sectionIndented">    
+            Added ability to change line height and scrollbar width. 
+        </div>    
+        <div class="sectionIndented">    
+            Allows all of the color properties to be overridden, including scrollbar.
+        </div>
+    
+        <div class="sectionIndented">    
+            Added ability to change selected text highlight color. The GUI color "sel_txt" is an alpha adjusted color. The property "col_sel_text" specifies the highlight color. That color is ADDED to the list background color to produce the highlight. If "sel_txt" color is specified it will use the "sel_txt" alpha and color. Otherwise it will use the specified color with a default alpha of 0.5.
+        </div>    
+    
+        <div class="sectionListItemIndented">             
+            Note: Caption is optional. If used it will use the colors in properties "col_cap_bg" and "col_cap_text". 
+        </div>
+
+<div class="chartCont">
+<pre>----------------------------------------------------------------------------
+   [color_name] brackets indicate that the color is hardcoded.                      
+----------------------------------------------------------------------------
+Class:           |   Lokasenna TextEditor    |      dh_TextEditor     
+attribute:       | property_name   default   | property_name   default
+----------------------------------------------------------------------------
+text:              retval          {}          retval          {}
+caption:           caption         nil         caption         nil
+caption font:      font_a          3           font_caption    sans20
+text font:         font_b          monospace   font_text       mono16
+
+line height        n/a             n/a         line_height     1.25
+scrollbar width:   [8]                         scrollbar_width 8
+
+-- colors --
+caption bg:        cap_bg          wnd_bg      col_cap_bg      wnd_bg         
+caption text:      color           txt         col_cap_txt     txt
+box bg:            [elm_bg]                    col_bg          elm_bg
+box frame:         [elm_frame]                 col_frame       elm_frame
+box text:          color           txt         col_text        elm_txt
+selected text:     [elm_fill]                  col_sel_text    sel_txt
+outline focused:   [elm_fill]                  col_active      elm_active
+
+scrollbar track:   [tab_bg]                    col_track       elm_track
+scrollbar outline: [elm_outline]               col_sb_outline  elm_outline
+scrollbar thumb:   col_fill        elm_fill    col_thumb       elm_thumb
+----------------------------------------------------------------------------</pre>
+</div> 
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+</html>
+

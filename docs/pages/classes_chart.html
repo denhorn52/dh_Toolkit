@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Classes-defaults</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+  
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <!--<div class="tocHeading">dh_Toolkit</div>-->
+        <div class="pageHeading">Classes-defaults</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a>       
+    </div>
+    
+    <div class="pageBody">
+
+<div class="subHeading">5.14 Classes-defaults</div>
+ 
+<div class="classesChart">
+<pre>----------------------------------------------------------------------------
+                       Class defaults:
+   [color_name] brackets indicate that the color is hardcoded.                      
+----------------------------------------------------------------------------
+Class:           |         Lokasenna         |        dh_Toolkit      
+attribute:       | property_name    value    | property_name    value       
+----------------------------------------------------------------------------
+Button:                    
+----------------------------------------------------------------------------
+text:              caption         ""          text            ""
+font:              font            3 (sans16)  font            sans22
+function:          func       function()end    func       function()end
+parameters:        params          {...}       params          {...}
+
+-- colors --
+face:              col_fill        elm_frame   col_bg          btn_face    
+outline:           [elm_outline]               col_outline     btn_outline
+text:              col_txt         txt         col_text        btn_txt               
+
+----------------------------------------------------------------------------
+Frame/dh_Panel: 
+----------------------------------------------------------------------------
+font:              font            3 (sans16)  font            mono16
+text:              text            ""          text            ""
+line height:       n/a             n/a         line_height     1.25
+line height pixels: n/a            n/a         use_pixels      0
+
+fill:              fill            false       n/a
+radius:            round           0           radius          0
+border width:      n/a             n/a         border_width    2
+
+function:          func       function()end    func       function()end
+parameters:        params          {...}       params          {...}
+
+-- colors --
+frame/border:      color *         elm_frame   col_border      elm_frame
+background:        bg    **        wnd_bg      col_bg          wnd_bg 
+text:              col_txt         txt         col_text        txt
+
+*  frame color, and background color if fill is true.
+** Backgound color if fill is true.
+   Also color underneath text. Set to color if fill is true.
+
+----------------------------------------------------------------------------
+Knob:   When increasing values font size one needs to also increase 
+          knob w and h, or else text overlaps.
+        pointer color is also highlighted text color.  
+----------------------------------------------------------------------------
+caption:           caption         nil         caption         nil
+caption font:      font_a          3 (sans16)  font_caption    sans20
+values font:       font_b          4 (sans16)  font_text       sans16
+centered:          n/a             n/a         centered        true
+       
+-- colors --
+background:        bg              wnd_bg      col_bg          wnd_bg 
+text:              col_txt         txt         col_text        txt
+knob outline:      [elm_outline]               col_outline     btn_outline
+knob body:         col_body        elm_frame   col_body        btn_face 
+knob pointer:      col_head        elm_fill    col_head        txt
+
+----------------------------------------------------------------------------
+Label:   
+----------------------------------------------------------------------------      
+text:              caption         ""          text            ""
+font:              font            2 (sans20)  font            sans22
+
+-- colors --
+background:        bg              wnd_bg      col_bg          wnd_bg 
+text:              color           txt         col_text        txt
+ 
+----------------------------------------------------------------------------
+Listbox:  
+----------------------------------------------------------------------------
+caption:           caption         nil         caption         nil
+caption font:      font_a          3 (sans16)  font_caption    sans20
+text font:         font_b          4 (sans16)  font_text       sans22
+line height        n/a                         line_height     1.25
+padding top left:  pad             4           pad             4
+scrollbar width:   [8]                         scrollbar_width 8
+
+list:              list            {}          list            {}
+
+-- colors --
+caption bg:        cap_bg          wnd_bg      col_cap_bg      wnd_bg    
+caption text:      color           txt         col_cap_text    txt
+list bg:           bg              elm_bg      col_bg          elm_bg 
+list frame:        [elm_frame]                 col_frame       elm_frame
+list text:         color           txt         col_text        elm_txt
+selected text:     [elm_fill]                  col_sel_text    sel_txt
+
+scrollbar track:   [tab_bg]                    col_track       elm_track
+scrollbar outline: [elm_outline]               col_sb_outline  elm_outline
+scrollbar thumb:   col_fill        elm_fill    col_thumb       elm_thumb
+
+----------------------------------------------------------------------------
+Menubar:  
+----------------------------------------------------------------------------
+title padding:     n/a                         do_pad_top      false
+title pad value:   n/a                         pad_top_val     0
+titles font size:  font            2 (sans20)  font            sans22
+
+menus:             menus           {}          menus           {}
+
+-- colors --
+background:        col_bg          elm_frame   col_bg          btn_face
+text:              col_txt         txt         col_text        btn_txt
+mouse over:        col_over        elm_fill    col_over        elm_fill
+
+----------------------------------------------------------------------------
+Menubox:  
+----------------------------------------------------------------------------
+caption:           caption         nil         caption         nil
+caption font:      font_a          3 (sans16)  font_caption    sans20
+text font:         font_b          4 (sans16)  font_text       sans22
+padding top left:  pad             4           pad             4
+
+menu options:      opts            " "         opts            " "
+
+-- colors --
+caption bg:        cap_bg          wnd_bg      col_cap_bg      wnd_bg       
+caption text:      col_cap         txt         col_cap_text    txt
+box bg:            [elm_bg]                    col_bg          elm_bg
+box frame:         [elm_frame]                 col_frame       elm_frame
+box face:          n/a             n/a         col_face        btn_face
+box text:          col_txt         txt         col_text        elm_txt
+outline focused:   [elm_fill]                  col_active      elm_active
+
+----------------------------------------------------------------------------
+Options: 
+----------------------------------------------------------------------------
+caption:           caption         nil         caption         nil
+caption font:      font_a          2 (sans20)  font_caption    sans20
+text font:         font_b          3 (sans16)  font_text       sans20
+direction:         dir             v           dir             v
+padding top left:  pad             4           pad             4
+
+draw frame:        frame           true        frame           true
+draw field:        n/a             n/a         field           false
+border width:      n/a             n/a         border_width    1
+round corners:     n/a             n/a         radius          0
+
+options:           opts            {}          opts            {}
+option size:       opt_size        20          opt_size        20
+
+-- colors --
+caption bg:        cap_bg          wnd_bg      col_cap_bg      wnd_bg       
+caption text:      col_cap         txt         col_cap_text    txt
+options text:      col_txt         txt         col_text        txt
+frame/border:      [elm_frame]     n/a         col_border      elm_frame
+field:             n/a             n/a         col_field       wnd_bg
+option outline:    [elm_frame]     n/a         col_opt_outline txt
+option fill:       col_fill        elm_fill    col_opt_fill    txt
+        
+----------------------------------------------------------------------------
+Slider:  dh_Slider Added track thickness  
+---------------------------------------------------------------------------- 
+caption:           caption         nil         caption         nil
+caption font:      font_a          3 (sans16)  font_caption    sans20
+values font:       font_b          4 (sans16)  font_text       sans16
+track thickness:   [8]                         thk             8
+direction:         dir             h           dir             h
+ 
+-- colors --
+background:        bg              wnd_bg      col_bg          wnd_bg 
+text:              col_txt         txt         col_text        txt
+track bg:          [elm_bg]                    col_track       elm_bg
+track outline:     [elm_outline]               col_outline     btn_outline
+thumb face:        col_hnd         elm_frame   col_thumb       btn_face
+thumb outline:     [elm_outline]               col_outline     btn_outline
+track_fill:        col_fill        elm_fill    col_fill        track_fill 
+
+----------------------------------------------------------------------------
+Tabs:  
+----------------------------------------------------------------------------
+font tab active:   font_a          3 (sans16)  font_tab_active    sans24
+font tab inactive: font_b          4 (sans16)  font_tab_inactive  sans22
+
+tab names:         opts            {}          opts               {}
+
+-- colors --
+background:        bg              elm_bg      col_bg             elm_bg   
+text:              col_ txt        txt         col_text           txt
+active tab:        col_tab_a       wng_bg      col_tab_active     tab_active 
+inactive tab:      col_tab_b       tab_bg      col_tab_inactive   tab_inactive
+
+----------------------------------------------------------------------------
+Textbox:  Can set text using GUI.Val
+----------------------------------------------------------------------------
+text:              retval          ""          retval          ""
+caption font:      font_a          3 (sans16)  font_caption    sans20
+text font:         font_b          monospace   font_text       mono16
+padding top left:  pad             4           pad             4
+
+-- colors --
+caption bg:        bg              wnd_bg      col_cap_bg      wnd_bg         
+caption text:      color           txt         col_cap_text    txt
+box bg:            [elm_bg]                    col_bg          elm_bg
+box frame:         [elm_frame]                 col_frame       elm_frame
+box text:          color           txt         col_text        elm_txt
+selected text:     [elm_fill]                  col_sel_text    sel_txt
+outline focused:   [elm_fill]                  col_active      elm_active
+
+----------------------------------------------------------------------------
+TextEditor:  Can set text using GUI.Val
+----------------------------------------------------------------------------
+text:              retval          {}          retval          {}
+caption:           caption         nil         caption         nil
+caption font:      font_a          3           font_caption    sans20
+text font:         font_b          monospace   font_text       mono16
+
+line height        n/a             n/a         line_height     1.25
+scrollbar width:   [8]                         scrollbar_width 8
+
+-- colors --
+caption bg:        cap_bg          wnd_bg      col_cap_bg      wnd_bg         
+caption text:      color           txt         col_cap_txt     txt
+box bg:            [elm_bg]                    col_bg          elm_bg
+box frame:         [elm_frame]                 col_frame       elm_frame
+box text:          color           txt         col_text        elm_txt
+selected text:     [elm_fill]                  col_sel_text    sel_txt
+outline focused:   [elm_fill]                  col_active      elm_active
+
+scrollbar track:   [tab_bg]                    col_track       elm_track
+scrollbar outline: [elm_outline]               col_sb_outline  elm_outline
+scrollbar thumb:   col_fill        elm_fill    col_thumb       elm_thumb 
+
+----------------------------------------------------------------------------
+Window:
+----------------------------------------------------------------------------
+Started to make minor changes to color usage and font size. 
+Haven't used this so I am not sure where I left off. 
+----------------------------------------------------------------------------</pre>
+</div> <!-- end classesChart -->
+
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+</html>
+
+
+
+

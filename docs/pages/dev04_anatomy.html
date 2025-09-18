@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Anatomy of a script</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      <div class="centered-xy"> 
+        <div class="pageHeading">Anatomy of a script</div>
+      </div>
+      <a href="dev00_design_notes.html" ><div class="backArrow"></div></a>             
+    </div>
+    
+    <div class="pageBody">
+        
+<div class="heading">6.04 Anatomy of a script:</div>        
+      
+<p>
+This page illustrates the basic outline of a script utilizing 
+the Lokasenna GUI and dh_Toolkit. The order of the steps are important to maintain. 
+For a detailed description refer to dh_Template.lua. 
+That is a highly commented bare-bones script that can also be considered as a tutorial.
+</p>
+
+<hr>
+
+
+        <div class="sectionListItem">
+            Load required files (Lokasenna GUI; dh_Toolkit)
+        </div>
+        <div class="sectionListItem">
+            Define variables and data structures.
+        </div>
+        <div class="sectionListItem">
+            Define functions (including those used by GUI elements).
+        </div>
+        <div class="sectionListItem">
+            (Load any saved settings required to define GUI.)
+        </div>        
+        <div class="sectionListItem">
+            Define GUI elements.
+        </div>         
+        <div class="sectionListItem">
+            Override element events (e.g., mouseup)
+        </div> 
+        <div class="sectionListItem">
+            Initialization:
+        </div> 
+        <div class="sectionListItemIndented">
+                Load any saved settings used by script.
+        </div> 
+        <div class="sectionListItemIndented">
+            Do any setup for GUI.
+        </div>
+        <div class="sectionListItem">
+            On exit: (See Note 1)
+        </div> 
+        <div class="sectionListItemIndented">
+                Provide for saving GUI settings and/or script settings.
+        </div>
+        <div class="sectionListItem">
+            userFunction( ) -- runs on each update loop. (See Note 2)
+        </div>
+        <div class="sectionListItem">
+            GUI.Init( )
+        </div>
+        <div class="sectionListItem">
+            GUI.func = userFunction 
+        </div>
+        <div class="sectionListItemIndented">
+                Tell the GUI library to run user function on each update loop.
+        </div>
+        <div class="sectionListItem">
+            GUI.Main( )
+        </div>
+
+<hr>
+
+<p>              
+<b>Note 1:</b>
+<br> 
+
+Create a function to hold your exit code and assign it to reaper.atexit 
+(the name doesn't matter but "Exit" says it all):
+</p>
+
+<div class="preCont">
+<pre>local function Exit()
+    -- Your exit code --
+end
+
+reaper.atexit(Exit)</pre>
+</div>
+<br>
+<p>
+Alternatively you can use the following, as long as it appears before GUI.Init( ).
+</p>
+<div class="preCont">
+<pre>local function Exit()
+    -- Your exit code --
+end
+
+GUI.exit = Exit</pre>
+</div>
+<br>
+
+<p>
+Basically, GUI.Init( ) assigns it by calling
+</p>
+
+<div class="preCont">
+<pre>if GUI.exit then reaper.atexit(GUI.exit) end</pre>  
+</div>                     
+<br>
+
+<p>                     
+I prefer the first, more direct method.                     
+</p>
+
+<hr>
+
+<p>              
+<b>Note 2:</b>
+<br> 
+User function to be run on every update loop. Anything that would
+go into a reaper.defer function would go here. You can name it 
+whatever you wish (dh_Toolkit scripts call it "dhMain"). 
+</p>
+    <br><br>
+    </div>  <!-- end pageBody -->
+  </body>
+
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Documentation</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      <div class="centered-xy"> 
+        <div class="pageHeading">1.03 Documentation</div>
+      </div>
+    </div>
+    
+    
+    <div class="pageBody">
+
+        <div class="heading">Documentation:</div><br>
+        
+        <div class="sectionIndented">                
+          The "docs" directory contains all of the documentation in HTML format. If you want a local copy of this documentation then copy the "docs" directory somewhere on your device. You can place it in the dh_Toolkit_v1" directory, or anywhere you desire for easy access.<br><br> 
+
+          Clicking on the logo at the left of the page heading navigates to the main "Table of Contents. Clicking on the Github logo at the right of the Table of Contents navigates to the dh_Toolkit" repository on Github.<br><br>
+
+          Some sections such as the "Theme Designer" section has its own table of contents. Pages under those sections have a back arrow at the right of the page header. Clicking on that will return you to the parent section page.<br><br>
+
+
+
+        </div><br><br>
+    </div>
+  </body>  <!-- end pageBody -->
+
+</html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Installation</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      <div class="centered-xy"> 
+        <div class="pageHeading">Installation</div>
+      </div>
+    </div>
+    
+    
+    <div class="pageBody">
+
+<div class="heading">1.01 Installation:</div>
+        
+<!-- Install Lokasenna GUI -->
+        
+<div class="subHeading">Install the Lokasenna GUI:</div>
+        
+<div class="sectionDefault">
+Install Lokasenna_GUI if not already done. This can be installed 
+automatically by using the Reapack add-on for Reaper. 
+On my computer this resulted in the following file structure:
+</div>
+
+<div class="sectionIndented">
+E:\Reaper6\Scripts\<span class="inlineBlock">ReaTeam Scripts\</span>Development\<span class="block">Lokasenna_GUI v2</span>
+</div>
+
+<div class="subHeading">The files can also be installed manually:</div>
+
+    <div class="sectionListItem">
+      1. Navigate to the <a href="https://github.com/jalovatt/Lokasenna_GUI/tree/master">Lokasenna</a>  site.
+    </div>
+    <div class="sectionListItem">
+      2. Download the files by clicking on the "Code" button and then clicking on the "Download ZIP" option in the popup window. Save it to your local device.
+    </div>
+    <div class="sectionListItem">
+      3. Open the ZIP file.
+    </div>                            
+    <div class="sectionListItem">
+      4. Inside the ZIP file there is a directory "Lokasenna_GUI v2". 
+      If you are planning to do any developing you should extract this directory 
+      somewhere in the "Reaper/Scripts" directory. 
+      If you are not planning on doing any developing you only 
+      require the subdirectory "Library". The "Library" directory 
+      contains all the files needed to run the scripts. 
+      You can extract the "Library" directory and its contents 
+      to somewhere in the "Reaper/Scripts" directory. 
+      (Even if not planning to do any development it is okay 
+      to include the entire "Lokasenna_GUI v2" directory.) 
+    </div>
+    <div class="sectionListItem">
+      5. The "Library" directory contains the file "Set Lokasenna_GUI v2 library path.lua". 
+      You must run this script to add the Lokasenna library path 
+      to the "reaper-extstate.ini" file. User scripts look there when 
+      loading files when running a user script.
+    </div>
+                
+<div class="sectionIndented">  <!-- indent 2 -->              
+    <div class="sectionListItem">                  
+      5.01 In Reaper's main menu click "Actions" then "Show action list". This opens the "Actions" window.
+    </div>
+    <div class="sectionListItem">                                                        
+      5.02 Click the "New action" button then click "Load Reascript" from the dropdown menu.
+    </div>
+    <div class="sectionListItem">                                                        
+      5.03 Browse to the Lokasenna "Library" directory and select the "Set Lokasenna_GUI v2 library path.lua" file. Click open.
+    </div>  
+    <div class="sectionListItem">                                                        
+      5.04 This file now appears in the action list as: "Script:Set Lokasenna_GUI v2 library path.lua". Select it.
+    </div>                              
+    <div class="sectionListItem">
+      5.05. Click the "Run" button. The path should now be set.
+    </div>             
+</div>  <!-- end indent 2 -->  
+                      
+
+<br>
+
+<!-- Install dh_Toolkit -->
+        
+<div class="subHeading">Install dh_Toolkit:</div>
+        
+<div class="sectionDefault"> <!-- dh_Toolkit install -->
+Install dh_Toolkit. As of 06-22-2025 this can only be done manually. 
+</div>
+
+            <div class="sectionListItem">
+              1. Navigate to the <a href="https://github.com/denhorn52/dh_Toolkit">dh_Toolkit</a> site. 
+            </div>
+            <div class="sectionListItem">
+              2. Download the files by clicking on the "Code" button and then clicking on the "Download ZIP" option in the popup window. Save it to your local device.
+            </div>
+            <div class="sectionListItem">
+              3. Open the ZIP file.
+            </div>            
+            <div class="sectionListItem">
+              4. Extract the directory "dh_Toolkit_v1" and its contents to Reaper/Scripts/ directory.
+            </div>
+            
+            <div class="sectionListItem">
+              5. The "library" subdirectory contains the file "Set dh_Toolkit_v1 library path.lua". You must run this script to add the dh_Toolkit library path to the "reaper-extstate.ini" file. User scripts look there when loading files when running a user script.
+            </div>
+            <div class="sectionIndented">                           
+                <div class="sectionListItem">              
+                  5.01 In Reaper's main menu click "Actions" then "Show action list". This opens the "Actions" window.<br>
+                </div>              
+                <div class="sectionListItem">              
+                  5.02 Click the "New action" button then click "Load Reascript" from the dropdown menu.<br>
+                </div>              
+                <div class="sectionListItem">              
+                  5.03 Browse to the dh_Toolkit_v1 "library" directory and select the "Set dh_Toolkit_v1 library path.lua" file. Click open.
+                </div>              
+                <div class="sectionListItem">              
+                  5.04 This file now appears in the action list as: "Script:Set dh_Toolkit_v1 library path.lua". Select it.
+                </div>              
+                <div class="sectionListItem">              
+                  5.05. Click the "Run" button. The path should now be set.
+                </div>              
+             </div>
+        
+      <br><br> 
+      </div> <!-- end installation --> 
+       
+    </div>  <!-- end pageBody -->
+  </body>
+
+</html>

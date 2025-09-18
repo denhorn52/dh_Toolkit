@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Selected Text Highlights</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_Toolkit Tab</div>
+      </div>
+      <a href="dh_themedesigner.html" ><div class="backArrow"></div></a>       
+    </div>
+    
+    <div class="pageBody">
+    
+<div class="heading">3.08 Selected Text Highlights:</div> 
+<!--
+<p>
+This section is mostly applicable to the theme designer,
+but may be also useful to a script developer, 
+esp. if overriding default behavior.
+</p>
+-->
+<p>
+The text element classes Listbox, Textbox, and TextEditor 
+provide for highlighting selected text. The highlighted color 
+is added to the selection's background and text color to produce 
+the highlight. An alpha value is used to determine the intensity 
+of the highlight. 
+</p>
+
+<p>
+The applicable Lokasenna text element classes use the GUI color 
+"elm_fill" and an alpha value of 0.5. These are fixed in code. 
+While this generally provides satisfactory results there are times 
+when more fine-tuning may be desired. Hence, dh_Toolkit introduces 
+the theme color "sel_txt". This color is the only theme color in 
+which an alpha value other than full alpha (255 decimal, 1.0 integer) 
+is used. 
+</p>
+
+<p>
+There are two ways to adjust the alpha value:
+</p>
+
+<div class="sectionDefault">
+<span class="textEmphasis">Method 1:</span> 
+Use the "sel_txt" color's alpha value.<br>
+In dh_ThemeDesigner use the selAlpha slider on the "dh_Toolkit" 
+tab to adjust the "sel_txt" alpha value. 
+Values range from 0 (no highlight) to 10 (full highlight). 
+This affects the text elements on the "dh_Toolkit" tab 
+and the "Color uses" listbox in the Tools panel. 
+By default dh_Toolkit text elements use the color "sel_txt" and 
+its alpha for text highlighting. The "sel_txt" alpha value can 
+be overridden by using Method 2. 
+</div> 
+ 
+<div class="sectionDefault">
+<span class="textEmphasis">Method 2:</span> 
+Override the "sel_txt" color's alpha value.<br> 
+By setting an element's "use_sel_alpha" property to true the 
+highlighting alpha can be overridden. This is whether using 
+the "sel_txt" color or any other color. Do this by setting the 
+element's "sel_alpha" property to a value from -1.0 to +1.0. 
+(More on negative values follows.) The default is 0.5.
+This is how it is handled on the "Show" panel (accessed via the 
+Show menu on the Lokasenna tab). That menu also provides for 
+changing the panel's background color and the value of the alpha.
+(When changing the background color dh_ThemeDesigner automatically 
+selects a corresponding text color.) <br> 
+
+By using this method the alpha is adjusted only for the element 
+for which it is set.
+</div>
+
+<p>
+A positive alpha value produces a highlight by lightening 
+both the background and text. This can produce washed out text 
+when use with a darker text. Conversely, using a negative alpha value 
+produces a highlight that darkens the background and text. 
+</p>
+
+<p>
+<span class="textEmphasis110">Theme design:</span><br>
+It is always wise to choose a background color (elm_bg) and 
+a text color (elm_txt) with a good constrast, hence legibility. 
+Then choose a highlight color (sel_txt) and alpha value that 
+is that provides good results.
+also compatible. It seems that best compatibility amongst themes 
+will come from using Case 1, and possibly Case 2.
+</p>
+
+<div class="sectionListItem">
+Case 1: Dark background with light text (standard).
+Highlight color should lighten background. Text also gets 
+lightened. If it is white it will remain white. If 
+it is off-white it will get lightened which is fine.
+</div>
+
+<div class="sectionListItem">
+Case 2: Light background with dark text.
+Highlight color should darken background. Text also gets 
+darkened. If it is black it will remain black. If 
+it is very dark it will get darkened which is fine.
+</div>
+
+<div class="sectionListItem">
+Case 3: Medium gray background with dark text.
+Will need to use a lightening highlight for text to remain legible.
+Not a good choice. 
+</div>
+
+<div class="sectionListItem">
+Case 4: Medium gray background with light text.
+May need to use a darkening highlight for text to remain legible.
+Not a good choice. 
+</div>
+<!--
+<p>
+<span class="textEmphasis110">Script development:</span><br>
+Only one optimized text highlighting scheme is possible per theme.    
+It is possible to override the theme specific highlight by 
+overriding the "sel_txt" alpha. Perhaps your script uses 
+the standard Case 1 for its text elements. Then you decide to 
+use Case 2 for a particular element. You would proceed by doing 
+the following in the element definition:
+
+<div class="sectionListItemIndented">
+  1. Assign the background color to the property "col_bg".
+</div>  
+<div class="sectionListItemIndented">
+  2. Assign the text color to the property "col_text".
+</div>  
+<div class="sectionListItemIndented">
+  3. Assign the highlight color to the property "col_sel_text". 
+     Whether you use the "sel_txt" color and want to change 
+     its alpha value, or decide to use a different color: 
+</div>
+<div class="sectionListItemIndented">
+  3a. Set the "use_sel_alpha" property to true.
+</div>
+<div class="sectionListItemIndented">
+  3b. Set the "sel_alpha" property to a value from -1 to +1. 
+  I decided to not implement negative alpha as it caused too many 
+  problems for a feature that probably is not necessary. Alpha can 
+  be set to 0 for no highlight to a probably too bright 1.
+</div>
+</p>
+-->      
+<p>
+<span class="textEmphasis">Note:</span> 
+Keep in mind that overriding the standard settings may produce 
+unsatisfactory results with other themes. Altough I use it in dh_ThemeDesigner 
+for the "Show" Listbox I consider it somewhat experimental.  
+</p>
+
+    <br><br>
+    </div> <!-- end pageBody -->
+  </body>
+
+</html>

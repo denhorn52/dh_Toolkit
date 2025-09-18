@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>dh_ArrangeViews</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_ArrangeViews</div>
+      </div>
+    </div>
+    
+    <div class="pageBody">
+
+<div class="heading">2.01 dh_ArrangeViews:</div><br>
+        
+<div class="imgTitle">Collapsed view</div>
+<div class="imgContainer"><img src="../images/arrange-views-collapsed.png" alt="arrange views collapsed"></div>  
+        
+<!-- # dh_ARRANGEVIEWS -->  
+                      
+<p>   
+dh_ArrangeViews stores "snapshots" of Reaper's arrange view window 
+(referred to as "views" for this script). Each view will store 
+the start time and end time of the arrange view window, 
+as well as the status of any selected media items, 
+and the position of the edit cursor. 
+</p>
+<p>    
+The display has two menuboxes, each with a list of all 
+the current project's saved views.
+Click on a menubox to open a dropdown menu with available views and select one.  
+Click on the <span class="textEmphasis110">“Go”</span> button next to the menubox to restore that view.
+When clicking one of these <span class="textEmphasis110">"Go"</span> buttons 
+the textbox in the bottom row gets the name of the selected view.
+The menuboxes can be set to different views to allow for quick switching between the two. 
+</p>
+<p>
+Changing project tabs updates the script with the current project data.
+In Preferences you can select which options to restore when clicking "Go" button. 
+See "Options panel" later on page.
+</p>
+<p>
+The <span class="textEmphasis110">“More”</span> button (+ sign) 
+expands the window to show more features. I designed it this way 
+so as to be able to keep the window as small as possible 
+so as to not clutter reaper’s interface. Click to expand, 
+click again to collapse.
+</p>
+        
+<!-- # EXPANDED VIEW -->  
+
+<div class="imgTitle">Expanded view</div>
+<div class="imgContainer"><img src="../images/arrange-views-expanded.png" alt="arrange views expanded"></div>  
+
+<p>
+The <span class="textEmphasis110">expanded window</span> reveals 
+a bottom row that has an <span class="textEmphasis110">“Add”</span> button, 
+a textbox with the name of the last selected view, 
+a <span class="textEmphasis110">“Delete”</span> button, 
+a menubox with the names of all the project’s region markers, 
+and a <span class="textEmphasis110">“Go”</span> button to go to selected region.
+</p>
+<p>
+The <span class="textEmphasis110">“Add”</span> button will add 
+the current state of Reaper's arrange view window 
+(start time, end time, selected items, and cursor position) 
+as a "view" with the name displayed in the textbox window. 
+Edit the name in the textbox as you see fit. If you use the 
+name of an existing view then that view will be updated with 
+the current view state.You will be prompted if trying to 
+overwrite an existing view.
+</p>
+<p>
+The <span class="textEmphasis110">“Del”</span> button will delete 
+the arrange view snapshot with the name in the textbox. 
+You will be prompted to confirm.
+</p>
+<p>
+Also displayed is a menubox that has a list of the names 
+of all of the current project’s regions. Select a region 
+from the menubox dropdown menu. With a region selected click 
+on the adjacent <span class="textEmphasis110">“Go”</span> button 
+to navigate to that region. Right-clicking on the 
+<span class="textEmphasis110">“Go”</span> button refreshes 
+the regions list in case any region markers were added, 
+deleted, or modified after the script was opened.
+</p>
+
+<!-- # PREFERENCES -->
+
+<div class="heading">Preferences:</div>
+
+<p>                                    
+Right-clicking on the <span class="textEmphasis110">“More”</span> button opens the Preferences window.
+</p>      
+
+<div class="imgTitle">Preferences window</div>
+<div class="imgContainer"><img src="../images/arrange-views-prefs.png" alt="preferences window"></div>
+ 
+<div class="sectionDefault">  <!-- # 3 -->   
+ 
+<div class="subHeading">The App Scale panel:</div>
+<p>       
+Displays the current App scale.
+Use the menubox to select a scale setting.
+Click the <span class="textEmphasis110">"Scale App"</span> button to set the scale.        
+</p>
+
+<div class="subHeading">The Themes panel:</div>
+<p>       
+Displays the current theme.
+Use the menubox to select a theme.
+If "User" theme is selected it displays the current selected user theme, and a menubox to select a user theme.
+Use the <span class="textEmphasis110">"Set Theme"</span> button to set the theme.
+</p>
+
+<div class="subHeading">The Options panel:</div>
+
+<p>       
+Displays the view options. The first four options are always 
+saved when adding a view. If one of these options is checked 
+it will be restored when applying a view. (By unchecking 
+the boxes you can disable if those states are updated 
+when applying a view.)
+</p>
+
+</div> <!-- end # 3 -->  
+
+<p>       
+Click the <span class="textEmphasis110">“Close”</span> button to return to the script functionality.       
+</p>
+
+     <br><br>   
+     </div>  <!-- end pageBody --> 
+
+  </body>
+
+</html>
+
