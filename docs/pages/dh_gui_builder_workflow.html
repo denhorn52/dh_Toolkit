@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>dh_GUI_Builder</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">Example Workflow</div>
+      </div>
+    </div>
+    
+    <div class="pageBody">
+
+<div class="heading">4.01 Example Workflow:</div>
+
+
+<div class="sectionIndented">  
+Say you are developing a script called "MyScript.lua" 
+Save your main script "MyScript.lua" in the "scripts" 
+directory. (You can use a copy of dh_Template.lua as a starting 
+point. More on this later.) 
+</div>
+
+<div class="sectionIndented">  
+In GUI Builder create a new project.
+In 'Project Settings' set the name of your project to "MyScript". 
+Insert elements in the workspace. They will created on layer 1. 
+You can then edit the 'z' property to place it on a different layer.
+</div>
+
+<div class="sectionIndented">  
+Many elements can appear on the same layer. Even so, any element 
+that has heavy usage, and needs to be redrawn frequently should 
+best be put on their own layer. How many layers are possible? 
+Good question. I believe somewhere in the Lokasenna documentation 
+it says 1024. But the real limitation might be how many drawing 
+buffers are availble. One reference states 128. Another says 1024. 
+I wonder if anybody really knows.
+</div>
+
+<div class="sectionIndented">  
+All elements names must be unique. GUI Builder has 
+mechanisms to ensure names are unique. It is recommended to  
+decide on an element's name early on so that you 
+do not need to change it later. Later changes may affect any 
+property assignments made in the main script. 
+I use the convention: element type, underscore, functionality. 
+Hence 'btn_SetColor' signifies a button used to set a color.
+</div>
+
+<div class="sectionIndented">  
+dh_Toolkit classes are Lokasenna classes that have been 
+modified to be compatible with dh_Toolkit theming. They also 
+include other enhancements.
+Although the Lokasenna classes are available to use, I 
+recommend using the dh_Toolkit classes due to the 
+aforementioned reasons.
+</div>
+
+<div class="sectionIndented">  
+An element class refers to the definition of an element and is 
+contained in a class file, e.g., dh_Button.lua is the class 
+file that defines the class dh_Button. 
+An element refers to a 
+created instance of a class.
+</div>
+
+<div class="sectionIndented">  
+A dh_Tabs element can be used to groups elements for display. 
+The dh_Tabs class has a property 'z_sets' which is a table 
+that contains the layer (z) numbers of the layers which will 
+be displayed when a tab is active. 
+Each tab has its own z_set. An element can be displayed 
+on a single tab, or on multiple tabs. 
+GUI Builder has a Tabs Title Editor which is used to add, 
+remove, rename, and reposition tabs. The Tabs Z_sets editor 
+is used to define what layers are to appear on a particular tab. 
+</div>
+
+<div class="sectionIndented">  
+Save the project with 'File -> Save Elements'. 
+The file will be saved to the "scripts" directory with the name 
+"MyScript_ELMS.lua". 
+</div>
+
+<div class="sectionIndented"> 
+In "MyScript.lua" insert the following code in the "Elements" 
+section:
+
+<div class="preCont text110">
+<pre>
+load(GUI.script_path .. "MyScript_ELMS.lua")()
+</pre>
+</div>
+
+</div>
+
+<div class="sectionIndented"> 
+All of the elements will now appear when you run "MyScript.lua".
+Any additional changes to your layout that you save to 
+"MyScript_ELMS".lua" will appear the next time you run "MyScript.lua".
+</div>
+
+<div class="subHeading">4.01.00 Additional assignments:</div>
+
+<div class="sectionIndented">
+After the elements are loaded it is time to make additional 
+assignments to some of the elements' properties. These additional 
+assignments need to be made after "MyScript_ELMS.lua" is loaded  
+(or the elements are declared).
+Since GUI Builder is primarily concerned with layout and not 
+functionality, some properties are not included in the 
+sidebar's editable properties. This way any changes to the 
+layout (stored in the file, "MyScript_ELMS.lua")  
+will not affect the code in the main script ("MyScript.lua"). 
+
+The only problem arises when changing an element's name or 
+deleting an element within GUI Builder, which can result in 
+any additional assignments made in the main script 
+no longer being valid. 
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Button functions: </span>  
+Buttons have a property 'func'. It accepts the name 
+of a function which is to be called when the button is clicked. 
+It also has an optional property 'params' which include any 
+parameters which should be passed to that function. 
+
+<div class="sectionDefault">
+GUI Builder does not expose the 'func' property for editing. 
+That property should only be assigned in the main script. 
+Let's just say that keeping that tenet makes maintenence 
+so much easier.
+</div>
+<div class="sectionDefault">
+Note: There is an order to where these components are placed. 
+Say:
+</div>
+<div class="preCont text110">
+<pre>
+  button.func = MyButtonFunc,
+</pre>
+</div>
+
+<div class="sectionDefault">
+MyButtonFunc needs to be declared before this button 
+assignment is made, whether that assignment is in the element's 
+creation parameters, or a later assignment. The later 
+assignment allows that any changes made to the layout 
+("MyScript_ELMS.lua") does not affect the main script. 
+In the template file, "dh_Template.lua", MyButtonFunc could 
+be placed in the section titled "Element Functions".
+</div>
+
+<div class="sectionDefault">
+Next is the element creation section. It is here where the 
+elements are defined or imported.
+In the template file, "dh_Template.lua", 
+the elements could be placed in
+the section titled "Elements".
+</div>
+
+<div class="sectionDefault">
+Next is property assignments. This obviously needs to be 
+after element creation. 
+</div>
+
+<div class="preCont text110">
+<pre>
+GUI.elms["MyButtonName"].func = MyButtonFunc
+GUI.elms["MyButtonName"].params = {...}
+</pre>
+</div>
+
+</div>  <!--end button functions -->
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Element method overrides: </span>  
+An element's methods, esp., mouse events can be overridden 
+to provide additional functionality. These overrides need 
+to be placed after the element is declared (or imported). 
+I place mine in the main script section "Method Overrides".
+
+<div class="preCont text110">
+<pre>
+-- Example mouseup override:
+
+function GUI.elms.lbx_SnapshotsNames:onmouseup()
+	-- Run the element's normal method
+	GUI.dh_Listbox.onmouseup(self)
+	
+	-- Your code here.
+	-- Maybe update script variables.
+	-- Maybe update other element properties,
+	--   perhaps a textbox or label display.
+	
+end
+</pre>
+</div>
+
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Menu assignments: </span>  
+The Menubar.menus and Menubox.optarray properties reference 
+menus that can get fairly complicated. They can have sub-menus, 
+grayed-out items, and separators. (In dh_ThemeDesigner 
+I use them to call functions with multiple parameters.) 
+They can also be dynamic. 
+That is why GUI Builder only handles the top-level of these 
+properties, and that is for layout purposes only. 
+Because of this restriction it is necessary to design your 
+menus in the main script then later assign them to the 
+appropriate element (after the element is declared or imported).
+
+<div class="preCont text110">
+<pre>
+-- Example: assigning menu to menubar element: 
+-- MyMenubar previously declared.
+
+GUI.elms["MyMenubar"].menus = {
+          
+      {title = "Menu 1", options = {} }
+      {title = "Menu 2", options = {} }
+      {title = "Menu 3", options = {} }
+      
+}
+</pre>
+</div>
+
+You can also define the menu earlier, and then assign it.
+
+<div class="preCont text110">
+<pre>
+-- Define the menu in "My Data" section.
+
+myMenus = {
+          
+      {title = "Menu 1", options = {} }
+      {title = "Menu 2", options = {} }
+      {title = "Menu 3", options = {} }
+      
+}
+
+-- Define or load your elements.
+   ...
+
+-- Make the assignment.
+
+GUI.elms["MyMenubar"].menus = myMenus
+</pre>
+</div>
+
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Using a template: </span>  
+dh_Toolkit provide a couple of scripts can be used as templates 
+for a new script: "dh_Template.lua" and "dh_Template-multi.lua". 
+These scripts have sections for the various parts of a script 
+simplifying where to place your code. They are also heavily 
+commented acting as a somewhat tutorial. They explain what 
+script specific variables to change, and where to place your code. 
+Refer to section 
+<span class = "textEmphasis">"7.04 Anatomy of a script" </span>
+for a brief 
+desription.
+</div>
+
+     <br><br><br>   
+     </div>  <!-- end pageBody --> 
+
+  </body>
+
+</html>

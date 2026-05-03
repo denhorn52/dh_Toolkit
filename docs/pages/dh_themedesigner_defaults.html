@@ -45,9 +45,10 @@ wnd_bg       script window           script window
              options bg              options bg
              panel bg                panel bg
              slider bg               slider bg
-             tab active              tab active
+             tab active              
                
-txt          caption text            caption text
+txt          window text             window text
+             caption text            caption text
              label text              label text
              knob values             knob values
                                      knob pointer
@@ -62,30 +63,30 @@ elm_bg       elements bg             elements bg
              [slider track bg]       slider track bg  
              tabs bg                 tabs bg                           
 
-elm_fill     [elms focused outline]  (uses elm_active)   
-             knob arrow              (uses txt)
+elm_fill     [elms focused outline]    
+             knob arrow              
              menubar mouseover       menubar mouseover
-             option button fill      (uses txt)
-             scrollbar thumb         (uses elm_thumb)
-             [selected text]         (uses sel_txt)
-             slider track fill       (uses track_fill)
+             option button fill      
+             scrollbar thumb         
+             [selected text]         
+             slider track fill       
                                
-elm_frame    button face             (uses btn_face)
-             frame border/fill       panel border
-             knob body               (uses btn_face)
+elm_frame    button face             
+             frame border/fill       
+             knob body               
              [elements frame]        elements frame
-             options frame           options frame
-             [option btn outline]    (uses txt)
-             slider thumb            (uses btn_face)
+             options frame           
+             [option btn outline]    
+             slider thumb            slider track outline
              
-elm_outline  [button outline]        (uses btn_outline)
-             [knob outline]          (uses btn_outline)
-             [scrollbar outline]     scrollbar outline
-             [slider thumb outline]  (uses btn_outline)
-             [slider track outline]  (uses btn_outline)
+elm_outline  [button outline]        
+             [knob outline]          
+             [scrollbar outline]     
+             [slider thumb outline]  
+             [slider track outline]  
              
-tab_bg       [scrollbar track]       (uses elm_fill)
-             tab inactive            (uses tab inactive)
+tab_bg       [scrollbar track]       
+             tab inactive            
 
 --------------------------------------------------------
 -- dh_Toolkit defined colors:
@@ -94,35 +95,38 @@ btn_face                             button face
                                      knob body               
                                      menubar bg             
                                      menubox face           
-                                     slider thumb           
+                                     scrollbar track          
 
 btn_outline                          button outline
                                      knob outline
                                      slider thumb outline
-                                     slider track outline
 
 btn_txt                              button text
                                      menubar text
+                                     
+btn_face2                            button face alternative
+
+btn_txt2                             button text alternative
 
 elm_active                           elements outline focused
                                    
-elm_txt                              elements text
-
-elm_thumb                            scrollbar thumb 
-
-elm_track                            scrollbar track 
+elm_txt                              text elements text
 
 panel_bg                             panel background alternative 
        
-panel_border                         panel border alternative   
+panel_border                         panel border 
+                                     options border
+                                     slider border  
      
-panel_txt                            panel txt alternative        
+panel_txt                            panel text alternative        
 
 sel_txt                              selected text 
 
 tab_active                           active tab 
 
-tab_inactive                         inactive tab 
+tab_inactive                         inactive tab
+
+thumb_body                           slider thumb 
 
 track_fill                           slider track fill 
 --------------------------------------------------------</pre>

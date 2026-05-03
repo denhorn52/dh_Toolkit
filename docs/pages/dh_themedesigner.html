@@ -24,11 +24,18 @@
 <div class="heading">3.00 dh_ThemeDesigner:</div>
 
 <p>
-This script provides a GUI to design user themes for scripts using dh_Toolkit.
+A theme is a collection of colors to be used by a script's 
+GUI. The colors are meant to provide a pleasing and coherent 
+experience. dh_ThemeDesigner provides a GUI to design user 
+themes for scripts which use dh_Toolkit and the Lokasenna GUI.
 The script window (herein referred to as App) consists of two main parts. 
 The top is a Tabbed section, and the bottom is the Tools section.
 </p>
-
+    <!--
+    <div class="tocSubItem">
+      <a href="dh_themedesigner_workflow.html" >&nbsp;3.00_1 Workflow</a>
+    </div>
+    -->
     <div class="tocSubItem">
       <a href="dh_themedesigner_tab1.html" >&nbsp;3.01 Preferences Tab</a>
     </div>
@@ -53,15 +60,47 @@ The top is a Tabbed section, and the bottom is the Tools section.
     <div class="tocSubItem">
         <a href="dh_themedesigner_sel_txt.html" >&nbsp;3.08 Selected Text Highlights</a>
     </div>
-        
+               
 <p>
-<span class="textEmphasis110">Note:</span> I pushed the limits with this. The script used 135 elements although 
-there apparently are only 127 buffers available for elements to use. 
-Plus some elements require more than one buffer. 
-I believe this is why the script occasionally crashed . 
-I combined 19 color labels on Tab4 into 3 dh_Panels which I had hoped would fix this. 
-Seems that the script still occasionally crashes due to buffer issues. 
-However, your work is saved. Just restart the script and it pick ups where you left off.  
+<span class="textEmphasis110">Workflow: </span>
+The Preferences tab has selection boxes where you select a 
+theme to use as a starting point. The name of the selected theme 
+is displayed in the 'User Theme Name' textbox. This is merely a 
+convenience for saving and renaming user themes 
+(see 3.01 Preference Tab). 
+<br><br>
+Then you select a theme color to edit by clicking on a color 
+swatch on the Colors tab, or selecting it from the Color Names 
+selection box in the Tools panel. Use the color sliders in the 
+Tools panel to edit the selected theme color. 
+The edits appear in the "New Color" swatch.
+Clicking on the "New Color" swatch updates the GUI with its color. 
+<br><br>
+The loaded theme is not changed when editing. The current 
+'edit state' can be saved at any time as a user theme.
+<br><br>
+When exiting dh_ThemeDesigner the current 'edit state' is 
+preserved. It will appear the next time dh_ThemeDesigner 
+is opened.
+</p>        
+               
+<p>
+<span class="textEmphasis">Side Note:</span> I pushed the limits with this. 
+The script used 135 elements although there were, from what I could gather, 
+only 127 buffers available for elements to use. Another source says 
+that 1024 buffers are available. I could not find any definitive 
+answer for that. Plus some elements require more than one buffer.
+</p>
+<p>
+During development the script would often crash claiming a buffer error.
+I eventually found the issue. dh_ThemeDesigner is constantly reinitializing 
+all of its elements. And the Lokasenna text elements were not reusing their 
+buffers. Coupled with the way the GUI places a possibly narrow range limit on 
+available buffers. I addressed these issues by overriding the pertinent 
+functions in the library file 'GUI_overrides.lua'. But even before I addressed 
+those issues the current workspace was preserved. Restart the script and pick up 
+where you left off.  
+
 </p>
 
     <br><br>                      

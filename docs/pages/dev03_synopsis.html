@@ -22,24 +22,26 @@
     
     <div class="pageBody">
     
-<div class="heading">6.03 Synopsis of the GUI:</div>            
+<div class="heading">7.03 Synopsis of the GUI:</div>   
+         
+<div class="sectionDefault left050"><!-- sectiom #1 -->         
         
 <div class="subHeading">Z layers:</div>        
       
-<p>
+<div class="sectionDefault left050">
     Lokasenna GUI uses layers designated by "z". 
     Elements are assigned to a layer by setting the element's "z" value.
     Lower "z" values are in front of (drawn later) than elements with higher "z" values.
     A layer can have more than one element. Note: an element
     that requires frequent redrawing should be on its own layer since all of 
     the elements sharing that layer are redrawn.
-</p>
+</div>
 
 <!--  ====  core.lua ==== -->        
 
 <div class="subHeading">Gleaned from core.lua:</div>
 
-<div class="sectionDefault"> <!-- # 1 -->
+<div class="sectionDefault left050"> <!-- # 2 -->
 
     <div class="sectionListItem">
         GUI.elms = { } -- holds all GUI elements
@@ -113,32 +115,37 @@
         </div>
     </div> 
     
-</div> <!-- end # 1 -->
+</div> <!-- end # 2 -->
 
-<hr>           
-<p>
+<hr> 
+<div class="sectionDefault left050"> <!-- # 3 -->   
+       
+<div class="sectionDefault">
 Note 1:<br>                          
 GUI.Main is run on every update loop of the GUI script.<br>
 GUI.Main calls GUI.Main_Update_State( ) which calls reaper.defer(GUI.Main) 
 &lt;Line 372 of core.lua&gt;.
-</p>
-<p>            
+</div>
+<div class="sectionDefault">
 Note 2:<br>
 If defining a user function you can name it however you want. 
 dh_Toolkit scripts call the user function "dhMain". It is called by:
-</p>
+</div>
 
 <div class="preCont">
 <pre>GUI.func = dhMain</pre>
 </div>
 
-<p>
+<div class="sectionDefault">
 Anything you would put inside a reaper.defer( ) loop should go here. 
-</p>
+</div>
 
-    <br><br>
+</div> <!-- end # 3 -->
+
+</div> <!-- end section #1 -->
+
+    <br><br><br>
     </div>  <!-- end pageBody -->
   </body>
 
 </html>
-

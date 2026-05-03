@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Tabs.lua
--- Date: 20250908
+-- Date: 20260330
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Tabs class
@@ -12,7 +12,11 @@
 --[[ Modified by Dennis Horn.
 
      20250506 Changed col_tab_a, col_tab_b, color_tab_a, col_tab_b to "a" to "active" and "b" to "inactive".
-
+     20251001 Changed Tab.w to Tab.tabs_w.
+         Use Tab.tabs_w for actual Tabs width.
+         Use Tab.w to allow limiting fullwidth to maximum..
+         Added property Tab.limit_w.
+     20260420 Changed update_sets to ensure Tabs z-layer doesn't get hidden.         
 ]]--
 ---------------------------------------------------------------------
 if not GUI then
@@ -36,50 +40,75 @@ function GUI.dh_Tabs:new(name, z, x, y, tab_w, tab_h, opts, pad)
     
     Tab.x = Tab.x or x
     Tab.y = Tab.y or y
-    Tab.tab_w = Tab.tab_w or tab_w or 48
-    Tab.tab_h = Tab.tab_h or tab_h or 20
+    Tab.tab_w = Tab.tab_w or tab_w or GUI.dh_Tabs.defaults.tab_w
+    Tab.tab_h = Tab.tab_h or tab_h or GUI.dh_Tabs.defaults.tab_h
 
-    -- Parse the string of options into a table
+    -- First, check if optarray.
     if not Tab.optarray then
-        local opts = Tab.opts or opts
-
+    
         Tab.optarray = {}
-        if type(opts) == "string" then
-            for word in string.gmatch(opts, '([^,]+)') do
-                Tab.optarray[#Tab.optarray + 1] = word
-            end
-        elseif type(opts) == "table" then
+        
+        -- Next, check if opts.
+        local opts = Tab.opts or opts or "Tab 1"
+
+        if type(opts) == "table" then
+
             Tab.optarray = opts
+
+        elseif type(opts) == "string" then
+            -- Given a comma separated string.
+            -- Parse the string of options into a table
+            local tempidx = 1
+            for word in string.gmatch(opts, '([^,]+)') do
+                Tab.optarray[tempidx] = word
+                tempidx = tempidx + 1
+            end
         end
+        Tab.retval = Tab.retval or 1
+        
+    else
+        if #Tab.optarray == 0 then Tab.optarray = {"Tab 1"} end  
+        Tab.retval = 1
     end
     
-    Tab.pad = Tab.pad or pad or 8    
+    Tab.pad = Tab.pad or pad or GUI.dh_Tabs.defaults.pad    
         
-    Tab.font_tab_active = Tab.font_tab_active or "sans24"
-    Tab.font_tab_inactive = Tab.font_tab_inactive or "sans22"
+    Tab.font_tab_active = Tab.font_tab_active or GUI.dh_Tabs.defaults.font_tab_active
+    Tab.font_tab_inactive = Tab.font_tab_inactive or GUI.dh_Tabs.defaults.font_tab_inactive
 
 ----colors--------------------------------------------------    
-    Tab.col_bg = Tab.col_bg or "elm_bg"
-    Tab.col_text = Tab.col_text or "btn_txt"
-    Tab.col_tab_active = Tab.col_tab_active or "tab_active"
-    Tab.col_tab_inactive = Tab.col_tab_inactive or "tab_inactive"
+    Tab.col_bg = Tab.col_bg or GUI.dh_Tabs.defaults.col_bg
+    Tab.col_text = Tab.col_text or GUI.dh_Tabs.defaults.col_text
+    Tab.col_tab_active = Tab.col_tab_active or GUI.dh_Tabs.defaults.col_tab_active
+    Tab.col_tab_inactive = Tab.col_tab_inactive or GUI.dh_Tabs.defaults.col_tab_inactive
 ------------------------------------------------------------
 
     -- Placeholder for if I ever figure out downward tabs
-    Tab.dir = Tab.dir or "u"
+    Tab.dir = Tab.dir or GUI.dh_Tabs.defaults.dir
 
-    Tab.z_sets = {}
-    for i = 1, #Tab.optarray do
-        Tab.z_sets[i] = {}
+    --Tab.z_sets = {}
+    --for i = 1, #Tab.optarray do
+    --    Tab.z_sets[i] = {}
+    --end
+    
+    Tab.z_sets = Tab.z_sets or {}
+    
+    if #Tab.z_sets == 0 then
+        for i = 1, #Tab.optarray do
+            Tab.z_sets[i] = {}
+        end    
     end
-
-    -- Figure out the total size of the Tab frame now that we know the
-    -- number of buttons, so we can do the math for clicking on it
-    Tab.w, Tab.h = (Tab.tab_w + Tab.pad) * #Tab.optarray + 2*Tab.pad + 12, Tab.tab_h
-
+    
+    Tab.w = Tab.w or 0
+    Tab.h = Tab.tab_h
+    
     if Tab.fullwidth == nil then
-        Tab.fullwidth = true
-    end
+        Tab.fullwidth = true 
+    end  
+    
+    -- This will be maximum element width if not fullwidth.
+    -- This is necessary to dynamically change width (as in GUI Builder).   
+    Tab.limit_w = Tab.limit_w or GUI.dh_Tabs.defaults.limit_w    
 
     -- Currently-selected option
     Tab.retval = Tab.retval or 1
@@ -93,9 +122,52 @@ function GUI.dh_Tabs:new(name, z, x, y, tab_w, tab_h, opts, pad)
 
 end
 
+GUI.dh_Tabs.defaults = {
+    tab_w = 48,
+    tab_h = 24,
+    pad = 8,
+    fullwidth = true,
+    limit_w = 0,
+        
+    optarray = {"Tab 1"},
+    
+    font_tab_active = "sans24",
+    font_tab_inactive = "sans22",
+    
+    dir = "u",  -- currently not used
+
+    col_bg = "elm_bg",
+    col_text = "btn_txt",
+    col_tab_active = "tab_active",
+    col_tab_inactive = "tab_inactive",    
+}
+
 
 function GUI.dh_Tabs:init()
 
+    --[[
+    GUI.Msg("\n** dh_Tabs:init **")
+    GUI.Msg("    GUI.w : " .. tostring(GUI.w))    
+    GUI.Msg("    GUI.cur_w : " .. tostring(GUI.cur_w))
+    GUI.Msg("    gfx.w : " .. tostring(gfx.w))        
+    GUI.Msg("    self.w is : " .. tostring(self.w))
+    GUI.Msg("    self.fullwidth is : " .. tostring(self.fullwidth))
+    GUI.Msg("    self.fullwidth type is : " .. tostring(type(self.fullwidth)))    
+    --]]
+
+    -- Figure out the total size of the Tab frame now that we know the
+    -- number of buttons, so we can do the math for clicking on it.    
+    -- Tab.tabs_w is actual (overall) Tabs width.
+    self.tabs_w = (self.tab_w + self.pad) * #self.optarray + 2 * self.pad + 12
+    
+    -- Set maximum width. self.w previously set to minimum width.
+    if self.fullwidth then --and not self.limit_w then    
+        --self.w = GUI.cur_w - self.x
+        self.w = GUI.w - self.x        
+    else
+        self.w = math.max(self.tabs_w, self.limit_w)
+    end
+    
     self:update_sets()
 
 end
@@ -110,10 +182,6 @@ function GUI.dh_Tabs:draw()
 	local dir = self.dir
 	local state = self.state
 
-    -- Make sure w is at least the size of the tabs.
-    -- (GUI builder will let you try to set it lower)
-    self.w = self.fullwidth and (GUI.cur_w - self.x) or math.max(self.w, (tab_w + pad) * #self.optarray + 2*pad + 12)
-
 	GUI.color(self.col_bg)
 	gfx.rect(x - 16, y, self.w, self.h, true)
 
@@ -123,7 +191,7 @@ function GUI.dh_Tabs:draw()
 	for i = #self.optarray, 1, -1 do
 
 		if i ~= state then
-			--
+
 			local tab_x, tab_y = x + GUI.shadow_dist + (i - 1) * x_adj,
 								 y + GUI.shadow_dist * (dir == "u" and 1 or -1)
 
@@ -194,6 +262,8 @@ function GUI.dh_Tabs:onmouseup()
 
 	-- Set the new option, or revert to the original if the cursor isn't inside the list anymore
 	if GUI.IsInside(self, GUI.mouse.x, GUI.mouse.y) then
+	
+	    --GUI.Msg(">>>  GUI.dh_Tabs:onmouseup   self.state : " .. self.state)
 
 		self.retval = self.state
 		self:update_sets()
@@ -298,8 +368,13 @@ end
 ------------------------------------
 
 
--- Updates visibility for any layers assigned to the tabs
+-- Updates visibility for any layers assigned to the tabs.
+-- @param init: z_sets. Specify when supplying a new or updated z_sets.
+
 function GUI.dh_Tabs:update_sets(init)
+
+    --GUI.Msg("\n>>>> GUI.dh_Tabs:update_sets")
+    --GUI.Msg("     self.state : " .. self.state)    
 
 	local state = self.state
 
@@ -321,16 +396,24 @@ function GUI.dh_Tabs:update_sets(init)
             for _, z in pairs(z_sets[i]) do
 
                 GUI.elms_hide[z] = true
+                
+                --GUI.Msg("  HIDE  iter z_set[" .. i .. "] : " .. z)
 
             end
         end
 
 	end
-
+--zzz
     for _, z in pairs(z_sets[state]) do
 
         GUI.elms_hide[z] = false
-
+        
+        -- Ensure that Tabs layer isn't hidden.
+        
+        GUI.elms_hide[self.z] = false
+        
+        --GUI.Msg("  SHOW  iter z_set[" .. state .. "] : " .. z)        
+        
     end
 
 end

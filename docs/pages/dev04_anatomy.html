@@ -22,89 +22,133 @@
     
     <div class="pageBody">
         
-<div class="heading">6.04 Anatomy of a script:</div>        
+<div class="heading">7.04 Anatomy of a script:</div>   
+     
+<div class="sectionDefault left050"><!-- sectiom #1 -->         
       
-<p>
+<div class="sectionDefault">
 This page illustrates the basic outline of a script utilizing 
 the Lokasenna GUI and dh_Toolkit. The order of the steps are important to maintain. 
 For a detailed description refer to dh_Template.lua. 
 That is a highly commented bare-bones script that can also be considered as a tutorial.
-</p>
+</div>
 
 <hr>
 
+<div class="subHeading">
+7.04.01 Script sections and actions required:
+</div>
 
-        <div class="sectionListItem">
-            Load required files (Lokasenna GUI; dh_Toolkit)
-        </div>
-        <div class="sectionListItem">
-            Define variables and data structures.
-        </div>
-        <div class="sectionListItem">
-            Define functions (including those used by GUI elements).
-        </div>
-        <div class="sectionListItem">
-            (Load any saved settings required to define GUI.)
-        </div>        
-        <div class="sectionListItem">
-            Define GUI elements.
-        </div>         
-        <div class="sectionListItem">
-            Override element events (e.g., mouseup)
-        </div> 
-        <div class="sectionListItem">
-            Initialization:
-        </div> 
-        <div class="sectionListItemIndented">
-                Load any saved settings used by script.
-        </div> 
-        <div class="sectionListItemIndented">
-            Do any setup for GUI.
-        </div>
-        <div class="sectionListItem">
-            On exit: (See Note 1)
-        </div> 
-        <div class="sectionListItemIndented">
-                Provide for saving GUI settings and/or script settings.
-        </div>
-        <div class="sectionListItem">
-            userFunction( ) -- runs on each update loop. (See Note 2)
-        </div>
-        <div class="sectionListItem">
-            GUI.Init( )
-        </div>
-        <div class="sectionListItem">
-            GUI.func = userFunction 
-        </div>
-        <div class="sectionListItemIndented">
-                Tell the GUI library to run user function on each update loop.
-        </div>
-        <div class="sectionListItem">
-            GUI.Main( )
-        </div>
+<!-- <div class="chartCont left050 top000 text110"> -->
+
+<div class="sectionDefault left050 text110">    
+<pre>
+Load Lokasenna GUI:
+    Set the name to appear in the script's title bar.
+      GUI.name = "dh_Template v1.0"
+    Uncomment any elements that the script uses.
+
+Load dh_Toolkit: Loads any saved settings required to define GUI.
+    Set window size.
+    Set the name to use for saving to reaper.extstate.ini
+      Usually the script name.
+    Uncomment any elements that the script uses.
+
+My Data:
+    Define script variables and data structures.
+  
+My Functions:
+    Define your functions here.
+      This will include any functions called from a function
+      in the "Element Functions" section.
+  
+Element Functions:
+    Define functions called directly by GUI elements.
+      (These functions could just as well be put intp "My Functions
+         but I like to keep them separate.)
+           
+ELEMENTS:
+    Declare and/or load your elements here.
+  
+Method Overrides:
+    Override element methods here.
+  
+GET PROJECT DATA:
+    Modify if saving your data to reaper.extstate.ini
+      The templates use the checklist "template_options" as an
+        example of how to maintain and persist data.
+        "template_options" (all references) can be safely renamed
+        or removed. 
+        
+SAVE PROJ EXT STATE:
+    Provide for saving GUI settings and/or script settings.
+    This is a place to put anything you want to save persistantly.
+        "template_options" is also used here.
+  
+EXIT:
+    Things to do when exiting script, perhaps, saveProjExtState(0)
+    On exit: (See Note 1)  
+
+Script Initialize:
+    The place to do any last minute script/element initializations.
+    Load any saved settings used by script.
+    Do any setup for GUI.
+  
+MAIN LOOP: userFunction()
+    User function to be called on every update cycle.
+    Anything that would go into a reaper.defer function would go here. 
+    The name of the function can be any unique name. I call mine dhMain().
+    
+    Include within it any code you wish to be called on every cycle.
+    I use it to check if a project tab has changed 
+      then save the previous project's data 
+      then update the script with the newly selected project's data.
+    dh_Toolkit uses it to check if the script scale has changed
+      then updates the GUI. DO NOT change this!
+
+-- Open the script window and initialize a few things.      
+GUI.Init( )  
+
+-- Tell the GUI library to run userFunction on each update cycle.
+GUI.func = userFunction  -- Name it to your liking.
+
+-- How often (in seconds) to run GUI.func. 0 = every cycle.
+GUI.freq = 0
+       
+-- Start the main loop
+GUI.Main()      
+</pre>
+</div>  
+
+
+</div> <!-- end section #1 -->
 
 <hr>
 
-<p>              
+<div class="sectionDefault left050"> <!-- NOTES -->
+
 <b>Note 1:</b>
 <br> 
 
+<div class="sectionDefault left050">
 Create a function to hold your exit code and assign it to reaper.atexit 
 (the name doesn't matter but "Exit" says it all):
-</p>
 
-<div class="preCont">
+
+<div class="preCont leftPad">
 <pre>local function Exit()
     -- Your exit code --
 end
 
 reaper.atexit(Exit)</pre>
 </div>
+
 <br>
-<p>
+<div class="sectionDefault left050">
 Alternatively you can use the following, as long as it appears before GUI.Init( ).
-</p>
-<div class="preCont">
+</div>
+
+<div class="preCont leftPad">
 <pre>local function Exit()
     -- Your exit code --
 end
@@ -113,29 +157,27 @@ GUI.exit = Exit</pre>
 </div>
 <br>
 
-<p>
+<div class="sectionDefault left050">
 Basically, GUI.Init( ) assigns it by calling
-</p>
+</div>
 
-<div class="preCont">
+<div class="preCont leftPad">
 <pre>if GUI.exit then reaper.atexit(GUI.exit) end</pre>  
 </div>                     
 <br>
 
-<p>                     
+<div class="sectionDefault left050">
 I prefer the first, more direct method.                     
-</p>
+</div>
+
+</div>
 
 <hr>
 
-<p>              
-<b>Note 2:</b>
-<br> 
-User function to be run on every update loop. Anything that would
-go into a reaper.defer function would go here. You can name it 
-whatever you wish (dh_Toolkit scripts call it "dhMain"). 
-</p>
-    <br><br>
+
+</div> <!-- end NOTES -->
+
+    <br><br><br>
     </div>  <!-- end pageBody -->
   </body>
 

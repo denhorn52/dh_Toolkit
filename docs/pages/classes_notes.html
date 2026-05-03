@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Classes-Notes</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">Classes - General Notes</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a> 
+    </div>
+
+    <div class="pageBody">
+
+<div class="heading">6.15 Classes - General Notes:</div>
+
+<div class="sectionIndented"><!-- sectiom #1 -->
+        
+<div class="subHeading">Common Properties: </div>
+
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">name:  </span>    
+Name of the element.
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">z: </span>    
+The layer to place the element on.
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">x: </span>    
+The left of the element relative to the project window (workspace).
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">y: </span>    
+The top of the element relative to the project window (workspace).
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">w: </span>    
+The width of the element.
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">h: </span>    
+The height of the element.
+</div>
+
+<div class="sectionListItemIndented">
+Note: The width and/or height of some elements are 
+auto-calculated based on other criteria.
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">caption: </span>    
+If not nil or an empty string then a caption will be shown. The caption 
+will use 'font_caption' for its font, and 'col_cap_text' for 
+its color. The caption's background color will generally 
+be specified by 'col_backdrop'.
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">shadow: </span>    
+If true the element will be displayed with a shadow. 
+Buttons and Slider thumbs shadows are always on. 
+The text elements probably should not use shadows unless they 
+are using non-highlighted frames.
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">col_backdrop: </span>    
+This should be set to the background color where the element 
+is placed: "wnd_bg" if placed directly on the script window, 
+or "panel_bg" if placed on a panel. 
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">frame_use_outline: </span>    
+The text elements, slider track, and knob and slider display boxes 
+as a default use highlighted outlines. Set this to true (default 
+is false) to use solid outlines instead. Solid outlines will use 
+the color specified in the element's 'col_frame' property 
+("elm_frame" by default). Themes have a false color "metadata", 
+which if the alpha value is 0, will cause the element to be 
+drawn with a solid outline regardless of the 'frame_use_outline' setting. 
+Whether to use outlines can be set in script's preferences.
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">frame_thk: </span> 
+Specify the thickness of the element frames (see above). 
+You can set the thickness in a script's preferences.
+As of 03-14-2026 there are are only two valid values: 1 or 2.  
+</div>
+
+<div class="sectionListItemIndented">
+<span class="textEmphasis">allow_sel_outline: </span>    
+Most of the classes have this property. 
+If set to true then the element will be displayed with an 
+outlined when it is selected by clicking on it, or by tabbing 
+to it. It uses the dedicated GUI color "elm_active" for drawing the outline. 
+This property is set to false by default, except for textbox 
+and text editor, which benefit from the visual cue. 
+As of 03-15-2026 tabbing isn't implemented, although the 
+Lokasenna GUI does have provisions for tabbing.
+</div>
+
+<div class="subHeading">Notes: </div>
+
+<div class="sectionIndented">
+Almost all of the color properties' use default colors 
+that correspond to a theme. Notable exceptions are panel colors. 
+An element's backdrop color also needs to correspond to the 
+background color of where it is placed. Although almost all 
+of an element's colors can be set individually, it is best to 
+use the default's otherwise it breaks theming. 
+</div>
+
+<div class="sectionIndented">
+Menubox popup menus, and system dialog use system fonts for 
+their display. These cannot be controlled by the script.
+</div>
+
+</div><!-- end Section #1 -->  
+
+      <br><br><br> 
+      </div> <!-- end installation --> 
+       
+    </div>  <!-- end pageBody -->
+  </body>
+
+</html>

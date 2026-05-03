@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Label.lua
--- Date: 20250908
+-- Date: 20260330
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Label class
@@ -15,6 +15,10 @@
      Note: init and draw functions added then subtracted 2 pixels from gfx.x and gfx.h.
            This caused labels to be displayed at design x minus 2 causing problems with tight layout.
            Changed to eliminate add/subtract. Doesn't seem to be causing any problems.
+     20251219 rev a: added properties "text_pos" and "x_override". Although gfx.drawstring() allows for justifying text 
+           dh_Label draws text on a background rectangle in a buffer then that buffer get blitted'
+           Positioning occurs during the draw cycle. Use "x_override" with position "center" or "right". 
+     20260106: x_override not needed. self.x will be repositioned if text_pos is not "left".       
      
 ]]--
 ---------------------------------------------------------------------
@@ -27,11 +31,11 @@ if not GUI then
 end
 ---------------------------------------------------------------------
 -- Creation parameters:
--- name, z, x, y, text[, shadow, font, col_bg, col_txt]
+-- name, z, x, y[, text, shadow_text, font, col_bg, col_text]
 ---------------------------------------------------------------------
 -- dh_Label - New
 GUI.dh_Label = GUI.Element:new()
-function GUI.dh_Label:new(name, z, x, y, text, shadow, font, col_bg, col_txt)
+function GUI.dh_Label:new(name, z, x, y, text, shadow_text, font, col_bg, col_text)
 
 	local label = (not x and type(z) == "table") and z or {}
 
@@ -42,20 +46,24 @@ function GUI.dh_Label:new(name, z, x, y, text, shadow, font, col_bg, col_txt)
 	label.x = label.x or x
     label.y = label.y or y
 
-	--label.caption = label.caption or caption
-	label.text = label.text or text or "Label"	
-	label.shadow =  label.shadow    or shadow   or false
-	label.font =    label.font      or font     or "sans22"
+	--label.caption = label.caption or caption or "Label"	
+	label.text = label.text or text or GUI.dh_Label.defaults.text	
+	label.font = label.font or font or GUI.dh_Label.defaults.font
+	label.shadow_text = label.shadow_text or shadow_text or GUI.dh_Label.defaults.shadow_text
+
+    label.text_pos = label.text_pos or GUI.dh_Label.defaults.text_pos   -- left,center,right
+    --label.x_override = label.x_override or label.x
 
 ----colors---------------------------	
-	label.col_bg =     label.col_bg     or bg         or "wnd_bg"
-	label.col_text =   label.col_text   or col_txt    or "txt"
+	label.col_bg =     label.col_bg     or bg         or GUI.dh_Label.defaults.col_bg
+	label.col_text =   label.col_text   or col_text   or GUI.dh_Label.defaults.col_text
 -------------------------------------  
 
     -- Placeholders; we'll get these at runtime
 	label.w, label.h = 0, 0	
     
-    -- Started to implement using func, but it is easy enough to call a function by overriding the mouseup event.
+    -- Started to implement using func, but it is easy enough 
+    -- to call a function by overriding the mouseup event.
 	--label.func = label.func or func or function () end
 	--label.params = label.params or {...}
 
@@ -67,6 +75,14 @@ function GUI.dh_Label:new(name, z, x, y, text, shadow, font, col_bg, col_txt)
 
 end
 
+GUI.dh_Label.defaults = {
+	text = "Label",	
+	font = "sans22",
+    text_pos = "left",   -- left,center,right
+    shadow_text = false,
+	col_bg = "wnd_bg",
+	col_text = "txt",
+}
 
 function GUI.dh_Label:init(open)
 
@@ -80,12 +96,26 @@ function GUI.dh_Label:init(open)
     
     --GUI.Msg("Label:init self.h for : " .. self.name .. " is " .. tostring(self.h))    
     
-    local w, h = self.w + 4, self.h + 4
+    --??? Is this necessary? Does it really help antialiaing? 
+    -- Two pixels is valuable in tight layouts.
+    --local w, h = self.w + 4, self.h + 4
+    local w, h = self.w, self.h
+    
+    -- Reposition self.x if not using default "left" alignment.
 
+    --GUI.Msg("\n** Label:init self.x before adjustment : " .. tostring(self.x))
+    
+    if self.text_pos == "center" then
+        self.x = math.floor(self.x - self.w / 2)
+    elseif self.text_pos == "right" then
+        self.x = self.x - self.w
+    end
+        
+    --GUI.Msg("\n** Label:init self.x after adjustment : " .. tostring(self.x))
+    
     -- Because we might be doing this in mid-draw-loop,
     -- make sure we put this back the way we found it
     local dest = gfx.dest
-
 
     -- Keeping the background separate from the text to avoid graphical
     -- issues when the text is faded.
@@ -105,13 +135,12 @@ function GUI.dh_Label:init(open)
     GUI.color(self.col_bg)
     gfx.rect(0, 0, w, h)
     
-    -- Don't know why adding pixels except maybe for padding.
     --gfx.x, gfx.y = 2, 2
-    gfx.x, gfx.y = 2, 0
+    gfx.x, gfx.y = 0, 0
 
     GUI.color(self.col_text)
 
-	if self.shadow then
+	if self.shadow_text then
         GUI.shadow(self.text, self.col_text, "shadow")
     else
         gfx.drawstr(self.text)
@@ -146,9 +175,22 @@ function GUI.dh_Label:draw()
     local a = self.fade_arr and self:getalpha() or 1
     if a == 0 then return end
     
-    -- Don't know why subtracting pixels from position.
     --gfx.x, gfx.y = self.x - 2, self.y - 2
     gfx.x, gfx.y = self.x, self.y
+    
+    --[[
+    if self.text_pos == "center" then
+        --gfx.x = self.x_override - self.w / 2
+        gfx.x = self.x - self.w / 2
+    elseif self.text_pos == "right" then
+        --gfx.x = self.x_override - self.w
+        gfx.x = self.x - self.w
+    else -- left    
+        gfx.x = self.x
+    end
+    
+    gfx.y = self.y
+    --]]
 
     -- Background
     gfx.blit(self.buffs[1], 1, 0)
@@ -175,7 +217,7 @@ function GUI.dh_Label:val(newval)
 
 end
 
--- 20250430 Added by dh
+-- 20250430 Added by dh. Not currently using.
 function GUI.dh_Label:onmouseup()
 --[[
 	--self.state = 0

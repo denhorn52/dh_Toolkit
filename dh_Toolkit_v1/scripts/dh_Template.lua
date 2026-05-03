@@ -1,7 +1,7 @@
 --dh_Template.lua 
 -- version 1.0 
 -- Author: Dennis R. Horn
--- Date: 2025-09-08
+-- Date: 2026-03-15
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -29,7 +29,7 @@
 -- dh_Toolkit provides the theming and scaling capabilities.
 -- dh_Toolkit provides a "Preferences" window to display options,
 --   and an optional Checklist which can be used for project specific options.
--- The "Preferences" window is designed at 600 x 400 using z-layers 9-20.
+-- The "Preferences" window is designed at 600 x 400 using z-layers 490-500.
 -- If your App is smaller than 600 x 400 you need to use a 
 --   process (as used in dh_ArrangeViews.lua) that uses multiple window sizes.
 --   (See dh_Template-mult.)
@@ -115,14 +115,14 @@ loadfile(lib_path .. "Core.lua")()
 
 --[[ DEV NOTE: Comment out classes not being used. ]]
 
-GUI.req("Classes/Class - Button.lua")()
-GUI.req("Classes/Class - Frame.lua")()
+--GUI.req("Classes/Class - Button.lua")()
+--GUI.req("Classes/Class - Frame.lua")()
 --GUI.req("Classes/Class - Knob.lua")()
-GUI.req("Classes/Class - Label.lua")()
+--GUI.req("Classes/Class - Label.lua")()
 --GUI.req("Classes/Class - Listbox.lua")()
 --GUI.req("Classes/Class - Menubar.lua")()
 --GUI.req("Classes/Class - Menubox.lua")()
-GUI.req("Classes/Class - Options.lua")() 
+--GUI.req("Classes/Class - Options.lua")() 
 --GUI.req("Classes/Class - Slider.lua")()
 --GUI.req("Classes/Class - Tabs.lua")()
 --GUI.req("Classes/Class - Textbox.lua")()
@@ -153,19 +153,26 @@ if not dhtk_path or dhtk_path == "" then
     return
 end
 
---loadfile(dhtk_path .. "common/dh_Toolkit_core.lua")()
 package.path = package.path .. ";" .. dhtk_path .. "?.lua"
+
+-- !!! Load GUI.overrides.
+require "common/GUI_overrides"
 
 ----------------------------------------
 --[[ DEV NOTE: !!! Necessary. ]]--
 DHTK = require "common/dh_Toolkit_core"
 ----------------------------------------
+-- Set to true if script uses dh_Toolkit Prefs window.
+-- Set to false if script handles Prefs in its own way (as with GUI Builder).)
+DHTK.USE_DHTK_PREFS = true
+
 
 --[[ DEV NOTE: Replace with a name you choose. ]]--
 -- This is the name to be used as the section name when 
 -- saving settings to reaper ext state (usually the name of the script).
 DHTK.EXT_STATE_NAME = "dh_Template"
      
+--[[ DEV NOTE: Set script window size. ]]--
 -- Script window dimensions at 1.00x scale.
 DHTK.APP_WIDTH = 640
 -- Preferences display needs 300 min. height.
@@ -175,30 +182,30 @@ DHTK.APP_HEIGHT = 400
 --[[ DEV NOTE: Custom or modified Lokasenna classes.
      Comment out classes not used. ]]--
 
+-- dh_Toolkit classes 
+
 -- Needed for core.
-local dh_btn = require "classes/dh_Button"     
-local dh_lbl = require "classes/dh_Label"
-local dh_mbx = require "classes/dh_Menubox"     
-local dh_panel = require "classes/dh_Panel"
-     
---local dh_knob = require "classes/dh_Knob"
---local dh_lbx = require "classes/dh_Listbox"
---local dh_mbr = require "classes/dh_Menubar"
-local dh_opt = require "classes/dh_Options"
---local dh_sld = require "classes/dh_Slider"
---local dh_tabs = require "classes/dh_Tabs"
---local dh_tbx = require "classes/dh_Textbox"
---local dh_tbx = require "classes/dh_TextEditor"
+require "classes/dh_Button"     
+require "classes/dh_Label"
+require "classes/dh_Menubox"  
+require "classes/dh_Options"   
+require "classes/dh_Panel"   
+  
+require "classes/dh_Knob"  
+--require "classes/dh_Listbox"
+--require "classes/dh_Menubar"
+--require "classes/dh_Slider_H"
+--require "classes/dh_Slider_V"
+require "classes/dh_Tabs"
+--require "classes/dh_Textbox" 
+--require "classes/dh_TextEditor"
+
 ----------------------------------------
 --[[ DEV NOTE: !!! Necessary. Must be after req dh_Options ]]--
 DHTK.init_DHTK()
 ----------------------------------------
 
--- May be used to access some toolkit functions.
--- Or may use DHTK.shared?
-local dhtks = require "common/dh_Toolkit_shared"
-
--- May be used for saving and loading ext states.
+-- Used for saving/loading to extstate.
 local json = require "common/json"
 
 --======================================
@@ -245,43 +252,35 @@ end
   ------     My Functions    --------
 --======================================
 --zzfunc
---[==[ Reference:
--- Functions can be declared 'local' if they are called by Lokasenna GUI, i.e., clicking a button.
--- If called from within another function they must be global (no 'local') or it crashes script.
-
--- Example function. Called from GUI element function. 
-local function call_from_gui_function()
-	my_function()
-end
-
--- If this is declared as local it crashes script.
-function my_function()
-	-- do stuff --
-end
-
---??? Seems okay if my_function is declared before call_from_gui_function call.
---]==]
-----------------------------------------       
 --[[ DEV NOTE: Insert your functions here.
      These can be called direct from GUI element func,
-     or from your own code. ]]--
+     or from your own code. 
+
+     Note: Functions can be declared 'local' if they are called by a GUI element, i.e., clicking a button.
+           If that function calls another function then that other function must be declared before the 
+             calling function or the script will crash. 
+--]]
+
+local function func_called_from_button_click()
+    reaper.MB("Button 1 was clicked.", "Info!", 0)
+end
 
 --======================================
   ------   Element Functions   ------
 --======================================
---zzelemfunc  
+--zzelemfunc
 
---[[ DEV NOTE: This section provided for organization.
-     These can just as well be in My Functions section,
-     but I found it convenient to have a separate section.
-     Example: GUI element func = btnScaleAppClick 
-     Functions called by, say, clicking a button must be 
-       before element creation.
-     Functions called from within those functions must be
-       before said function.
+--[[ DEV NOTE: Put your functions here if they are called from a GUI element, e.g., a button click. 
+
+     This section provided for organization.
+     These can just as well be in My Functions section above,
+       but I found it convenient to have a separate section.
+     Any functions called by these functions must be declared before these functions or Lua complains.
 --]]
 
--- Put your element functions here --
+local function dh_Button1_Click()
+    func_called_from_button_click()
+end
 
 --======================================
   --------      ELEMENTS      --------
@@ -292,24 +291,21 @@ end
 
 --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 -- This frame is optional. It is provided as possible starting point.
-GUI.New("frm_Main", "Frame", {
+GUI.New("pnl_Main", "dh_Panel", {
     z = 100,
     x = 0,
     y = 0,
     w = DHTK.APP_WIDTH, 
     h = DHTK.APP_HEIGHT, 
     shadow = false,
-    fill = false,
-    color = "wnd_bg",
-    bg = "wnd_bg",
-    round = 0,
-    text = "",
-    txt_indent = 0,
-    txt_pad = 0,
-    pad = 8, 
-    font = "sans16",
-    col_txt = "txt"
+    border_width = 2,
+    radius = 0,    
+    col_bg = "wnd_bg",
+    col_border = "panel_border",
+    col_text = "txt",
+    col_backdrop = "wnd_bg",
 })
+
 -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 --[[ DEV NOTE: 
      Need a way to open Preferences Window.
@@ -318,18 +314,34 @@ GUI.New("frm_Main", "Frame", {
        or have other mechanism to open and close "Preferences" window. 
 --]]
 
-GUI.New("btn_Prefs", "Button", {
-    z = 99,
-    x = 488, 
-    y = 12, 
+GUI.New("btn_Prefs", "dh_Button", {
+    z = 2,
+    x = 528, 
+    y = 48, 
     w = 80, 
     h = 28, 
-    caption = "Prefs",
+    text = "Prefs",
     font = "sans24",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",
-	func = DHTK.showPrefsWindow
+    col_bg = "btn_face",
+    col_text = "btn_txt",
+	func = DHTK.showPrefsWindow,
 })
+
+----------------------------------------
+------  Import Elements  ------
+----------------------------------------
+
+--[[ DEV NOTE: Load the elements contained in an external file. 
+     GUI Builder can save an element file to the location where the main script (this) is located.
+--]] 
+
+loadfile(GUI.script_path .. "dh_Template_ELMS.lua")()
+
+--[[ DEV NOTE: After elements are loaded assign any additional data or func to the loaded elements. ]]--
+
+GUI.elms.dh_Button1.func = dh_Button1_Click
+--GUI.elms.dh_Menubox1.optarray = {"Option 1", "Option 2"}
+
 
 ------------------------------------
 ------   Options Section   ------ 
@@ -340,11 +352,11 @@ GUI.New("btn_Prefs", "Button", {
      Can use this as a template. 
 --]]
 
-GUI.New("lbl_Options", "Label", {
+GUI.New("lbl_Options", "dh_Label", {
     z = 499, 
     x = 372, 
     y = 32, 
-    caption = "Options", 
+    text = "Options", 
     font = "sans22",
 })
 
@@ -353,63 +365,25 @@ GUI.New("chkl_Options",	"dh_Checklist",	{
     x = 368, 	
     y = 56,  
     w = 220, 
-    h = 236,
+    h = 270,
 	caption = "",
 	--shadow = false,
 	--opts = template_options_names, -- defined in "my data"
 	opts= {},
 	dir = "v", 
-	pad = 8,
-	
-	frame = true,
-    field = false,
-    border_width = 1, 
+
+    border_width = 2, 
     radius = 0,	
+    pad_x = 10,
 	
+    col_bg = "panel_bg",		
     col_border = "panel_border",
-    col_field = "panel_bg",	
-	col_text = "txt", 
-	
+	col_text = "panel_txt", 
+    col_backdrop = "wnd_bg",
+    	
 	font_caption = "sans22",
 	font_text = "sans22",
 })
-
---[[
-GUI.New("chkl_Options",	"Checklist", {
-	z = 489, 
-    x = 368, 	
-    y = 56,  
-    w = 220, 
-    h = 236,
-    --shadow = false,
-	caption = "Options",
-	frame = true,
-	opt_size = 16, 
-	--opts = template_options_names, -- defined in "my data"
-	opts= {},
-	--bg = "wnd_bg",  -- wnd_bg is default
-	bg = "white",  -- wnd_bg is default	
-	col_txt = "txt",
-	col_fill = "elm_fill",
-	font_a = "sans22",
-	font_b = "sans22",
-	--dir = "h", 
-	pad = 8, 
-})
---]]
-----------------------------------------
-------  Tips Display  ------
-----------------------------------------
---zztips
---<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
---[[ DEV NOTE:
-     There is some extra room at bottom of "Preferences" window. 
-     I used it to include some useful tips.
-     You may use, alter, or discard. ]]--
---GUI.New("lbl_tip_01", "Label", 19, 18, 332, "Go button Click - go to view indicated by menubox.", false, "sans20", "txt", "elm_fill" )
---GUI.New("lbl_tip_02", "Label", 19, 18, 352, "Go button Shift + Click - update view indicated by menubox.", false, "sans20", "txt", "elm_fill" )
---GUI.New("lbl_tip_03", "Label", 19, 18, 372, "Go button Alt + Click - rename view with text in textbox.", false, "sans20", "txt", "elm_fill" )
--->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 --======================================
   ------   Method Overrides  ------
@@ -471,7 +445,7 @@ local function populateLists(proj)
     if (retval == 1) then
         local opts = json.decode(json_string) -- should return Lua table
             
-        if type(opts) == "table" and dhtks.hash_table_length(opts) > 0 then
+        if type(opts) == "table" and DHTK.hash_table_length(opts) > 0 then
             template_options = opts
           
             -- Update checklist --
@@ -634,6 +608,8 @@ populateLists(proj_before_change)
 --]==]
 
 local function dhMain()
+
+    --[[ DEV NOTE: This condition used by dh_Toolkit. ]]--
 	if GUI.resized then
         -- If the window's size has been changed, reopen it
         -- at the current position with the size we specified.	

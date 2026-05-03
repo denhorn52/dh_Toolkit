@@ -22,16 +22,17 @@
     
     <div class="pageBody">
 
-<div class="heading">6.02 Evolution of the Theme System</div>
+<div class="heading">7.02 Evolution of the Theme System</div>
         
-<p>
+<div class="sectionDefault left050">
 This section reflects some of my thought process when designing 
 a theming system.
-<p>
+</div>
       
-<div class="subHeading">6.02.01 Considerations:</div>      
+<br>      
+<div class="subHeading">7.02.01 Considerations:</div>      
       
-<p>
+<div class="sectionDefault left050">
 When I was developing a theming system for dh_Toolkit I spent a 
 lot of time trying to decide between building upon the Lokasenna system 
 or starting from scratch. Lokasenna's system works fine for 
@@ -40,8 +41,8 @@ for "multi-colored" themes. I decided on a combination; start from
 scratch, but use Lokasenna color names when practical. I 
 introduced some new colors, some which I deem necessary, and some  
 which are dedicated to the their intended use.
-</p>
-<p>
+</div>
+<div class="sectionDefault left050">
 As I introduced colors I wanted to be sure not to break Lokasenna's 
 theming. One color that particularly caused me some trepidation 
 is "elm_outline". Lokasenna uses it for various features, all 
@@ -51,17 +52,16 @@ such as buttons, knobs, and slider thumbs, I decided to introduce
 a theme color "btn_outline" for dh_Toolkit classes to use. 
 This will also ensure that any Lokasenna defined colors beginning 
 with "elm_" that are utilized by dh_Toolkit classes will only 
-use those for text elements. (Except for elm_frame which will 
-be used as the default for dh_Panel and dh_Option borders.) 
-</p>
-<p>
+use those for text elements (there are exceptions). 
+</div>
+<div class="sectionDefault left050">
 A main consideration is to try to keep it simple. Consistency is key. 
 While a theme designer has an almost unlimited palette to use, 
 what may look good using one theme may look terrible using another. 
 A script developer, whether using Lokasenna classes or dh_Toolkit classes, 
 should be able to apply any theme and have the interface look good.
-</p>
-<p>
+</div>
+<div class="sectionDefault left050">
 It is also important that text has a good contrast with the background. 
 While this is easy to achieve with a monochrome theme, 
 some colored themes may present a challenge to individuals with 
@@ -70,8 +70,8 @@ That is why I offer several colors to use for text. I'm not sure
 if that is necessary, but they are available. I also take a 
 screenshot of my themes and convert them to gray-scale 
 to test them for contrast.
-</p>
-<p>
+</div>
+<div class="sectionDefault left050">
 Another consideration is what to name the colors. We can't call 
 them black, dark gray, medium gray, light gray, and white because 
 that would only apply to a particular (in this case, monochrome) theme. 
@@ -82,67 +82,84 @@ Imagine a kitchen. It could have floor color, wall color, ceiling color,
 trim color, cabinet color, hardware color, etc. These are descriptive 
 names that indicate their use while the palette (theme) to be used 
 will define the actual colors.
-</p>
-      
-<div class="subHeading">6.02.02 Starting from scratch:</div>
+</div>
+            
+<br>            
+<div class="subHeading">7.02.02 Starting from scratch:</div>
 
-<p>
+<div class="sectionDefault left050">
 Start with a script window with a label. Here we will use a monochrome theme. 
 Let's call the window background color "wnd_bg" and paint it black. 
 Let's call the text color "txt" and paint it white.
-</p>
+</div>
 
-<p>
+<!-- ###################### -->
+
+<br>
+<div class="sectionDefault left050"> <!-- BUTTON -->
 <span class="textEmphasis110">Place a Button element:</span> 
-</p>
 
-<p>
+<div class="sectionDefault left050">
 Give its face the color "btn_face" and paint it light gray. 
 Give it an outline color "btn_outline" and paint it medium gray.
 Add text to the Button. 
-</p>
+</div>
 
+<br>
 <div class="imgContainer"><img src="../images/evolution-01.png" alt="evolution 1"></div>
 
-<p>
+<div class="sectionDefault left050">
 We need a new color for the text because the existing 
 "txt" color is white which doesn't work. 
 Let's call this color "btn_txt" and paint it black. 
 (We could use the black "wnd_bg" color for the text but we may need 
 more flexibility down the line.) 
-</p>
+</div>
 
-<div class="imgContainer"><img src="../images/evolution-02.png" alt="evolution 2"></div>
 <br>
-<p>
-<span class="textEmphasis110">Place a Knob element:</span> 
-</p>
+<div class="imgContainer"><img src="../images/evolution-02.png" alt="evolution 2"></div>
 
-<p>
+</div> <!-- end BUTTON -->
+
+<!-- ###################### -->
+<br>
+<div class="sectionDefault left050"> <!-- KNOB -->
+<span class="textEmphasis110">Place a Knob element:</span> 
+
+<div class="sectionDefault left050">
+
+<div class="sectionDefault">
 Assign the Knob face the color "btn_face".<br>
 Assign the Knob outline the color "btn_outline".<br>
 Assign the Knob text the color "txt".
-</p>
+</div>
 
-<p>
+<div class="sectionDefault">
 The Knob also has a attribute "knob head" (color property 
 "col_head") which describes the color of the pointer and highlighted text. 
 I chose to assign to "knob head" the current text color 
 of the background on which it is placed, because in my tests 
 it seems to provide good compatibilty amongst themes. 
-</p>
-<p>
+</div>
+
+<div class="sectionDefault">
 It is possible that another color might serve better for knob head. 
 In that case the script developer can assign a different theme 
 color to it. In my tests I haven't found it necessary to introduce 
 a dedicated color for it.
-<p>
+</div>
 
-<p>
+</div>
+
+</div> <!-- end KNOB -->
+
+<!-- ###################### -->
+
+<br>
+<div class="sectionDefault left050"> <!-- SLIDER -->
 <span class="textEmphasis110">Place a Slider element:</span> 
-</p>
 
-<p>
+<div class="sectionDefault left050">
 A Slider has similar characteristics to the Knob when it comes to 
 theming, but with two additional features: track background and 
 track fill colors. They can be treated the same way as "knob head". 
@@ -156,53 +173,63 @@ While this could have been set to default to, say, "elm_fill",
 I like the flexibility of having a dedicated color. It is possible 
 that "elm_fill" works fine. In that case, the theme designer could 
 set it to that.
-</p>
+</div>
 
-<p>
+</div> <!-- end SLIDER -->
+
+<!-- ###################### -->
+
+<br>
+<div class="sectionDefault left050"> <!-- PANEL -->
 <span class="textEmphasis110">Place a Panel element:</span> 
-</p>
 
-<p>
+<div class="sectionDefault left050">
 Place a Panel with just a border to group elements.
 Assign the border the theme color "panel_border" and paint it medium gray. 
 (We could assign the Lokasenna color "elm_frame" to the border, 
 but we may need more flexibilty later on.) 
 Place a Label, a  Knob, a Slider, and a Button on this panel.
-</p>
-      
+</div>
+
+<br>      
 <div class="imgContainer"><img src="../images/evolution-03.png" alt="evolution 3"></div>
       
-<p>
+<div class="sectionDefault left050">
 So far, so good.
 Now let's give the Panel a background color. Call it "panel_bg" 
 and paint it light gray.
-</p> 
+</div>
      
+<br>     
 <div class="imgContainer"><img src="../images/evolution-04.png" alt="evolution 4"></div>
 
-<p>
+<div class="sectionDefault left050">
 The Label, Knob, and Slider backgrounds need to be set to the Panel background. 
 But then the white text on the light gray background is almost imperceptible. 
-</p>
+</div>
 
+<br>
 <div class="imgContainer"><img src="../images/evolution-05.png" alt="evolution 5"></div>
 
-<p>
+<div class="sectionDefault left050">
 So let's create a new color "panel_txt", paint it dark and 
 assign it to those elements text properties. 
 (We could have used "btn_txt" but we might need more flexibility down the line.) 
 Slider track fill shown using theme color "track_fill" painted medium gray.
+</div>
 
-</p>
-
+<br>
 <div class="imgContainer"><img src="../images/evolution-06a.png" alt="evolution 6"></div>
 
-<br>      
-<p>
-<span class="textEmphasis110">Options:</span> 
-</p>
+</div> <!-- end PANEL -->
 
-<p>
+<!-- ###################### -->
+
+<br>      
+<div class="sectionDefault left050"> <!-- OPTIONS -->
+<span class="textEmphasis110">Options:</span> 
+
+<div class="sectionDefault left050">
 The Options class (Checkbox and Radio box) shares characteristics 
 similar to the Panel class. It has an optional border, and the 
 background color can be set to other than the default "wnd_bg". 
@@ -210,23 +237,23 @@ In the following image the Checkbox on the left uses the default
 colors "wnd_bg" for the background and "txt" for the text. 
 The checkbox on the right uses "panel_bg" for the background and 
 "panel_txt" for the text color.
-</p>
-<p>
+</div>
+
+<div class="sectionDefault left050">
 While it is possible to override the option text, button outline, 
 and button fill colors it probably is not advisable for theme compatibility. 
 We could also have dedicated colors for these, which I did implement 
 at one point, but decided it wasn't necessary and only complicated matters.  
+</div>
 
-</p>
-
+<br>
 <div class="imgContainer"><img src="../images/evolution-07-options.png" alt="evolution 7 options"></div>
       
 <br>      
-<p>
+<div class="sectionDefault left050">
 <span class="textEmphasis110">Text Elements:</span> 
-</p>
 
-<p>
+<div class="sectionDefault left050">
 Text elements are the Listbox, Menubox, Textbox, and TextEditor. 
 These four share a common set of characteristics. They each primarily 
 consist of a box to display text, a minimal frame around the box, 
@@ -239,74 +266,85 @@ will suffice for this use. Plus, I believe that the text color
 for this use should be tied to the text elements. 
 Therefore I introduce a new color "elm_txt". 
 This should always be paired to the text elements.
-</p>
-<p>
+</div>
+
+<div class="sectionDefault left050">
 The Text elements frames (borders) will use the Lokasenna defined color 
-"elm_frame". We will use that instead of introducing a new color. 
-</p>
-<p>
+"elm_frame". We will use that instead of introducing a new color.<br>
+2026-02-04: I introduced element frames using highlight and lowlight 
+colors as the default. 
+</div>
+
+<div class="sectionDefault left050">
 The Lokasenna text element classes use the color "elm_fill" 
 for highlighting the focused element. This may work well on a 
 monochrome theme, but I have found that for many themes it is imperceptible. 
 This color requires a high degree of contrast with the background to be noticable.
-Therefore I introduced a dedicated color "elm_active" to be used for this purpose. 
-</p>
-<p>
+Therefore I introduced a dedicated color "elm_active" to be used for this purpose.<br> 
+2026-02-04: I have yet to implement highlighting of focused elements. 
+Lokasenna GUI does have provisions for tabbing to elements, and dh_Toolkit 
+classes have at least some of the framework to allow this.
+</div>
+
+<div class="sectionDefault left050">
 I also introduced the color "sel_txt" which may be used as an 
 alternative to highlight selected text in the text elements. 
 The default "elm_fill" uses an alpha of 0.5 which gets added to 
 the text background to create the highlight. "sel_txt" can 
 provide more flexibility by having its own color and alpha.
-</p>
-<p>
+</div>
+
+<div class="sectionDefault left050">
 The Listbox and TextEditors have scrollbars. They consist of an 
 outline, a track, an a thumb. As a default they use "elm_outline" for 
 the outline, "elm_fill" for the track, and "elm_frame" for the thumb. 
 I also introduced two dedicated colors, "elm_track" and "elm_thumb" 
 for refining the scrollbar in case the defaults don't produce the 
-desired effect. 
-</p>
-<p>
-Now I had a decision to make. In the class files should I use 
-"elm_fill" and "elm_frame" as the defaults, or should 
-I use "elm_track" and "elm_thumb" as the defaults? I opted for 
-the latter. Since they are going to be defined in the theme anyway, 
-and if the former is fine, they can just be set to the same. 
-This is one extra step for the theme designer, but simplifies 
-things for the script developer.
-</p>
-<p>
-The following image shows two TextEditor elements. The left one 
-uses the Lokasenna defaults for the scrollbars. The right one uses "elm_thumb" 
-and "elm_track".
-</p>
+desired effect.<br>
+2026-02-04: Removed "elm_track" and "elm_thumb" colors. The default 
+for the scrollbar track is now btn_face, and the scrollbar thumb 
+and outline colors are auto calculated from the btn_face color. 
+</div>
 
+<div class="sectionDefault left050">
+The following image shows two TextEditor elements. The left one 
+uses the Lokasenna defaults for the scrollbars. The right one uses 
+the new method.
+</div>
+
+</div>
+
+<br>
 <div class="imgContainer"><img src="../images/evolution-08-txe.png" alt="text editors"></div>
 
-<p>
+<div class="sectionDefault left050">
 The next image shows the right TextEditor having focus. 
 Notice the outline has changed. The white outline on the black 
 background is noticable. But I find that in most every other 
 color combination the active outline is barely noticable. 
 A theme designer may have to experiment to find an appropriate 
 color to use.
-</p>
-
-<div class="imgContainer"><img src="../images/evolution-08a-txe.png" alt="text editor focused"></div>
-
-<p>
-This image shows the right TextEditor having some selected text. 
-</p>
-
-<div class="imgContainer"><img src="../images/evolution-08b-txe.png" alt="text editor selection"></div>
-
+</div>
 
 <br>
-<p>
-<span class="textEmphasis110">Menubar:</span> 
-</p>
+<div class="imgContainer"><img src="../images/evolution-08a-txe.png" alt="text editor focused"></div>
 
-<p>
+<div class="sectionDefault left050">
+This image shows the right TextEditor having some selected text. 
+</div>
+
+<br>
+<div class="imgContainer"><img src="../images/evolution-08b-txe.png" alt="text editor selection"></div>
+
+</div> <!-- end OPTIONS -->
+
+<!-- ###################### -->
+
+<br>
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Menubar:</span> 
+
+<div class="sectionDefault left050">
 The Menubar uses three colors. The background color (default "wnd_bg") 
 and text color (default "txt") can utilize any of the aforementioned 
 colors. When the cursor is over a menubar title the title becomes 
@@ -315,44 +353,50 @@ to produce the highlight. The default highlight color is "elm_fill"
 which works in most cases, although it is too bright sometimes. 
 I don't think a dedicated color is necessary here. Choosing a 
 different theme color should suffice.
-</p>
+</div>
 
-<p>
+</div>
+
+<div class="sectionDefault left050">
 <span class="textEmphasis110">Tabs:</span> 
-</p>
 
-<p>
+<div class="sectionDefault left050">
 Tabs utilize four colors: background, text, active tab, and inactive tab. 
 The background (space behind the tabs) uses "elm_bg" as its default. 
 The text color defaults to "txt". 
 The active tab will use the dedicated color "tab_active". 
 The inactive tab will use the dedicated color "tab_inactive". 
-While the defaults can be set to "wnd_bg" and "tab_bg", it is 
-very probable that the script developer will want to override these.
-</p>
+While the Lokasenna defaults of "wnd_bg" and "tab_bg" could work, 
+I opted for dedicated colors. The script developer can still  
+override these.
+</div>
 
-<p>
+</div>
+
+
+<div class="sectionDefault left050">
 <span class="textEmphasis110">Labels and Captions:</span> 
-</p>
 
-<p>
+<div class="sectionDefault left050">
 Some elements can have captions which are basically labels that 
-are part of the element. (Personally, I don't use captions. I 
-prefer the placement control of labels.) Their background should 
+are part of the element. Their background should 
 match the background where they are placed, and the text color 
 should be that normally used with that background.
-</p> 
+</div>
 
-<div class="subHeading">6.02.03 Gathering it all together:</div>
+</div>
+
+<!-- ###################### -->
+
+<br>
+<div class="subHeading">7.02.03 Gathering it all together:</div>
  
-<p>
+<div class="sectionDefault left050"> <!-- GATHER -->
+ 
 <span class="textEmphasis110"></span> 
 Here are the theme colors introduced above:
-
-</p>
     
-<!-- <div class="preCont left050 lineheight120 text110"> -->
-<div class="preCont">
+<div class="preCont left050 lineheight120 text110">
 <pre>
 -- Lokasenna defined:
 wnd_bg  
@@ -360,15 +404,17 @@ txt
 elm_bg  
 elm_fill  
 elm_frame
-elm_outline  
+elm_outline
+tab_bg  
 
 -- dh_Toolkit defined:
 btn_face
-btn_outline (use Lokasenna elm_outline?)
+btn_outline 
 btn_txt
+btn_face2
+btn_outline2 
+btn_txt2
 elm_active
-elm_thumb
-elm_track
 elm_txt
 panel_bg
 panel_border
@@ -380,14 +426,13 @@ track_fill
 </pre>
 </div>
 
-<p>
+<div class="sectionDefault">
 <span class="textEmphasis110"></span> 
 Here I identify almost four dozen element attributes 
 which need to be colored: 
+</div>
 
-</p>
-
-<div class="preCont">
+<div class="preCont left050 lineheight120 text110">
 <pre>
 window bg       
 window text
@@ -437,47 +482,53 @@ tab active
 tab inactive</pre>
 </div>
 
-<p>
+<div class="sectionDefault">
 This produces an unwieldy task for both the theme designer 
 and the script developer. Of course, many of these will share 
 a particular theme color.
-</p>
+</div>
              
-<div class="subHeading">6.02.04 Defining the color properties:</div>
+</div> <!-- end GATHER -->    
+         
+<!-- ###################### -->         
+             
+<br>             
+<div class="subHeading">7.02.04 Defining the color properties:</div>
     
-<p>
+<div class="sectionDefault left050"> <!-- DEFINE -->    
+    
+<div class="sectionDefault">
 The color properties are defined in the elements class files.
 Identify the various attributes of the elements which need to be colored.
 Give them a descriptive property name.
 Be consistent amongst elements. 
 Here is a non-exhaustive list:
-</p>
+</div>
 
-<div class="preCont">
+<div class="preCont left050 lineheight120 text110">        
 <pre>-----------------------------------------------------------------------------------------
-Class:     background  text       border       other
+Class:     background  text        border        other
 -----------------------------------------------------------------------------------------
 Label:     col_bg      col_text
-Button:    col_bg      col_text   col_outline  
-Panel:     col_bg      col_text   col_border
-Elements*: col_bg      col_text   col_frame    col_sel_text  
-Knob:      col_bg      col_text                col_body         col_head
-Slider:    col_bg      col_text                col_track        col_thumb       col_fill
-Options:   col_bg**    col_text   col_border   col_opt_outline  col_opt_fill
-Menubar:   col_bg      col_text                col_over
-Tabs:      col_bg      col_text                col_tab_active   col_tab_inactive
+Button:    col_bg      col_text    col_outline  
+Panel:     col_bg      col_text    col_border
+Elements*: col_bg      col_text    col_frame    col_sel_text  
+Knob:      col_bg      col_values               col_body         col_head
+Slider:    col_bg      col_values               col_track        col_thumb       col_fill
+Options:   col_bg      col_text    col_border   col_opt_outline  col_opt_fill
+Menubar:   col_bg      col_text                 col_over
+Tabs:      col_bg      col_text                 col_tab_active   col_tab_inactive
            
 *  Elements refer to text elements: Listbox, Menubox, Textbox, and TextEditor.
-** Can specify col_bg or col_field. 
 
 Scrollbar: col_track   col_thumb  col_sb_outline 
 (Scrollbar is used in Listbox and TextEditor.)
+(col_thumb and col_sb_outline now auto calculated.)
 
 Caption:   col_cap_bg   col_cap_text
 Captions are equivalent of a label attached to and as a part
 of an element. When used on text elements it requires different
 property names to distinguish from core properties.
-(Personally, I don't use captions. I prefer labels.)
   
 Focused:   col_active 
 Proposed as outline color for focused elements.
@@ -485,17 +536,24 @@ Needs great contrast against background.
 Currently only used with Menubox, Textbox, and TextEditor.
 -----------------------------------------------------------------------------------------</pre>        
 </div>
-        
-<div class="subHeading">6.02.05 Define the default colors for the properties:</div>
 
-<p>
+</div> <!-- end DEFINE -->   
+          
+<!-- ############################### -->       
+        
+<br>        
+<div class="subHeading">7.02.05 Define the default colors for the properties:</div>
+
+<div class="sectionDefault left050"> <!-- DEFINE 2 -->    
+
+<div class="sectionDefault">
 From this set assign a theme color to each color property as a default.
 Ideally, the defaults should display nicely. And it is probably
 a good practice for a script developer to stay with the defaults, 
 except where prescribed.
-</p>
-<!-- ############################### -->       
-<p> 
+</div>
+
+<div class="sectionDefault">
 <b>Let's use an example.</b> 
 Say a Panel has its color property "col_bg" default 
 to theme color "wnd_bg", When changing themes it will use that 
@@ -503,16 +561,16 @@ theme's "wnd_bg" color. Fine. A script developer can set the color
 property to use "panel_bg" instead. Changing themes will then
 use that theme's "panel_bg". 
 Either choice should transfer nicely when changing themes.
-</p>
+</div>
 
-<p> 
+<div class="sectionDefault">
 This chart shows where the theme colors are used as the 
 defaults for dh_Toolkit classes. They differ in some instances 
 from the defaults used in Lokasenna classes. See section 
-5.14 Classes-defaults for a side by side comparison.  
-</p>
+6.14 Classes-defaults for a side by side comparison.  
+</div>
 
-<div class="preCont">
+<div class="preCont left050 lineheight120 text110">
 <pre>----------------------------------------------------- 
 color         dh_Toolkit defaults    [class property]
 ----------------------------------------------------- 
@@ -522,10 +580,10 @@ color         dh_Toolkit defaults    [class property]
               options bg             [col_bg]              
               panel bg               [col_bg]
               tab active             [col_bg] 
-              *label bg              [col_bg]         
-              *caption bg            [col_cap_bg]           
-              *knob bg               [col_bg]          
-              *slider bg             [col_bg]
+              label bg *             [col_bg]         
+              caption bg *           [col_cap_bg]           
+              knob bg *              [col_bg]          
+              slider bg *            [col_bg]
                            
               * set these to match bg of where placed           
 
@@ -533,12 +591,12 @@ color         dh_Toolkit defaults    [class property]
               caption text           [col_cap_text]       
               knob pointer and
                  highlighted text    [col_head]          
-              knob values            [col_text]
+              knob values            [col_values]
               option button outline  [col_opt_outline]
               option button fill     [col_opt_fill] 
               options text           [col_text] 
               panel text             [col_text] 
-              slider values          [col_text]
+              slider values          [col_values]
               tabs text              [col_text]
  
  elm_bg       text elements bg       [col_bg]          
@@ -549,20 +607,11 @@ color         dh_Toolkit defaults    [class property]
               (listbox, textbox, texteditor)
               
               menubar mouseover highlight   [col_over] 
-              scrollbar track        [col_track] **
-              slider track fill      [col_track] ***
  
- elm_frame    options frame          [col_border]
-              panel border           [col_border] 
-              scrollbar thumb        [col_thumb] **            
-              text elements frame    [col_frame]       
+ elm_frame    text elements frame    [col_frame]
+              slider track outline   [col_track_outline]       
  
- elm_outline **** 
-              button outline         [col_outline] 
-              knob outline           [col_outline]
-              scrollbar outline      [col_sb_outline]
-              slider thumb outline   [col_outline]
-              slider track outline   [col_outline]
+ elm_outline  
  
  --dh_Toolkit defined colors:
  
@@ -571,13 +620,13 @@ color         dh_Toolkit defaults    [class property]
               menubar bg             [col_bg]
               menubox face           [col_face]
               slider thumb           [col_thumb]
+              scrollbar track        [col_track] 
 
- btn_outline ****
+ btn_outline 
               button outline         [col_outline] 
               knob outline           [col_outline] 
               scrollbar outline      [col_sb_outline]
               slider thumb outline   [col_outline]
-              slider track outline   [col_outline]
  
  btn_txt      button text            [col_text]
               menubar text           [col_text]
@@ -587,55 +636,40 @@ color         dh_Toolkit defaults    [class property]
  
  elm_txt      text elements text     [col_text]
  
- elm_thumb    alternate for scrollbar thumb    [col_thumb]        
- 
- elm_track    alternate for scrollbar track    [col_track]       
- 
  panel_bg     alternate for panel background   [col_bg] 
               alternate for options background [col_bg]
  
- panel_border alternate for panel border       [col_border]   
-              alternate for options border     [col_border]
+ panel_border options border         [col_border]
+              panel border           [col_border]   
               
  panel_txt    alternate for panel text         [col_text]           
  
  sel_txt      alternate for selected text      [col_sel_text]
  
- tab_active   alternate for active tab         [col_tab_active]
+ tab_active   active tab                       [col_tab_active]
  
  tab_inactive inactive tab                     [col_tab_inactive]
  
- track_fill   alternate for slider track fill  [col_fill]
- 
- **   Opting to use "elm_fill" and "elm_frame" as defaults 
-      instead of optional "elm_thumb" and "elm_face" for now.
-      This may change after testing. 
-      
- ***  Opting to use "elm_fill" and "elm_frame" as defaults  
-      
- **** Using "elm_outline" as default. Can use "btn_outline" 
-      as an alternate. This may be useful if needing a different 
-      outline when used on panel_bg.  
-
+ track_fill   slider track fill                [col_fill]
+       
 ----------------------------------------------------- </pre> 
 </div> 
 
-<div class="subHeading">6.02.06 Final thoughts:</div>
+</div> <!-- end DEFINE 2 -->   
 
-<p>
+<br>
+<div class="subHeading">7.02.06 Final thoughts:</div>
+
+<div class="sectionDefault left050">
 Will there be issues when placing an element on "panel_bg" 
 as opposed to "wnd_bg"? Possibly. Elements using "btn_face", 
 "btn_outline", and possibly "track_fill" may appear different 
 depending on the background where they are placed. Do I introduce 
 "btn_face2", "btn_outline2", and "btn_txt2" to accommodate 
-this possibility? That may be over-kill. I think using a 
-combination of existing colors is a more efficient remedy. 
-As of this writing I have opted to use "elm_outline" as the default 
-for these attributes. A script developer can still use "btn_outline" 
-as an alternate. This may be useful if needing a different 
-outline when used on panel_bg.  
-</p>
-    <br><br>
+this possibility? 
+</div>
+
+    <br><br><br>
     </div>  <!-- end pageBody -->
   </body>
 

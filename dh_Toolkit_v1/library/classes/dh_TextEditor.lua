@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_TextEditor.lua
--- Date: 20250908
+-- Date: 20260330
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - TextEditor class
@@ -21,8 +21,8 @@
        If "sel_txt" color is specified it will use the "sel_txt" alpha and color. 
        Otherwise it will use the specified color with a default alpha of 0.5.
        
-     Note: Caption is optional. If used it will use the colors in properties "col_cap_bg" and "col_cap_text"
-
+     20260223: Replace element frame with highlighted drawn.
+               Added properties for frame modification.
 
 ]]--
 ---------------------------------------------------------------------
@@ -49,48 +49,61 @@ function GUI.dh_TextEditor:new(name, z, x, y, w, h, text, caption, pad)
 
 	txt.x = txt.x or x
     txt.y = txt.y or y
-    txt.w = txt.w or w
-    txt.h = txt.h or h
+    txt.w = txt.w or w or GUI.dh_TextEditor.defaults.w
+    txt.h = txt.h or h or GUI.dh_TextEditor.defaults.h
 
 	txt.retval = txt.retval or text or {}
 
-	txt.caption = txt.caption or caption or ""
-	txt.pad = txt.pad or pad or 4
+	txt.caption = txt.caption or caption or GUI.dh_TextEditor.defaults.caption
 
-    if txt.shadow == nil then
-        txt.shadow = true
-    end
+	txt.font_caption = txt.font_caption or GUI.dh_TextEditor.defaults.font_caption
+	txt.cap_pos = txt.cap_pos or GUI.dh_TextEditor.defaults.cap_pos
+	txt.cap_pad_x = txt.cap_pad_x or GUI.dh_TextEditor.defaults.cap_pad_x
+	txt.cap_pad_y = txt.cap_pad_y or GUI.dh_TextEditor.defaults.cap_pad_y
+	txt.cap_centered = txt.cap_centered or GUI.dh_TextEditor.defaults.cap_centered
+	
+	-- Forcing a safe monospace font to make our lives easier
+	txt.font_text = txt.font_text or GUI.dh_TextEditor.defaults.font_text
+	txt.pad = txt.pad or pad or GUI.dh_TextEditor.defaults.pad		
+    
+    txt.shadow = txt.shadow or GUI.dh_TextEditor.defaults.shadow
+    txt.shadow_caption = txt.shadow_caption or GUI.dh_TextEditor.defaults.shadow_caption
+
+    txt.frame_use_outline = txt.frame_use_outline or GUI.dh_TextEditor.defaults.frame_use_outline
+    txt.frame_thk = txt.frame_thk or GUI.dh_TextEditor.defaults.frame_thk
+        	
+    -- Experimental:
+    txt.outline_thk = txt.outline_thk or 2
+    	
+    if txt.allow_sel_outline == nil then 
+        txt.allow_sel_outline = GUI.dh_TextEditor.defaults.allow_sel_outline  
+    end    
 
 ----colors--------------------------- 
     -- Caption
-    txt.col_cap_bg = txt.col_cap_bg or "wnd_bg"
-    txt.col_cap_text = txt.col_cap_text or "txt"
+    txt.col_cap_text = txt.col_cap_text or GUI.dh_TextEditor.defaults.col_cap_text
     
     -- Box
-    txt.col_frame = txt.col_frame or "elm_frame" 
-    txt.col_bg = txt.col_bg or "elm_bg"
-    txt.col_text = txt.col_text or "elm_txt"  --"txt"
-	txt.col_sel_text = txt.col_sel_text or "sel_txt"  --"elm_fill"
-    txt.col_active = txt.col_active or "elm_active"  --"elm_fill"
+    txt.col_bg = txt.col_bg or GUI.dh_TextEditor.defaults.col_bg    
+    txt.col_frame = txt.col_frame or GUI.dh_TextEditor.defaults.col_frame 
+    txt.col_text = txt.col_text or GUI.dh_TextEditor.defaults.col_text
+	txt.col_sel_text = txt.col_sel_text or GUI.dh_TextEditor.defaults.col_sel_text
     
     -- Scrollbar
-	txt.col_track = txt.col_track or "elm_track"  --"elm_fill"
-	txt.col_thumb = txt.col_thumb or "elm_thumb"  --"elm_frame" 
-	txt.col_sb_outline = txt.col_sb_outline or "elm_outline"
--------------------------------------
---zzz
-    -- If true uses sel_alpha to override sel_txt alpha.
-    txt.use_sel_alpha = txt.use_sel_alpha or false
-    -- Use negative value to darken.
-    txt.sel_alpha = txt.sel_alpha or 0.5
-    
-	txt.font_caption = txt.font_caption or "sans20"
+	txt.col_track = txt.col_track or GUI.dh_TextEditor.defaults.col_track
+	--txt.col_thumb = txt.col_thumb or GUI.dh_TextEditor.defaults.
+	--txt.col_sb_outline = txt.col_sb_outline or GUI.dh_TextEditor.defaults.
 
-	-- Forcing a safe monospace font to make our lives easier
-	txt.font_text = txt.font_text or "mono16" or "monospace"
-	
-    txt.line_height = txt.line_height or 1.25
-    txt.scrollbar_width = txt.scrollbar_width or 8	
+    txt.col_active = txt.col_active or GUI.dh_TextEditor.defaults.col_active	
+    txt.col_backdrop = txt.col_backdrop or GUI.dh_TextEditor.defaults.col_backdrop		
+-------------------------------------
+
+    -- Use negative value to darken.
+    txt.sel_alpha = txt.sel_alpha or GUI.dh_TextEditor.defaults.sel_alpha
+    
+    txt.line_height = txt.line_height or GUI.dh_TextEditor.defaults.line_height
+    txt.scrollbar_width = txt.scrollbar_width or GUI.dh_TextEditor.defaults.scrollbar_width	
+    if txt.scrollbar_width < 8 then txt.scrollbar_width = 8 end
 
 	txt.wnd_pos = {x = 0, y = 1}
 	txt.caret = {x = 0, y = 1}
@@ -113,6 +126,41 @@ function GUI.dh_TextEditor:new(name, z, x, y, w, h, text, caption, pad)
 
 end
 
+GUI.dh_TextEditor.defaults = {
+    w = 256,
+    h = 192,
+    retval = "",
+    font_text = "mono16",
+    pad = 4,
+    line_height = 1.20,    
+    undo_limit = 20,
+    scrollbar_width = 8,    
+    
+	caption = "",
+	font_caption = "sans22",
+	cap_pos = "top",
+    cap_pad_x = 4,
+    cap_pad_y = 4,
+	cap_centered = false,    
+	shadow_caption = false,
+    shadow = false,
+    
+    frame_use_outline = false,
+    frame_thk = 2,    
+    allow_sel_outline = true,
+    
+    col_bg = "elm_bg",
+    col_frame = "elm_frame",
+    col_track = "btn_face",     
+	col_text = "elm_txt",        	
+	col_sel_text = "sel_txt",	
+    sel_alpha = 0.5,	    	    
+    col_cap_text = "txt",	      
+    col_active = "elm_active",
+    col_backdrop = "wnd_bg", 
+
+}
+
 
 function GUI.dh_TextEditor:init()
 
@@ -120,23 +168,60 @@ function GUI.dh_TextEditor:init()
 	if type(self.retval) == "string" then self:val(self.retval) end
 
 	local x, y, w, h = self.x, self.y, self.w, self.h
+	
+	local sd = self.shadow and GUI.shadow_dist or 0
 
-	self.buff = GUI.GetBuffer()
+	self.buff = self.buff or GUI.GetBuffer()
 
 	gfx.dest = self.buff
 	gfx.setimgdim(self.buff, -1, -1)
-	gfx.setimgdim(self.buff, 2*w, h)
+    gfx.setimgdim(self.buff, w + sd, h + sd)
 
-	GUI.color(self.col_bg)
-	gfx.rect(0, 0, 2*w, h, 1)
+    -- Draw shadow.
+    
+    if self.shadow then
+        GUI.color(GUI.colors["shadow"])
+        gfx.rect(1, 1, w + sd - 1, h + sd - 1, 1)        
+    end
 
-	GUI.color(self.col_frame)
-	gfx.rect(0, 0, w, h, 0)
-
-	GUI.color(self.col_active)
-	gfx.rect(w, 0, w, h, 0)
-	gfx.rect(w + 1, 1, w - 2, h - 2, 0)
-
+    -- Draw frame.
+    
+    local frm_thk = tonumber(self.frame_thk)
+     
+    if ((GUI.colors["metadata"]) 
+       and (GUI.colors["metadata"][4] == 0)) 
+       or self.frame_use_outline   
+    then  
+    
+        -- # use OUTLINE and outline color.
+        
+        GUI.color(self.col_frame)
+        gfx.rect(0, 0, w, h, 1)
+       
+    else    
+       
+        local ll_color, hl_color = DHTK.get_hilite_colors(self.col_backdrop)
+    
+        ---- # HIGHLIGHT bottom and right of track ----
+        GUI.color(hl_color)
+        gfx.rect(0, 0, w, h, 1)
+    
+        ---- # LOWLIGHT top and left of track ----
+        GUI.color(ll_color)
+        gfx.rect(0, 0, w - frm_thk, h - frm_thk, 1)
+        
+    end 
+    
+    -- Draw box.
+    
+    GUI.color(self.col_bg)
+    gfx.rect(frm_thk, frm_thk, w - (2 * frm_thk), h - (2 * frm_thk), 1)    	
+    
+    -- Make sure we calculate this ASAP to avoid errors with
+    -- dynamically-generated textboxes
+    -- Do it here if window already open. 
+    -- Otherwise do it in draw if not already set.
+    if gfx.w > 0 then self:wnd_recalc() end
 
 end
 
@@ -153,95 +238,127 @@ end
 
 function GUI.dh_TextEditor:draw()
 
+    local x, y, w, h = self.x, self.y, self.w, self.h
+    
+    local sd = self.shadow and GUI.shadow_dist or 0
+
 	-- Some values can't be set in :init() because the window isn't
 	-- open yet - measurements won't work.
 	if not self.wnd_h then self:wnd_recalc() end
 
-	-- Draw the caption
+	-- Draw the caption.
 	if self.caption and self.caption ~= "" then self:drawcaption() end
 
-	-- Draw the background + frame
-	gfx.blit(self.buff, 1, 0, (self.focus and self.w or 0), 0,
-            self.w, self.h, self.x, self.y)
+	-- Blit the background and frame.
+	gfx.blit(self.buff, 1, 0, 0, 0, w + sd, h + sd, x, y)
 
-	-- Draw the text
+	-- Draw the text.
 	self:drawtext()
 
-	-- Caret
-	-- Only needs to be drawn for half of the blink cycle
+	-- Focused?
+	
 	if self.focus then
-       --[[
-        --Draw line highlight a la NP++ ??
-        GUI.color("elm_bg")
-        gfx.a = 0.2
-        gfx.mode = 1
-
-
-        gfx.mode = 0
-        gfx.a = 1
-       ]]--
 
         -- Selection
         if self.sel_s and self.sel_e then
-
             self:drawselection()
-
         end
-
+        
+	    -- Caret
+	    -- Only needs to be drawn for half of the blink cycle
+	    
         if self.show_caret then self:drawcaret() end
-
+        
+        if self.allow_sel_outline then
+	        GUI.color(self.col_active)
+    	    --gfx.rect(x - 1, y - 1, w + 2, h + 2, 0)
+    	    gfx.rect(x - 2, y - 2, w + 4, h + 4, 0)
+    		-- Thicken highlight.
+    		if self.outline_thk > 1 then
+    	        gfx.rect(x - 2, y - 2, w + 4, h + 4, 0)
+    	    end
+        end
+        
     end
-
 
 	-- Scrollbars
 	self:drawscrollbars()
 
 end
 
-
+--zzcap
 function GUI.dh_TextEditor:drawcaption()
 
-	local str = self.caption
+    local caption = self.caption
 
-	GUI.font(self.font_caption)
-	local str_w, str_h = gfx.measurestr(str)
-	gfx.x = self.x - str_w - self.pad
-	gfx.y = self.y + self.pad
-	GUI.text_bg(str, self.col_cap_bg)
+    GUI.font(self.font_caption)
 
-	if self.shadow then
-		GUI.shadow(str, self.col_cap_text, "shadow")
-	else
-		GUI.color(self.col_cap_text)
-		gfx.drawstr(str)
-	end
+    local str_w, str_h = gfx.measurestr(caption)
+
+    if self.cap_pos == "left" then
+    
+        gfx.x = self.x - str_w - self.cap_pad_x
+        if self.cap_centered then
+            gfx.y = self.y + (self.h - str_h) / 2
+        else
+            gfx.y = self.y + self.cap_pad_y
+        end
+        
+    elseif self.cap_pos == "top" then
+    
+        if self.cap_centered then
+            gfx.x = self.x + (self.w - str_w) / 2
+        else
+            gfx.x = self.x + self.cap_pad_x 
+        end      
+        gfx.y = self.y - str_h - self.cap_pad_y
+        
+    elseif self.cap_pos == "right" then
+    
+        gfx.x = self.x + self.w + self.cap_pad_x
+        if self.cap_centered then
+            gfx.y = self.y + (self.h - str_h) / 2
+        else
+            gfx.y = self.y + self.cap_pad_y
+        end
+        
+    elseif self.cap_pos == "bottom" then
+    
+        if self.cap_centered then
+            gfx.x = self.x + (self.w - str_w) / 2
+        else
+            gfx.x = self.x + self.cap_pad_x 
+        end               
+        gfx.y = self.y + self.h + self.cap_pad_y
+        
+    end
+
+    --GUI.text_bg(str, self.col_backdrop)
+    
+    GUI.color(self.col_backdrop)        
+    gfx.rect(gfx.x, gfx.y, str_w, str_h, 1)
+
+    if self.shadow_caption then
+        GUI.shadow(caption, self.col_cap_text, "shadow")
+    else
+        GUI.color(self.col_cap_text)
+        gfx.drawstr(caption)
+    end
 
 end
 
 
 function GUI.dh_TextEditor:drawtext()
 
+    --GUI.Msg("\n## GUI.dh_TextEditor:drawtext: ")
+
 	GUI.color(self.col_text)
+	--GUI.color("white")	
 	GUI.font(self.font_text)
 
-    --[=[
-    --]=]
-	local tmp = {}
-	for i = self.wnd_pos.y, math.min(self:wnd_bottom() - 1, #self.retval) do
-
-		local str = tostring(self.retval[i]) or ""
-		tmp[#tmp + 1] = string.sub(str, self.wnd_pos.x + 1, self:wnd_right() - 1)
-
-	end
-
-	gfx.x, gfx.y = self.x + self.pad, self.y + self.pad
-	gfx.drawstr( table.concat(tmp, "\n") )
-	
-    --[=[
-	    	
-	-- wnd_h is how many lines can fit vertically.
-	-- wnd_y is index of top item.
-	-- wnd_ bottom is index of bottom item.
+	-- self.wnd_h is how many lines can fit vertically.
+	-- self.wnd_pos.y is index of top item.
+	-- self.wnd_bottom is index of bottom item.
 	
     local str_w, str_h = gfx.measurestr("M")
    	str_h = str_h * self.line_height
@@ -250,24 +367,39 @@ function GUI.dh_TextEditor:drawtext()
     local r = self.w - self.pad
     local b = self.h - self.pad
 
-	for i = self.wnd_y, math.min(self:wnd_bottom() - 1, #self.txt) do
+    --GUI.Msg("   self.wnd_pos.y : " .. tostring(self.wnd_pos.y) )    
+    --GUI.Msg("   #self.retval : " .. tostring(#self.retval) )
+    --GUI.Msg("   self:wnd_bottom : " .. tostring(self:wnd_bottom()) )    
+
+	for i = self.wnd_pos.y, math.min(self:wnd_bottom() - 1, #self.retval) do		
        	gfx.x = str_x
 	    gfx.y = str_y
-	    --gfx.drawstr(str, 0, r, b)
-	    gfx.drawstr(self.txt[i])
+
+	    --GUI.Msg("   type of self.retval[i] : " .. type(self.retval[i]))
+	    --GUI.Msg("   self.retval[i] : " .. self.retval[i])	    
+	    --GUI.Msg("   str_x : " .. tostring(str_x))    	    
+	    --GUI.Msg("   str_y : " .. tostring(str_y))
+
+	    local str = string.sub(self.retval[i], self.wnd_pos.x + 1, self:wnd_right() - 1)
+
+	    gfx.drawstr(str)
+	    --gfx.drawstr(self.retval[i], 0, r, b)
+	    --gfx.drawstr(self.retval[i], 0, r)	    	    
 	    str_y = str_y + str_h
 	end
-	--]=]
+
 end
 
-
+--zzcaret
 function GUI.dh_TextEditor:drawcaret()
 
 	local caret_wnd = self:adjusttowindow(self.caret)
 
 	if caret_wnd.x and caret_wnd.y then
 
-		GUI.color("txt")
+        --GUI.Msg("        in if\n")
+
+        GUI.color(self.col_text)
 
 		gfx.rect(	self.x + self.pad + (caret_wnd.x * self.char_w),
 					self.y + self.pad + (caret_wnd.y * self.char_h),
@@ -283,30 +415,38 @@ function GUI.dh_TextEditor:drawselection()
 
 	local off_x, off_y = self.x + self.pad, self.y + self.pad
 	local x, y, w, h
-	
-	-- If color is "sel_txt" will use sel_txt alpha or override.
-	-- If color not "sel_txt" will use sel_alpha.
-	
-    GUI.color(self.col_sel_text)
+
+    --if sel_txt use its alpha else use sel_alpha
+    -- To darken need a negative alpha.
+    -- sel_text alpha always positive, sel_alpha can be set negative.
     
-    if self.col_sel_text == "sel_txt" and self.use_sel_alpha == false then
-        --GUI.Msg("self.use_sel_txt alpha")
-        gfx.a = GUI.colors.sel_txt[4]
+    local alpha
+
+    if self.col_sel_text == "sel_txt" then
+        alpha = GUI.colors.sel_txt[4]
+        if self.sel_alpha <= 0 then
+            alpha = -alpha
+        end
     else
-        -- Probably don't want to use color other than sel_txt, but just in case.
-        --GUI.Msg("self.use_sel_alpha")
-        gfx.a = self.sel_alpha -- default 0.5 
+        alpha = self.sel_alpha 
     end
     
---[[    
-	-- GUI.colors["sel_txt"] will have its alpha set.
-	if self.col_sel_text == "sel_txt" then
-	    GUI.color("sel_txt")
-	else
-	    GUI.color(self.col_sel_text)
-	    gfx.a = 0.5                 
-	end  
---]]
+    --GUI.Msg("    lbx col_sel_text : " .. self.col_sel_text)
+    --GUI.Msg("    self.sel_alpha : " .. tostring(self.sel_alpha))        
+    --GUI.Msg("    alpha : " .. tostring(alpha))
+    
+    if self.sel_alpha < 0 then
+        -- Invert color.
+        local r,g,b,a = table.unpack(GUI.colors[self.col_sel_text])
+        r = 1 - r
+        g = 1 - g
+        b = 1 - b
+    
+        gfx.set(r,g,b,alpha)
+    
+    else
+        GUI.color(self.col_sel_text)
+    end    
 	
 	gfx.mode = 1 -- additive
 
@@ -376,7 +516,8 @@ function GUI.dh_TextEditor:drawscrollbars()
 	if not (vert or horz) then goto tracks end
 
 	-- Draw a gradient to fade out the last ~16px of text
-	GUI.color("elm_bg")
+	--GUI.color("elm_bg")
+	GUI.color(self.col_bg)	
 	for i = 0, fade_w do
 
 		gfx.a = i/fade_w
@@ -409,19 +550,27 @@ function GUI.dh_TextEditor:drawscrollbars()
     ::tracks::
 
 	-- Draw scrollbar track
-	--GUI.color("tab_bg")
+	
 	GUI.color(self.col_track)
+
 	GUI.roundrect(vx, vy, vw, vh, 4, 1, 1)
 	GUI.roundrect(hx, hy, hw, hh, 4, 1, 1)
-	--GUI.color("elm_outline")
-	GUI.color(self.col_sb_outline)	
-	GUI.roundrect(vx, vy, vw, vh, 4, 1, 0)
-	GUI.roundrect(hx, hy, hw, hh, 4, 1, 0)
-
 
 	-- Draw scrollbar thumb
-	
-	GUI.color(self.col_thumb)
+
+    local ll_col, hl_col, lum = DHTK.get_hilite_colors(self.col_track, true)
+        
+    local thumb_color
+    
+    if lum > 0.5 then 
+        -- darken 
+        thumb_color = ll_col
+    else
+        -- lighten 
+        thumb_color = hl_col
+    end     
+    
+    GUI.color(thumb_color)
 
     local sr = (vw - 4) / 2
     
@@ -442,16 +591,31 @@ function GUI.dh_TextEditor:drawscrollbars()
 		--GUI.roundrect(fx, hy + 2, fw, hh - 4, 2, 1, 1)
 		GUI.roundrect(fx, hy + 2, fw, hh - 4, sr, 1, 1)
 	end
+	
+	-- Draw scrollbar outline
+	
+	--GUI.color(self.col_sb_outline)
+		
+	GUI.roundrect(vx, vy, vw, vh, 4, 1, 0)
+	GUI.roundrect(hx, hy, hw, hh, 4, 1, 0)	
 
 end
 
-
+--zzval
 function GUI.dh_TextEditor:val(newval)
+
+    --GUI.Msg("\n# GUI.dh_TextEditor:val newval type is : " .. type(newval))
+    --GUI.Msg("# GUI.dh_TextEditor:val newval size is : " .. tostring(#newval))    
 
 	if newval then
 		self:seteditorstate(
             type(newval) == "table" and newval
                                     or self:stringtotable(newval))
+                                    
+        --GUI.Msg("\n# GUI.dh_TextEditor:val :ready to redraw")
+        --GUI.Msg("   GUI.dh_TextEditor:val retval type is : " .. type(self.retval))
+        --GUI.Msg("   GUI.dh_TextEditor:val retval size is : " .. tostring(#self.retval))
+        
 		self:redraw()
 	else
 		return table.concat(self.retval, "\n")
@@ -481,6 +645,9 @@ end
 function GUI.dh_TextEditor:lostfocus()
 
 	self:redraw()
+    --if self.allow_sel_outline then
+    --    self:redraw()
+    --end	
 
 end
 
@@ -499,6 +666,8 @@ function GUI.dh_TextEditor:onmousedown()
         self:setscrollbar(scroll)
 
     else
+    
+        --GUI.Msg("\n# GUI.dh_TextEditor:onmousedown : go get caret")
 
         -- Place the caret
         self.caret = self:getcaret(GUI.mouse.x, GUI.mouse.y)
@@ -727,6 +896,8 @@ function GUI.dh_TextEditor:getselection()
 
 
 	end
+	
+	--GUI.Msg("> getselection ey : " .. tostring(ey))
 
 	return sel_coords
 
@@ -870,7 +1041,8 @@ function GUI.dh_TextEditor:wnd_recalc()
 
 	GUI.font(self.font_text)
 	self.char_w, self.char_h = gfx.measurestr("i")
-	self.wnd_h = math.floor((self.h - 2*self.pad) / self.char_h)
+	self.char_h = self.char_h * self.line_height
+	self.wnd_h = math.floor((self.h - 2 * self.pad) / self.char_h)
 	self.wnd_w = math.floor(self.w / self.char_w)
 
 end
@@ -915,11 +1087,12 @@ function GUI.dh_TextEditor:getwndlength()
 
 end
 
-
 -- See if a given pair of coords is in the visible window
 -- If so, adjust them from absolute to window-relative
 -- If not, returns nil
 function GUI.dh_TextEditor:adjusttowindow(coords)
+
+    --GUI.Msg("> dh_TextEditor:adjusttowindow\n")
 
 	local x, y = coords.x, coords.y
 	x = (GUI.clamp(self.wnd_pos.x, x, self:wnd_right() - 3) == x)
@@ -933,7 +1106,11 @@ function GUI.dh_TextEditor:adjusttowindow(coords)
 	y = (GUI.clamp(self.wnd_pos.y, y, self:wnd_bottom() - 1) == y)
 						and y - self.wnd_pos.y
 						or nil
-
+						
+	--y = (GUI.clamp(self.wnd_pos.y, y, self:wnd_bottom()) == y)
+	--					and y - self.wnd_pos.y
+	--					or nil
+						
 	return {x = x, y = y}
 
 end
@@ -959,20 +1136,29 @@ function GUI.dh_TextEditor:windowtocaret()
 
 end
 
-
+--zzcaret  
 -- TextEditor - Get the closest character position to the given coords.
+-- x, y is mouse.x, mouse.y
+
 function GUI.dh_TextEditor:getcaret(x, y)
 
 	local tmp = {}
-
+	    
+    --GUI.Msg("\n# GUI.dh_TextEditor:getcaret")
+    
 	tmp.x = math.floor(		((x - self.x) / self.w ) * self.wnd_w)
                             + self.wnd_pos.x
-	tmp.y = math.floor(		(y - (self.y + self.pad))
-						/	self.char_h)
-			+ self.wnd_pos.y
-
+	--tmp.y = math.floor(		(y - (self.y + self.pad))
+	--					/	self.char_h)
+	--		+ self.wnd_pos.y
+	
+	--tmp.y = math.floor(	( y - (self.y + self.pad)) / (self.char_h * self.line_height) + self.wnd_pos.y)
+	tmp.y = math.floor(	(( y - (self.y + self.pad)) / self.char_h) + self.wnd_pos.y)	
+	
 	tmp.y = GUI.clamp(1, tmp.y, #self.retval)
 	tmp.x = GUI.clamp(0, tmp.x, #(self.retval[tmp.y] or ""))
+	
+	--GUI.Msg("   caret y is : " .. tostring(tmp.y))
 
 	return tmp
 
@@ -1034,9 +1220,11 @@ end
 ------------------------------------
 -------- Char/String Helpers -------
 ------------------------------------
-
+--zzval
 -- Split a string by line into a table
 function GUI.dh_TextEditor:stringtotable(str)
+
+    --GUI.Msg("  --  stringtotable  --")
 
     str = self:sanitizetext(str)
 	local pattern = "([^\r\n]*)\r?\n?"
@@ -1458,9 +1646,12 @@ function GUI.dh_TextEditor:geteditorstate()
 
 end
 
-
+--zzval
 function GUI.dh_TextEditor:seteditorstate(retval, caret, wnd_pos, sel_s, sel_e)
 
+    --GUI.Msg("\n# GUI.dh_TextEditor:seteditorstate retval type is : " .. type(retval))
+    --GUI.Msg("# GUI.dh_TextEditor:seteditorstate retval size is : " .. tostring(#retval)) 
+    
     self.retval = retval or {""}
     self.wnd_pos = wnd_pos or {x = 0, y = 1}
 	self.caret = caret or {x = 0, y = 1}

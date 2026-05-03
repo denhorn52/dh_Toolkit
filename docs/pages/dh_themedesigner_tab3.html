@@ -25,90 +25,121 @@
     
 <div class="heading">3.03 The dh_Toolkit tab:</div> 
 
-<p>
-This tab displays the various dh_Toolkit defined elements (including the main top tab bar).
-</p>
+<div class="sectionDefault left050"> <!-- section # 1 -->
 
+<div class="sectionDefault text110"> 
+This tab displays the various dh_Toolkit defined elements (including the main top tab bar).
+</div>
+
+<br>
 <div class="imgContainer"><img src="../images/tab3-only.png" alt="Tab 3 dh Toolkit"></div>
               
 <div class="subHeading">The menubar:</div>   
                    
-<p>               
+<div class="sectionDefault left050"> 
+<p>
 The menubar menus allow changing some of the property values 
-of the displayed elements. The first option shown in each menu item 
-is the default value. The remaining options are used to override the default.
-Although this allows auditioning various colors, one should try to 
+of the displayed elements. The first option shown in each menu item is the 
+default value. The remaining options are used to override the default.
+Although this allows auditioning various colors, one should try to always  
 stay with the defaults or recommended alternates. 
 (Except, of course, where prescribed such as panel colors.) 
-<br> 
+</p>
+<p>
 An example: 
-Button -> Face color shows four options. <br>
-The button face uses the default theme color "btn_face". 
-If a color other than the default works better than the default, 
-then the default "btn_face" theme color should be painted to that other color. 
-Not absolutely essential, but recommended in case possibly sharing a theme. 
-Of course, if designing a user theme for one's own then anything one decides is good.
+Button -> Face color shows several options. <br>
+The button face uses the default theme color "btn_face".
+There may be instances where a different value works better, such as when 
+placing on a panel. <br>
+As of 03-15-2026 themes include two additional colors: 
+'aux_bg and 'aux_text'. 
+This is somewhat experimental, but keeping for now. I included them 
+in case it may be needed in some scenario.
 </p>
+
+</div>
         
-<div class="subHeading">The "dh_Toolkit properties" radio box:</div>        
-<p>               
-Select "default" to display the default properties.
-Select "overrides" to display the overridden properties. 
-Note: The background and text colors of labels, knob, and slider which are placed 
-on the Lokasenna frame will use the default colors when in default mode, but 
-will automatically be set to use the frame's background and text override colors. 
-That is why there isn't a provision to set them independently. 
-When in "default" mode the menubar selections will update the 
-element properties in the background, but they won't be shown until "overrides" is selected.
-</p>
-          
-<div class="subHeading">The "dh_Tabs colors" radio box:</div>        
-<p>               
+<div class="subHeading">The "Panel Background" radio box:</div>        
+
+<div class="sectionDefault left050">
+Elements are placed on either the script window which uses 
+the GUI color "wnd_bg", or on a panel hence GUI color "panel_bg".
+This radio box allows for quick switching to see how the 
+elements appear on the different backgrounds. 
+</div>
+
+<div class="subHeading">The "Use Outlines" checkbox:</div>        
+
+<div class="sectionDefault left050">
+Use this checkbox to specify the type of outlines to use. 
+ 
+The text elements, knob and slider display boxes, and slider 
+track normally use a highlight/lowlight frame derived from the 
+background color. Alternately, the frames can use a single color 
+outline specified the theme's 'elm_frame' color. 
+
+Check the box to use the latter. (Themes have 
+a false color 'metadata' which is used to specify that the GUI 
+is to always use the single color option.) 
+</div>          
+<!-- <div class="subHeading">The "dh_Tabs colors" radio box:</div>        
+
+<div class="sectionDefault left050"> 
 Select "default" to display the default tab colors (main tab bar).
 Select "overrides" to display the overridden tab colors. 
-This is kept separate because the main tab bar is, obviouly, 
+This is kept separate because the main tab bar is, obviously, 
 not part of the tab content.
-</p>
+</div> -->
           
-<div class="subHeading">sel_alpha slider:</div>                
-<p>               
-This is the only control in the Tabbed section that has any effect on the GUI colors. 
-It is used to adjust the alpha value of the "sel_txt" (selected text) color. 
-This color is optional, but can be used to enhance the highlight 
-of selected text in dh_Listbox, dh_Textbox, and dh_TextEditor. 
-This color gets added to the existing background color of the text to produce the highlight. 
-Therefore it should be a darker color with an alpha value somewhere between 0.3 and 0.8. 
-When the "Selected text" (GUI.colors["sel_txt"]) is selected then use the slider to select an alpha value. 
-Click on the label "sel_alpha" to set the alpha. 
-Note: The default for highlight is "elm_fill". 
-If the default is used then the default alpha of 0.5 will be used.
-</p>
+<div class="subHeading">sel_alpha slider:</div>   
+             
+<div class="sectionDefault left050"> 
+This is the only control in the Tabbed section (as opposed to 
+the Tools section) that has any effect on the GUI colors. 
+It is used to adjust the alpha value of the "sel_txt" 
+(selected text color used by dh_Listbox, dh_Textbox, and dh_TextEditor). 
+I introduced this color to give more control how the highlighted 
+text is displayed. Although it is probably best to try to get the 
+desired result by first adjusing the colors, then setting the 
+alpha as a last resort. A more detailed explanation can be found 
+in section "3.04 Colors Tab".
+</div>
     
 <div class="subHeading">The Show menu:</div>
+
+<div class="sectionDefault left050"> 
+
 <p>
-<span class="textEmphasis">"Property Assignments to panel"</span> opens a panel which shows the current 
-assigned dh_Toolkit property values. See image below.
-<p>
-           
-<p>
-<span class="textEmphasis">"Property Assignments to console"</span> opens the script console 
-which shows the current assigned dh_Toolkit property values 
-where they can be selected and copied if desired.
-<p>
-           
-<p>
- <span class="textEmphasis">"Color Defaults to panel"</span> opens a panel to display a list 
- of both Lokasenna and dh_Toolkit elements default color values. 
- See image below.
-<p>
-                     
-<div class="imgTitle">Property Assignments to panel</div>
+<span class="textEmphasis">"Property Assignments to panel"</span> 
+opens a panel which shows the current assigned 
+dh_Toolkit property values. 
+</p>
+<!--<div class="imgTitle">Property Assignments to panel</div>-->
 <div class="imgContainer"><img src="../images/tab3-show-properties.png" alt="Tab 3 Show Properties dh Toolkit"></div>
-<br>
-<div class="imgTitle">Color Defaults to panel</div>
+
+<p>
+<span class="textEmphasis">"Property Assignments to console"</span> 
+opens the script console which shows the current assigned 
+dh_Toolkit property values where they can be selected 
+and copied if desired.
+</p>
+
+<p>
+ <span class="textEmphasis">"Color Defaults to panel"</span> 
+ opens a panel to display a list of both Lokasenna and 
+ dh_Toolkit elements default color values. 
+ See image below.
+</p>
+<!--<div class="imgTitle">Color Defaults to panel</div>-->
 <div class="imgContainer"><img src="../images/tab3-show-defaults-all.png" alt="Tab 3 Show Defaults All"></div>
 
-    <br><br>
+</div>
+
+<br><br>
+
+</div> <!-- end section # 1 -->
+
+    <br><br><br>
     </div> <!-- end pageBody -->
   </body>
 

@@ -23,85 +23,151 @@
     
     <div class="pageBody">
    
-        <div class="heading">5.07 dh_Options:</div>
+<div class="heading">6.07 dh_Options:</div>
 
-        <div class="sectionDefault">
-            This file provides two separate element classes:
-        </div>
-      
-        <div class="sectionIndented">
-            <div class="sectionListItem">             
-                dh_Radio:       A list of options from which the user can only choose one at a time.
-            </div>              
-            <div class="sectionListItem">             
-                dh_Checklist:   A list of options from which the user can choose any, all or none.
-            </div>
-        </div>
-          
-        <div class="sectionDefault">                         
-            <span class="textEmphasis110">Same as Lokasenna Options except:</span> 
-        </div> 
+<div class="sectionIndented"><!-- sectiom #1 -->
+
+This file provides two separate element classes:
+
+<div class="sectionIndented"> 
+     
+<div class="sectionListItem"> 
+<span class="textEmphasis">dh_Radio:</span>            
+A list of options from which the user can only choose one at a time.
+</div>              
+<div class="sectionListItem"> 
+<span class="textEmphasis">dh_Checklist:</span>            
+A list of options from which the user can choose any, all or none.
+</div>
+<div class="sectionDefault">                         
+See Lokasenna documentation for more detail.
+</div> 
+
+</div>
         
-        <div class="sectionIndented">
-          Provides ability to define border color and width. They can now be set separately from the caption text and background colors.
-        </div>
-        <div class="sectionIndented">
-          If "frame" is true and "border_width" > 0 then a border will be drawn using "col_border" with the specified "border_width".
-        </div>
-        <div class="sectionIndented">             
-          If "field" is true the background will use the "col_field" color (or "wnd_bg" if "col_field" isn't specified.)
-        </div>
-        <div class="sectionIndented">             
-          If the "radius" > 0 it will round the corners of the option panel. If using a border the radius will apply to the inner edge of the border. 
-        </div>            
-        <div class="sectionIndented">             
-          The "col_opt_outline" and "col_opt_fill" properties can be used to tweak the colors of the option bubbles if so desired.
-        </div>
+<div class="subHeading">Properties:</div>
 
-        <div class="sectionIndented">                     
-          Checklist.onmouseup sets self.optindex to the index of the selected item. 
-       Index now available to use in onmouseup override. This may be useful if you
-       need to see which item was clicked.
-        </div>        
-        <div class="sectionIndented">             
-          Note: Caption is optional. If used it will use "col_cap_bg" and "col_cap_text" colors. Personally, I would rather use a label.
-        </div>
-        <div class="sectionIndented">             
-          When defining an Options element you use the "opts" property to specify either a comma separated string of options, or a table of strings as options. During element creation "opts" gets parsed into the element's "optarray" property which hold the values that are displayed. After element creation "opts" is no longer used. Any manipulation to the options will be to "optarray". 
-        </div>        
+<div class="sectionIndented"> 
+<!--     
+<div class="sectionListItem">
+<span class="textEmphasis">opts:</span>
+The names of the options. Accepts table or comma separated value string: 
+<span class="inlineBlock">"A, B, C, D".</span>
+CSV string gets converted to a table.
+Table is then stored in self.optarray.
+It is also possible to just specify a table in the element 
+definition. Instead of "opts" specify 
+<span class="inlineBlock">optarray = {"A", "B", "C", "D"}</span>
+</div> 
+-->
+<div class="sectionListItem">             
+<span class="textEmphasis">opts </span>or 
+<span class="textEmphasis"> optarray: </span>
+Options can be specified as a table of strings using 
+'opts' or 'optarray', or a comma separated string using 'opts'.
+Options are ultimately stored in 'optarray'.
+If 'optarray' or 'opts' is not specified, or if 'optarray' is 
+specified as an empty table (optarray = { } or opts = { }) 
+then 'optarray' will be initialized to {"Option1"}. 
+If specified as a comma separated string (opts = "Option1, 
+Option2, Option3") it will be converted to a table and get 
+stored in 'optarray'.
+</div>
 
-    
-<div class="chartCont">
-<pre>----------------------------------------------------------------------------
-   [color_name] brackets indicate that the color is hardcoded.                      
-----------------------------------------------------------------------------
-Class:           |    Lokasenna Options      |       dh_Options      
-attribute:       | property_name   default   | property_name   default
-----------------------------------------------------------------------------
-caption:           caption         nil         caption         nil
-caption font:      font_a          2 (sans20)  font_caption    sans20
-text font:         font_b          3 (sans16)  font_text       sans20
-direction:         dir             v           dir             v
-padding top left:  pad             4           pad             4
+<div class="sectionListItem">
+<span class="textEmphasis">optindex:</span>
+This is an internal property which gets set during
+Checklist.onmouseup. It gets set to the index of the last 
+selected item. Index now available to use in onmouseup override. 
+This may be useful if you need to see which item was clicked. 
+This should never be set directly.
+</div>
 
-draw frame:        frame           true        frame           true
-draw field:        n/a             n/a         field           false
-border width:      n/a             n/a         border_width    1
-round corners:     n/a             n/a         radius          0
+<div class="sectionListItem">
+<span class="textEmphasis">dir:</span>
+If "v" (default) then options are displayed vertically. If "h" then 
+options are displayed horizontally.
+</div> 
 
-options:           opts            {}          opts            {}
-option size:       opt_size        20          opt_size        20
+<div class="sectionListItem">
+<span class="textEmphasis">swap:</span>
+If false (default) then option 'bubbles' appear before option title.
+</div> 
+
+<div class="sectionListItem">
+<span class="textEmphasis">border_width:</span>
+If greater than 0 then a border will be drawn around the element. 
+</div> 
+
+<div class="sectionListItem">
+<span class="textEmphasis">radius:</span>
+If greater than 0 then the element will be drawn with rounded corners. 
+If showing a border then the radius is to the inside of the border.
+</div> 
+
+<div class="sectionListItem">
+<span class="textEmphasis">option_size:</span>
+Size of the option 'bubble' (rectangle for checklist 
+and circle for radio).
+</div> 
+
+<div class="sectionListItem">
+<span class="textEmphasis">pad_x:</span>
+Horizontal space between element edge and option bubble.
+</div> 
+
+<div class="sectionListItem">
+<span class="textEmphasis">pad_y:</span>
+Vertical space between options.
+</div> 
+
+</div>
+
+      
+</div><!-- end Section #1 --> 
+
+<div class="chartCont text110">
+<pre>-------------------------------------------------------
+attribute:         property_name        default value  
+-------------------------------------------------------
+options:            opts or optarray   {"Option 1"}
+
+direction:          dir                "v"
+swap:               swap                false
+
+border width:       border_width        2
+round corners:      radius              0
+shadow frame:       shadow              false
+
+caption:            caption            ""
+caption font:       font_caption       "sans22"
+caption position:   cap_pos            "above"
+caption offset x:   cap_pad_x           4
+caption offset y:   cap_pad_y           4
+caption centered:   cap_centered        false
+shadow caption:     shadow_caption      false  
+
+option size:        opt_size            14
+option padding x:   pad_x               4
+option padding y:   pad_y               6
+
+options font:       font_text          "sans22"
+shadow text:        shadow_text         false
+
+allow sel.outline:  allow_sel_outline   false
 
 -- colors --
-caption bg:        cap_bg          wnd_bg      col_cap_bg      wnd_bg       
-caption text:      col_cap         txt         col_cap_text    txt
-options text:      col_txt         txt         col_text        txt
-frame/border:      [elm_frame]     n/a         col_border      elm_frame
-field:             n/a             n/a         col_field       wnd_bg
-option outline:    [elm_frame]     n/a         col_opt_outline txt
-option fill:       col_fill        elm_fill    col_opt_fill    txt
-----------------------------------------------------------------------------</pre>
-</div> 
+background:         col_bg             "wnd_bg"
+border:             col_border         "panel_border"
+options text:       col_text           "txt"
+caption text:       col_cap_text       "txt"
+
+elm sel.outline:    col_active         "elm_active"
+backdrop:           col_backdrop       "wnd_bg"
+-------------------------------------------------------</pre>
+</div>
+
+
 
     <br><br>
     </div>  <!-- end pageBody -->
@@ -109,4 +175,3 @@ option fill:       col_fill        elm_fill    col_opt_fill    txt
   </body>
 
 </html>
-

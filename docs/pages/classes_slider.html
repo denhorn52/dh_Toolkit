@@ -23,45 +23,317 @@
    
     <div class="pageBody">
     
-<div class="heading">5.09 dh_Slider:</div>
+<div class="heading">6.09 dh_Slider:</div>
 
-<div class="sectionDefault">
-Provides either a horizontal or vertical slider with optional caption. 
-Caption and entire slider element use the same background and text colors. 
-Same as Lokasenna Slider with the following modifications and enhancements:  
-</div>
+<div class="sectionIndented"><!-- section #1 -->
 
-<div class="sectionIndented">             
-Changed some property names.
-</div> 
-       
+<p>
+dh_Slider makes many changes to Lokasenna Slider. The Lokasenna 
+Slider provides a single class that can have multiple 'handles' 
+and can be either horizontal or vertical. dh_Slider splits it 
+into two separate horizontal and vertical classes, removes 
+multiple handles, and renames 'handles' to 'thumb'.
+</p>
+
+<p>
+With Lokasenna Slider you need to have the mouse directly 
+on the track to initiate mouse events. dh_Slider increases 
+the element height while maintaining the track height allowing 
+a greater area to receive mouse events. 
+</p>
+
+<p>
+The slider can be displayed with an optional border and/or 
+optional background color. 
+If the slider is displayed without a border or background color, 
+the slider height still defines the area that can receive mouse 
+events. Say the track thickness is 8 px and the slider height is 
+24 px. A mouse event can be triggered within the 24 px space. 
+I believe this makes user interaction easier.
+</p>
+
+<p>
+The slider can also have an integrated value display box to show 
+the current value. 
+If display_style is "none" then a value display box will not be 
+shown. If display_style is "box" a value display box will be 
+shown with a frame and background similar to the text elements. 
+If display_style is "plain" then the values will be displayed 
+in the area defined by the box, but with no outline and using 
+the background color of where it is placed.  
+</p>
+
+
+
+<div class="subHeading">dh_Slider_H:</div>
 <div class="sectionIndented">
-Added thickness "thk" property. This affects the track thickness and the size of the track thumb(s).
+A horizontal slider. It can have a border and its own background 
+color. That area, slider width and slider height, can be thought of as the bezel. 
+The actual track is contained within those boundaries. It can also have an optional 
+display box to display the current track value. The display box can be 
+positioned above the track (display_pos = "top"), to the right 
+of the track (display_pos = "right"), or within the slider element 
+boundaries (display_pos = "integrated"). If "integrated" be 
+sure to set the slider height tall enough to accommodate it. 
 </div>
 
-<div class="chartCont">
-<pre>----------------------------------------------------------------------------
-   [color_name] brackets indicate that the color is hardcoded.                      
-----------------------------------------------------------------------------
-Class:           |    Lokasenna Slider       |       dh_Slider      
-attribute:       | property_name   default   | property_name   default
-----------------------------------------------------------------------------
-caption:           caption         nil         caption         nil
-caption font:      font_a          3 (sans16)  font_caption    sans20
-values font:       font_b          4 (sans16)  font_text       sans16
-track thickness:   [8]                         thk             8
-direction:         dir             h           dir             h
+<div class="subHeading">dh_Slider_V:</div>
+<div class="sectionIndented">
+A vertical slider with an optional border, optional background 
+color, and an optional display box. Similar to dh_Slider_H except 
+the display can only be above or below the slider.
+</div>
+
+<!-- 
+<div class="subHeading">dh_Slider:</div>
+<p>
+A slider that can be specified as either horizontal 
+or vertical. Similar to above but no integrated display. 
+Easier to set up if the integrated display is not required.
+</p> 
+-->
+
+<div class="subHeading">dh_Slider Properties:</div>
+
+<div class="sectionIndented"><!-- section #2 -->
+
+<div class="sectionListItem">
+<span class="textEmphasis">w:</span>
+The width of the Slider element. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">h:</span>
+The height of the Slider element. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">track_thk:</span>
+This is actual track thickness. The track is generally 
+centered within this slider element.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">thumb_style:</span>
+The thumb style can be "long", "wide", "square" or "none". Its size 
+is automatically calculated based on the track thickness and 
+Slider height. A style value of "none" will result in no thumb 
+showing.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">border_width:</span>
+If greater than 0 then a border will be drawn around the element. 
+</div> 
+
+<div class="sectionListItem">
+<span class="textEmphasis">radius:</span>
+If greater than 0 then the element will be drawn with rounded corners. 
+If showing a border then the radius is to the inside of the border.
+</div> 
+
+<div class="sectionListItem">
+<span class="textEmphasis">shadow:</span>
+If true the Slider will be drawn with a shadow.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">min:</span>
+This is the minimum numerical value of the slider, which will be 
+when the thumb is to the left (or bottom) of the track.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">max:</span>
+This is the maximum numerical value of the slider, which will be 
+when the thumb is to the right (or top) of the track.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">inc:</span>
+This is the size of one step.
+Say a slider has min = 0, max = 100, and inc = 10. As the thumb 
+moves along the track the output will be 
+0,10,20,30,40,50,60,70,80,90,100. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">default:</span>
+The default numerical setting for the slider. 
+Say the above track has a default of 50, then the thumb will be 
+initially set here, and will return here when double-clicked. 
+It is also used by 'fill_from_default'.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">fill_from_default:</span>
+If true the track fill color will be from the default setting to 
+the thumb position. Otherwise the fill will be from min to 
+thumb position.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">show_values:</span>
+This is a carry-over from Lokasenna slider.
+If true, the current value will be displayed alongside the thumb.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">output:</span>
+Another carry-over from the Lokasenna slider. I have never used 
+it, and have not even explored it. Refer to Lokasenna docs.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">show_tickmarks:</span>
+The tickmarks are those tiny lines along the track that are 
+usually set to the number of track steps or a fraction thereof. 
+Set to true to show them.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">default_tickmarks:</span>
+These are tickmarks that extend across the track. If only one default tickmark 
+it can be an integer. Otherwise they are specified in a table of integers 
+with each item representing the track step postition in which to display them: 
+<span class='inlineBlock'>{0, 5, 10}.</span>
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">show_min_max:</span>
+If true then the minimum value, maximum value, and any other 
+specified value will be displayed along the track. It distance 
+from the track is determined by the 'pad_values' property. 
+</div>
+
+<div class="sectionListItem">
+<span class='textEmphasis'>min_max_values: </span>
+When 'show_min_max' is true the values are specified in a table with the format:<br>
+&nbsp;&nbsp;&nbsp;&nbsp; 
+<span class='inlineBlock '>{{0,"0"}, {5,"5"}, {10,"10"}}.</span><br> 
+Each item contains the position (step) and the value to be displayed. 
+The value is a string so anything alpha-numerical is valid. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">display_style:</span>
+The style of the display box which will display the current value. 
+The value can be "box", "plain", or "none". If "none" the  
+display box will not be shown. If "box" the the display box will 
+appear styled similar to a textbox. If "plain" then the 
+current value will de displayed in the area defined by the 
+display box, but with no outline and using the background 
+color of where it is placed. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">display_align:</span>
+Sets the placement of the text within the display box. Value can be 
+"left", "center", or "right".
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">track_offset:</span>
+Number of pixels to offset the track relative to its axis: 
+up - down for dh_Slider_H, or left - right for dh_Slider_V.
+ 
+ the 
+slider element.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">track_offset:</span>
+Number of pixels to offset the tickmarks.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">Note:</span>
+The properties 'max', 'default_tickmarks', and 'min_max_values'
+have a relationship between them. When changing 'max' be sure 
+to adjust the latter two as necessary.
+</div>
+
+</div><!-- end Section #2 -->  
+
+</div><!-- end Section #1 -->  
+
+<div class="chartCont text110">
+<pre>------------------------------------------------------------
+attribute:          property_name       default value
+------------------------------------------------------------
+track thickness:    track_thk           8
+thumb style:        thumb_style        "long"
+border width:       border_width        2
+radius:             radius              0
+shadow element:     shadow              false
+
+min value(number):  min                 0
+max value(number):  max                 10
+increment size:     inc                 1
+default setting:    default             5
+fill from default:  fill_from_default   false
+
+caption (string):   caption            ""
+caption font:       font_caption       "sans22"
+caption position:   cap_pos            "top"         
+caption offset x:   cap_pad_x           4
+caption offset y:   cap_pad_y           4
+caption centered:   cap_centered        false
+shadow caption:     shadow_caption      false
+
+show values:        show_values         false
+values font:        font_values        "sans18"
+values padding:     pad_values          4
+displayed vals:     output              nil
+
+show tickmarks:     show_tickmarks      false
+tickmark steps:     tickmark_steps      10 
+show default ticks: show_default_tickmarks false
+default tickmarks:  default_tickmarks   (see above)
+
+show min-max vals:  show_min_max        false
+min-max values:     min_max_values      (see above)
+
+display style:      display_style      "none"
+display position:   display_pos        "top"
+display width:      display_w           48
+display height:     display_h           26
+display font:       font_display       "sans24"
+display pad x:      display_pad_x       8
+display pad y:      display_pad_y       8
+display align:      display_align      "center"
+
+track offset:       track_offset        0 
+tickmarks offset:   tickmaks_offset     0 
+
+frame outline: *    frame_use_outline   false
+frame thickness: ** frame_thk           2
+allow sel.outline:  allow_sel_outline   false
 
 -- colors --
-background:        bg              wnd_bg      col_bg          wnd_bg 
-text:              col_txt         txt         col_text        txt
-track bg:          [elm_bg]                    col_track       elm_bg
-track outline:     [elm_outline]               col_outline     btn_outline
-thumb face:        col_hnd         elm_frame   col_thumb       btn_face
-thumb outline:     [elm_outline]               col_outline     btn_outline
-track_fill:        col_fill        elm_fill    col_fill        track_fill
-----------------------------------------------------------------------------</pre>
-</div> 
+background:         col_bg             "wnd_bg" 
+border:             col_border         "panel_border"
+track bg:           col_track          "elm_bg"
+track outline:      col_track_outline  "elm_frame"
+track_fill:         col_fill           "track_fill" 
+thumb body:         col_thumb          "thumb_body"
+thumb outline:      col_thumb_outline  "btn_outline"
+
+caption text:       col_cap_text       "txt"
+
+values text:        col_values         "txt"
+display bg:         col_display_bg     "elm_bg"
+display text:       col_display_text   "elm_txt"
+
+elm sel.outline:    col_active         "elm_active"
+backdrop:           col_backdrop       "wnd_bg"
+
+*  affects track outline and display box.
+** affects display box
+-------------------------------------------------------------------------------------</pre>
+</div>
+
+
 
     <br><br>
     </div>  <!-- end pageBody -->

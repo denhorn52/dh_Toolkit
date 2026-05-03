@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Window.lua
--- Modified: 20250430
+-- Modified: 20260315
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Window class
@@ -13,7 +13,7 @@
 ---------------------------------------------------------------------
 --[[ Modified by Dennis Horn.
      
-     Minor changes to draw() to make it compatible for theming.
+     Basically the same as Lokasenna window. Changed title bar height.  
 
 ]]--
 ---------------------------------------------------------------------
@@ -44,8 +44,8 @@ function GUI.dh_Window:new(name, z, x, y, w, h, caption, z_set, center) -- Add y
     wnd.h = wnd.h or h
 
     wnd.caption = wnd.caption or caption
-
-    wnd.title_height = wnd.title_height or 20
+  
+    wnd.title_height = wnd.title_height or 28
     wnd.close_size = wnd.title_height - 4
 
     if wnd.center == nil then
@@ -85,7 +85,6 @@ function GUI.dh_Window:init()
     --gfx.rect(0, 0, w, h, true)
     GUI.roundrect(0, 0, w - 2, h - 2, 4, true, true)
 
-	--GUI.color("elm_fill")
 	GUI.color("wnd_bg")
 	gfx.rect(4, th + 4, w - 10, h - (th + 10), true)
 
@@ -229,7 +228,7 @@ end
 
 function GUI.dh_Window:drawcaption()
 
-    GUI.font(2)
+    GUI.font("sans24")
     GUI.color("txt")
     local str_w, str_h = gfx.measurestr(self.caption)
     gfx.x = self.x + (self.w - str_w) / 2
@@ -279,12 +278,41 @@ end
 
 
 function GUI.dh_Window:adjustelm(elm, force)
-
+    --[=[ 
+    if elm.name == "GB_wnd_proj_name" then
+        GUI.Msg("---- enter dh_Window:adjustelm ---- ")
+        GUI.Msg("    app.w    : " .. GUI.cur_w)
+        GUI.Msg("    window.x : " .. self.x)
+        --GUI.Msg("    window.y  : " .. self.y)
+        GUI.Msg("      elm.ox : " .. (elm.ox or 0))
+        --GUI.Msg("      elm.oy : " .. (elm.oy or 0))        
+        GUI.Msg("      elm.x  : " .. elm.x)
+        --GUI.Msg("      elm.y  : " .. elm.y)
+        GUI.Msg("----------------------------------- ")
+    end 
+    --]=]
+    
     if elm.ox and not force then return end
 
-    elm.ox, elm.oy = elm.x, elm.y
-    elm.x, elm.y = self.x + elm.x, self.y + self.title_height + elm.y
-
+    if not elm.ox then
+        elm.ox, elm.oy = elm.x, elm.y
+    end
+        
+    elm.x = self.x + elm.ox
+    elm.y = self.y + self.title_height + elm.oy 
+    --[=[ 
+    if elm.name == "GB_wnd_proj_name" then
+        --GUI.Msg("------------------------------- ")
+        GUI.Msg("    Past calculation ")
+        --GUI.Msg("    window.x : " .. self.x)
+        --GUI.Msg("    window.y  : " .. self.y)
+        --GUI.Msg("      elm.ox : " .. elm.ox)
+        --GUI.Msg("      elm.oy : " .. elm.oy)        
+        GUI.Msg("      elm.x  : " .. elm.x)
+        --GUI.Msg("      elm.y  : " .. elm.y)
+        GUI.Msg("------------------------------- ")
+    end
+    --]=]
 end
 
 
@@ -379,6 +407,7 @@ function GUI.dh_Window:getchildelms()
         if GUI.elms_list[n] then
             for k, v in pairs(GUI.elms_list[n]) do
                 if v ~= self.name then elms[v] = true end
+                --GUI.Msg("# dh_Window:getchildelms elm name : " .. v)
             end
         end
     end

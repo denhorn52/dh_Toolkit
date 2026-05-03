@@ -23,14 +23,23 @@
     <div class="pageBody">
     
 <div class="heading">3.05 Tools Panel:</div><br>
-        
-<div class="imgContainer"><img src="../images/tab1.png" alt="Tools Panel"></div>    
 
+<div class="sectionDefault left050"> <!-- section # 1 -->
+        
+<div class="imgContainer"><img src="../images/tab3.png" alt="Tools Panel"></div>    
+
+<br>
 <div class="sectionListItem hanging050">
 <span class="textEmphasis110">"Color Names"</span>  
 <span class="textEmphasis">menubox:</span>  
-Select a theme color. 
-You can also select a color from a swatch on the "Colors" tab.
+Select a theme color from the selection box. 
+(You can also select a color from a swatch on the "Colors" tab.) 
+When selecting a color the "Start Color" and "New Color" swatches 
+are populated with their current values (see below). 
+The "Color Uses" listbox is updated showing many of the places 
+where that particular color is used. 
+The sliders are also updated to the red, green, and blue values 
+of the "New Color"
 </div>
 
 <div class="sectionListItem hanging050">
@@ -41,45 +50,60 @@ Displays the various default uses of the selected color name.
 
 <div class="sectionListItem hanging050">
 <span class="textEmphasis110">Color sliders:</span> 
-Adjust these to update "New Color". 
-Click on the Slider caption to decrement the value by one. 
+Adjust these to update the "New Color" swatch. 
+You can drag the slider thumb, click on the track, or use the 
+mousewheel when the mouse is over the track. 
+Click on the Slider caption (Red, Green, or Blue) to decrement the value by one. 
 Click on the value display to increment the value by one.
 </div>
 
 <div class="sectionListItem hanging050">
 <span class="textEmphasis110">"Start Color":</span> 
-Displays the theme color when first selected. 
-Clicking on the "Start Color" box updates all of the GUI elements 
-that use the current theme color with "Start Color".
+Displays the color with the last saved values. 
+Clicking on the "Start Color" swatch updates all 
+of the GUI elements, that should be affected, with the "Start Color". 
+It gets updated when a different theme color is selected.
+<br><br>
+
+Note: Clicking on "Start Color" updates the GUI. Therefore, 
+if selecting a different color then reselecting this color, the 
+"New Color" gets the values of "Start Color". Any recent edits to 
+"New Color" will be lost.
 </div>    
 
 <div class="sectionListItem hanging050">
 <span class="textEmphasis110">"New Color":</span> 
-Displays the current theme color with its edits. 
-Clicking on the "New Color" box updates all of the GUI elements 
-that use the current theme color with "New Color".
+When a theme color is selected this swatch displays the 
+theme color as is currently being used by the GUI. 
+This is the color that gets edited. 
+Clicking on the "New Color" swatch updates all 
+of the GUI elements, that should be affected, with "New Color".
+It gets updated when a different theme color is selected.
 </div>
 
-<div class="sectionListItem hanging050">
+<div class="sectionDefault"> 
 <span class="textEmphasis110">Reset Buttons:</span> 
-<br>
+<div class="sectionDefault left050"> 
 If not satified with the edited "New Color" color it can be restored 
 from the "Start Color" by clicking on the "Reset" button. 
-When clicking two additional buttons appear. Click "Y" to confirm. Click "N" to abort. 
-This copies the "Start Color" to "New Color".
-<br>
-If you are satisfied with the edited "New Color" it can be copied 
-to (overwrite) "Start Color" by clicking the "Save" button. 
 When clicking two additional buttons appear. 
-Click "Y" to confirm. Click "N" to abort. 
-"Start Color" now has the edited color. 
+Click "Y" to copy the "Start Color" to "New Color".
+Click "N" to abort. 
+</div>
+<div class="sectionDefault left050"> 
+If you are somewhat satisfied with the edited "New Color" it can be 
+saved to "Start Color" by clicking the "Save" button. 
+When clicking two additional buttons appear. 
+Click "Y" to copy (overwrite) the "New Color" to "Start Color" 
+Click "N" to abort. 
 The original start color is no longer available.
+</div>
 </div>
             
 <div class="sectionListItem hanging050">
 <span class="textEmphasis110">Last Selected Indicators:</span> 
 The color boxes to the upper corners of "Start Color" and "New Color" 
-when highlighted (white) shows which color is currently 
+when highlighted (white) shows which of the two colors is currently 
 selected and being used in the GUI.
 </div>
             
@@ -87,7 +111,7 @@ selected and being used in the GUI.
 <span class="textEmphasis110">Hold Color:</span> 
 The "Hold Color" swatch is located just above the "Reset" button. 
 This is used to transfer colors. 
-Clicking on the swatch copies either the "Start Color" or "New Color" 
+Clicking on the "Hold Color" swatch copies either the "Start Color" or "New Color" 
 into it, whichever was last selected. 
 It can also be populated by right-clicking on a color swatch 
 on the "Colors" tab. 
@@ -99,7 +123,9 @@ Clicking on the arrow button to the right of the "Hold Color"
 swatch will copy the hold color into the "New Color".
 </div>
 
-    <br><br>
+</div> <!-- end section # 1 -->
+
+    <br><br><br>
     </div> <!-- end pageBody -->
   </body>
 

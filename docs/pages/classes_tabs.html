@@ -23,34 +23,84 @@
    
     <div class="pageBody">
     
-        <div class="heading">5.10 dh_Tabs:</div>
+<div class="heading">6.10 dh_Tabs:</div>
 
-        <div class="sectionDefault">
-            Same as Lokasenna Tabs except changed most property names.  
-        </div>
-        <div class="sectionDefault">             
-            When defining a Tabs element you use the "opts" property to specify either a comma separated string of tab names, or a table of strings as tab names. During element creation "opts" gets parsed into the element's "optarray" property which hold the values that are displayed. After element creation "opts" is no longer used. "optarray" now holds the list of tab names. 
-        </div>
+<div class="sectionIndented"><!-- sectiom #1 -->
+Same as Lokasenna Tabs except changed most property names.  
 
-<div class="chartCont">
-<pre>----------------------------------------------------------------------------
-   [color_name] brackets indicate that the color is hardcoded.                      
-----------------------------------------------------------------------------
-Class:           |    Lokasenna Tabs         |       dh_Tabs      
-attribute:       | property_name   default   | property_name   default
-----------------------------------------------------------------------------
-font tab active:   font_a          3 (sans16)  font_tab_active    sans24
-font tab inactive: font_b          4 (sans16)  font_tab_inactive  sans22
+<div class="subHeading">Properties:</div>
 
-tab names:         opts            {}          opts               {}
+<div class="sectionIndented"><!-- sectiom #2 -->
+
+<div class="sectionListItem">             
+<span class="textEmphasis">opts </span>or 
+<span class="textEmphasis"> optarray: </span>
+The titles of the tabs. Can be specified as a table of strings using 
+'opts' or 'optarray', or a comma separated string using 'opts'.
+Tab titles are ultimately stored in 'optarray'.
+If 'optarray' or 'opts' is not specified, or if 'optarray' is 
+specified as an empty table (optarray = { } or opts = { }) 
+then 'optarray' will be initialized to {"Tab1"}. 
+If specified as a comma separated string (opts = "Tab1, 
+Tab2, Tab3") it will be converted to a table and get 
+stored in 'optarray'. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">tab_w:</span>
+The width of the individual tabs.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">tab_h:</span>
+The height of the tab bar.
+</div>
+
+<div class="sectionListItem">
+Note: The tab bar draws a 6 pixel high rectangle at the bottom 
+using "wnd_bg" color to cover up some "ugliness" at bottom of bar. 
+This adds 6px to the tab_h. I think there is better way to handle 
+this, but haven't attacked it yet.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">fullwidth:</span>
+When true the menu extends to the right of the script window.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis">limit_w:</span>
+When 'fullwidth' is false this can be set to limit the 
+width of the menubar. If less than the width of the combined titles, 
+the latter will be used. If set to 0 then the combined title width 
+will be used.
+</div>
+
+</div><!-- end Section #2 -->
+
+</div><!-- end Section #1 -->
+
+<div class="chartCont text110">
+<pre>--------------------------------------------------------
+attribute:          property_name       default value
+--------------------------------------------------------
+tab names:          opts or optarray    {"Tab 1"}
+tab width:          tab_w               48
+tab height:         tab_h               26
+full width:         fullwidth           true
+limit width:        limit_w             0
+
+font tab active:    font_tab_active    "sans24"
+font tab inactive:  font_tab_inactive  "sans22"
+pad between tabs:   pad                 8
 
 -- colors --
-background:        bg              elm_bg      col_bg             elm_bg   
-text:              col_ txt        txt         col_text           txt
-active tab:        col_tab_a       wng_bg      col_tab_active     tab_active 
-inactive tab:      col_tab_b       tab_bg      col_tab_inactive   tab_inactive
+background:         col_bg             "elm_bg"   
+text:               col_text           "txt"
+active tab:         col_tab_active     "tab_active" 
+inactive tab:       col_tab_inactive   "tab_inactive"
 
-----------------------------------------------------------------------------</pre>
+--------------------------------------------------------</pre>
 </div> 
 
     <br><br>
@@ -59,7 +109,3 @@ inactive tab:      col_tab_b       tab_bg      col_tab_inactive   tab_inactive
   </body>
 
 </html>
-
-
-
-

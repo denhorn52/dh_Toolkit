@@ -1,7 +1,7 @@
 -- dh_Toolkit_themes.lua
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 2025-09-08
+-- Date: 20260330
 
 
 -----------------------------------
@@ -14,6 +14,7 @@
 -- 2025-04-30 Added/revised themes.
 --            Added some utility functions.           
 --            Added several color names.
+-- 2025-12-29 Added size 14 font.
 
 -----------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
@@ -38,6 +39,7 @@ dh_Toolkit_themes.DH_THEME_NAMES = {
   "Desert",
   "Gray",
   "Magenta",
+  "Mocha",
   "Neon",
   "Pastel",
   "Sepia",
@@ -64,17 +66,25 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {96, 96, 96, 255},
         btn_outline = {32, 32, 32, 255},
         btn_txt = {192, 192, 192, 255},
-        elm_active = {192, 192, 192, 255},
-        elm_txt = {192, 192, 192, 255},
-        elm_thumb = {96, 96, 96, 255},
-        elm_track = {175, 175, 175, 255},
+        aux_bg = {96, 96, 96, 255},
+        aux_txt = {192, 192, 192, 255},
+        thumb_body = {96, 96, 96, 255},
+        track_fill = {148, 148, 148, 255},
+
         panel_bg = {64, 64, 64, 255},
         panel_border = {96, 96, 96, 255},
         panel_txt = {192, 192, 192, 255},
+        
+        elm_txt = {192, 192, 192, 255},        
         sel_txt = {120, 120, 120, 128},
         tab_active = {96, 96, 96, 255},
         tab_inactive = {56, 56, 56, 255},
-        track_fill = {148, 148, 148, 255},
+        
+        elm_active = {192, 192, 192, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {96, 96, 96, 255},
+        --elm_track = {175, 175, 175, 255},        
     },    
     Aqua = {
         wnd_bg = {132, 220, 228, 255},
@@ -86,43 +96,57 @@ dh_Toolkit_themes.DH_THEMES = {
         tab_bg = {132, 220, 228, 255},
         
         btn_face = {85, 224, 207, 255},
-        btn_outline = {66, 192, 153, 255},
+        btn_outline = {57, 138, 144, 255},
         btn_txt = {0, 64, 64, 255},
-        elm_active = {255, 128, 164, 255},
-        elm_txt = {216, 216, 216, 255},
-        elm_thumb = {0, 156, 93, 255},
-        elm_track = {139, 216, 201, 255},
+        aux_bg = {85, 224, 207, 255},
+        aux_txt = {0, 64, 64, 255},
+        thumb_body = {48, 183, 144, 255},
+        track_fill = {36, 165, 126, 255},
+
         panel_bg = {164, 228, 236, 255},
         panel_border = {66, 192, 153, 255},
         panel_txt = {0, 64, 64, 255},
-        sel_txt = {60, 193, 174, 128},
+        elm_txt = {216, 216, 216, 255},        
+        sel_txt = {51, 175, 147, 128},
         tab_active = {155, 237, 245, 255},
         tab_inactive = {132, 220, 228, 255},
-        track_fill = {48, 192, 144, 255},
+        
+        elm_active = {255, 0, 255, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {0, 156, 93, 255},
+        --elm_track = {139, 216, 201, 255},        
     },    
     Black = {
-        wnd_bg = {0, 0, 0, 255},
-        txt = {255, 254, 255, 255},
+        wnd_bg = {32, 32, 32, 255},
+        txt = {255, 255, 255, 255},
         elm_bg = {48, 48, 48, 255},
         elm_fill = {255, 255, 255, 255},
-        elm_frame = {198, 198, 198, 255},
+        elm_frame = {162, 162, 162, 255},
         elm_outline = {118, 118, 118, 255},
         tab_bg = {108, 108, 108, 255},
         
         btn_face = {180, 180, 180, 255},
-        btn_outline = {188, 188, 188, 255},
+        btn_outline = {27, 27, 27, 255},
         btn_txt = {0, 0, 0, 255},
-        elm_active = {255, 255, 255, 255},
-        elm_txt = {255, 255, 255, 255},
-        elm_thumb = {99, 99, 99, 255},
-        elm_track = {198, 198, 198, 255},
-        panel_bg = {71, 71, 71, 255},
-        panel_border = {179, 179, 179, 255},
-        panel_txt = {255, 254, 255, 255},
+        aux_bg = {180, 180, 180, 255},
+        aux_txt = {0, 0, 0, 255},
+        thumb_body = {162, 162, 162, 255},
+        track_fill = {144, 144, 144, 255},
+
+        panel_bg = {64, 64, 64, 255},
+        panel_border = {162, 162, 162, 255},
+        panel_txt = {255, 255, 255, 255},
+        elm_txt = {255, 255, 255, 255},        
         sel_txt = {128, 128, 128, 128},
         tab_active = {198, 198, 198, 255},
         tab_inactive = {160, 160, 160, 255},
-        track_fill = {144, 144, 144, 255},
+        
+        elm_active = {255, 255, 255, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {99, 99, 99, 255},
+        --elm_track = {198, 198, 198, 255},        
     },        
     Desert = {
         wnd_bg = {231, 193, 164, 255},
@@ -134,21 +158,27 @@ dh_Toolkit_themes.DH_THEMES = {
         tab_bg = {209, 171, 143, 255},
 
         btn_face = {220, 200, 172, 255},
-        btn_outline = {104, 144, 100, 255},
+        --btn_outline = {104, 144, 100, 255},
+        btn_outline = {95, 117, 91, 255},        
         btn_txt = {96, 24, 0, 255},
-        elm_active = {255, 111, 110, 255},
-        elm_txt = {225, 225, 225, 255},
-        elm_thumb = {164, 128, 83, 255},
-        elm_track = {221, 207, 190, 255},
+        aux_bg = {220, 200, 172, 255},
+        aux_txt = {96, 24, 0, 255},
+        thumb_body = {209, 185, 158, 255},
+        track_fill = {104, 144, 100, 255},
+
         panel_bg = {236, 218, 200, 255},
         panel_border = {104, 144, 100, 255},
         panel_txt = {96, 24, 0, 255},
-        sel_txt = {96, 144, 96, 128},
+        elm_txt = {225, 225, 225, 255},        
+        sel_txt = {105, 153, 96, 128},
         tab_active = {238, 208, 188, 255},
         tab_inactive = {209, 171, 143, 255},
-        --tab_active = {236, 204, 186, 255},
-        --tab_inactive = {220, 184, 155, 255},
-        track_fill = {104, 144, 100, 255},
+        
+        elm_active = {255, 0, 255, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {164, 128, 83, 255},
+        --elm_track = {221, 207, 190, 255},        
     },
     Gray = {
         wnd_bg = {81, 90, 90, 255},
@@ -158,49 +188,93 @@ dh_Toolkit_themes.DH_THEMES = {
         elm_frame = {198, 198, 198, 255},
         elm_outline = {118, 118, 118, 255},
         tab_bg = {108, 108, 108, 255},
-        
+
         btn_face = {208, 208, 208, 255},
-        btn_outline = {124, 124, 124, 255},
+        btn_outline = {63, 63, 63, 255},
         btn_txt = {0, 0, 0, 255},
-        elm_active = {255, 255, 255, 255},
-        elm_txt = {255, 255, 255, 255},
-        elm_thumb = {99, 99, 99, 255},
-        elm_track = {198, 198, 198, 255},
-        panel_bg = {152, 158, 164, 255},
+        aux_bg = {208, 208, 208, 255},
+        aux_txt = {0, 0, 0, 255},
+        thumb_body = {208, 208, 208, 255},
+        track_fill = {144, 144, 144, 255},
+
+        panel_bg = {172, 172, 172, 255},
         panel_border = {188, 188, 188, 255},
         panel_txt = {0, 0, 0, 255},
-        sel_txt = {148, 148, 148, 128},
+        elm_txt = {255, 255, 255, 255},        
+        sel_txt = {124, 124, 124, 102},
         tab_active = {198, 198, 198, 255},
         tab_inactive = {168, 168, 168, 255},
-        track_fill = {144, 144, 144, 255},
+        
+        elm_active = {255, 255, 255, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {99, 99, 99, 255},
+        --elm_track = {198, 198, 198, 255},        
     },
     Magenta = {
-        wnd_bg = {136, 18, 92, 255},
+        wnd_bg = {128, 16, 96, 255},
         txt = {219, 210, 219, 255},
         elm_bg = {66, 39, 66, 255},
         elm_fill = {209, 135, 209, 255},
-        elm_frame = {185, 91, 185, 255},
+        elm_frame = {200, 103, 182, 255},
         elm_outline = {209, 130, 209, 255},
         tab_bg = {136, 9, 83, 255},
         
         btn_face = {173, 54, 146, 255},
-        btn_outline = {221, 117, 206, 255},
+        --btn_outline = {221, 108, 206, 255},
+        btn_outline = {95, 0, 98, 255},
         btn_txt = {219, 210, 219, 255},
-        elm_active = {237, 129, 200, 255},
-        elm_txt = {226, 226, 226, 255},
-        elm_thumb = {127, 27, 92, 255},
-        elm_track = {185, 100, 158, 255},
-        panel_bg = {120, 21, 101, 255},
+        aux_bg = {173, 54, 146, 255},
+        aux_txt = {219, 210, 219, 255},
+        thumb_body = {173, 54, 146, 255},
+        track_fill = {164, 72, 146, 255},
+
+        panel_bg = {120, 30, 102, 255},
         panel_border = {200, 103, 182, 255},
         panel_txt = {226, 226, 226, 255},
-        sel_txt = {192, 30, 166, 128},
+        elm_txt = {226, 226, 226, 255},        
+        sel_txt = {165, 30, 140, 128},
         tab_active = {180, 45, 162, 255},
         tab_inactive = {136, 9, 83, 255},
-        track_fill = {164, 72, 146, 255},
+        
+        elm_active = {237, 129, 200, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {127, 27, 92, 255},
+        --elm_track = {185, 100, 158, 255},
     },
+    Mocha = {
+        wnd_bg = {132, 90, 90, 255},
+        txt = {255, 236, 230, 255},
+        elm_bg = {70, 66, 66, 255},
+        elm_fill = {255, 249, 244, 255},
+        elm_frame = {202, 162, 144, 255},
+        elm_outline = {118, 100, 100, 255},
+        tab_bg = {192, 172, 152, 255},
+        
+        btn_face = {204, 178, 172, 255},
+        btn_outline = {100, 82, 82, 255},
+        btn_txt = {64, 36, 0, 255},
+        aux_bg = {202, 184, 162, 255},
+        aux_txt = {64, 36, 0, 255},
+        thumb_body = {201, 170, 144, 255},
+        track_fill = {166, 142, 136, 255},
+        
+        panel_bg = {222, 202, 192, 255},
+        panel_border = {202, 162, 144, 255},
+        panel_txt = {0, 0, 0, 255},
+        elm_txt = {255, 237, 233, 255},
+        sel_txt = {121, 94, 67, 128},
+        tab_active = {218, 202, 180, 255},
+        tab_inactive = {192, 172, 152, 255},
+        
+        elm_active = {255, 248, 240, 255},
+        metadata = {0, 0, 0, 255},
+    },    
+
     Neon = {
-        wnd_bg = {0, 0, 0, 255},
-        txt = {75, 255, 75, 255},
+        wnd_bg = {36, 36, 36, 255},
+        txt = {75, 237, 75, 255},
         elm_bg = {27, 27, 27, 255},
         elm_fill = {180, 54, 189, 255},
         elm_frame = {219, 118, 210, 255},
@@ -208,19 +282,27 @@ dh_Toolkit_themes.DH_THEMES = {
         tab_bg = {38, 38, 38, 255},
 
         btn_face = {162, 57, 166, 255},
-        btn_outline = {224, 135, 224, 255},
-        btn_txt = {75, 255, 75, 255},
-        elm_active = {255, 111, 110, 255},
-        elm_txt = {75, 255, 75, 255},
-        elm_thumb = {138, 52, 138, 255},
-        elm_track = {216, 148, 216, 255},
-        panel_bg = {0, 0, 0, 255},
+        --btn_outline = {224, 135, 224, 255},
+        btn_outline = {64, 0, 64, 255},
+        btn_txt = {75, 237, 75, 255},
+        aux_bg = {162, 57, 166, 255},
+        aux_txt = {75, 255, 75, 255},
+        thumb_body = {162, 57, 166, 255},
+        track_fill = {156, 70, 156, 255},
+
+        panel_bg = {18, 18, 18, 255},
         panel_border = {216, 148, 216, 255},
-        panel_txt = {75, 255, 75, 255},
+        panel_txt = {75, 237, 75, 255},
+        elm_txt = {75, 237, 75, 255},        
         sel_txt = {221, 99, 206, 153},
         tab_active = {138, 52, 138, 255},
         tab_inactive = {38, 38, 38, 255},
-        track_fill = {156, 70, 156, 255},
+        
+        elm_active = {255, 111, 110, 255},        
+        metadata = {0, 0, 0, 0},
+        
+        --elm_thumb = {138, 52, 138, 255},
+        --elm_track = {216, 148, 216, 255},        
     },
     Pastel = {
         wnd_bg = {182, 224, 248, 255},
@@ -232,19 +314,26 @@ dh_Toolkit_themes.DH_THEMES = {
         tab_bg = {163, 204, 228, 255},
         
         btn_face = {121, 224, 211, 255},
-        btn_outline = {188, 188, 188, 255},
+        btn_outline = {48, 138, 117, 255},
         btn_txt = {0, 64, 64, 255},
-        elm_active = {255, 63, 117, 255},
-        elm_txt = {216, 216, 216, 255},
-        elm_thumb = {174, 103, 174, 255},
-        elm_track = {218, 193, 220, 255},
+        aux_bg = {121, 224, 211, 255},
+        aux_txt = {0, 64, 64, 255},
+        thumb_body = {65, 168, 146, 255},
+        track_fill = {48, 192, 144, 255},
+
         panel_bg = {228, 211, 246, 255},
         panel_border = {48, 192, 144, 255},
         panel_txt = {0, 64, 64, 255},
-        sel_txt = {207, 135, 189, 153},
+        elm_txt = {216, 216, 216, 255},        
+        sel_txt = {212, 178, 212, 128},
         tab_active = {182, 224, 248, 255},
         tab_inactive = {132, 220, 228, 255},
-        track_fill = {48, 192, 144, 255},
+        
+        elm_active = {255, 54, 216, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {174, 103, 174, 255},
+        --elm_track = {218, 193, 220, 255},        
     },    
     Sepia = {
         wnd_bg = {144, 87, 81, 255},
@@ -256,19 +345,26 @@ dh_Toolkit_themes.DH_THEMES = {
         tab_bg = {207, 145, 140, 255},
         
         btn_face = {224, 184, 176, 255},
-        btn_outline = {141, 104, 60, 255},
+        btn_outline = {96, 59, 51, 255},
         btn_txt = {57, 38, 19, 255},
-        elm_active = {255, 72, 66, 255},
-        elm_txt = {254, 243, 239, 255},
-        elm_thumb = {186, 124, 116, 255},
-        elm_track = {234, 207, 204, 255},
+        aux_bg = {224, 184, 176, 255},
+        aux_txt = {57, 38, 19, 255},
+        thumb_body = {215, 166, 158, 255},
+        track_fill = {196, 128, 116, 255},        
+
         panel_bg = {234, 207, 204, 255},
         panel_border = {224, 171, 167, 255},
         panel_txt = {85, 48, 20, 255},
-        sel_txt = {235, 147, 153, 128},
+        elm_txt = {254, 243, 239, 255},        
+        sel_txt = {226, 147, 153, 128},
         tab_active = {234, 198, 180, 255},
         tab_inactive = {208, 162, 148, 255},
-        track_fill = {196, 128, 116, 255},
+        
+        elm_active = {201, 72, 39, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {186, 124, 116, 255},
+        --elm_track = {234, 207, 204, 255},        
     },    
     Silver = {
         wnd_bg = {168, 180, 180, 255},
@@ -280,19 +376,25 @@ dh_Toolkit_themes.DH_THEMES = {
         tab_bg = {108, 108, 108, 255},
         
         btn_face = {208, 208, 208, 255},
-        btn_outline = {124, 124, 124, 255},
+        btn_outline = {88, 88, 88, 255},
         btn_txt = {0, 0, 0, 255},
-        elm_active = {255, 255, 255, 255},
-        elm_txt = {255, 255, 255, 255},
-        elm_thumb = {99, 99, 99, 255},
-        elm_track = {198, 198, 198, 255},
+        aux_bg = {208, 208, 208, 255},
+        aux_txt = {0, 0, 0, 255},
+        thumb_body = {208, 208, 208, 255},
+        track_fill = {144, 144, 144, 255},        
+
         panel_bg = {81, 90, 90, 255},
         panel_border = {197, 197, 197, 255},
         panel_txt = {255, 254, 255, 255},
-        sel_txt = {165, 165, 165, 153},
+        elm_txt = {255, 255, 255, 255},        
+        sel_txt = {144, 144, 144, 128},
         tab_active = {208, 208, 208, 255},
-        tab_inactive = {171, 171, 171, 255},
-        track_fill = {144, 144, 144, 255},
+        tab_inactive = {180, 189, 189, 255},
+        elm_active = {255, 255, 255, 255},        
+        metadata = {0, 0, 0, 255},
+        
+        --elm_thumb = {99, 99, 99, 255},
+        --elm_track = {198, 198, 198, 255},        
     },            
 }
 
@@ -302,6 +404,7 @@ dh_Toolkit_themes.DH_THEMES = {
 --zzcn 
 -- GUI.colors 
 -- Use to populate Colors Tab.
+-- !!! Order is important for dh_ThemeDesigner
 
 dh_Toolkit_themes.COLOR_NAMES = {
     -- Lokasenna defined
@@ -317,17 +420,23 @@ dh_Toolkit_themes.COLOR_NAMES = {
     "btn_face",
     "btn_outline",
     "btn_txt",
-    "elm_active",
-    "elm_txt",
-    "elm_thumb",    
-    "elm_track",
+    "aux_bg",
+    "aux_txt",
+    "thumb_body",
+    "track_fill",
+    
     "panel_bg",
     "panel_border",
-    "panel_txt",    
+    "panel_txt",        
+    "elm_txt",
     "sel_txt",
     "tab_active",
     "tab_inactive",
-    "track_fill",
+    
+    "elm_active",    
+    "metadata",
+    --"elm_thumb",    
+    --"elm_track",    
 }
 
 -----------------------------------
@@ -382,7 +491,13 @@ function dh_Toolkit_themes.set_theme(theme, isGuiInit)
     -- In case the theme lacks a color in COLOR_NAMES.
     
     for _, col_name in ipairs(dh_Toolkit_themes.COLOR_NAMES) do
-        if not GUI.colors[col_name] then 
+    
+        --GUI.Msg("set theme col_name : " .. col_name)
+    
+        if not GUI.colors[col_name] then
+        
+            --GUI.Msg("if not GUI.colors[col_name] : " .. col_name)
+                 
             if isGuiInit then
                 GUI.colors[col_name] = {0.5,0.5,0.5,1}
             else
@@ -413,200 +528,10 @@ function dh_Toolkit_themes.set_theme(theme, isGuiInit)
             table.insert(newcolor, GUI.clamp(col[4],0,255))            
         end
         
-        --dh_log("dhth.set_theme: newcolor name is: " .. name .. "\n")
+        --GUI.Msg("dhth.set_theme: newcolor name is: " .. name .. "\n")
+        --if col_name == "metadata" then GUI.Msg("metadata[4] : " .. tostring(col[4])) end
+        
         GUI.colors[col_name] = newcolor
-    end
-
-end
-
------------------------------------
-------      FONTS       -------
------------------------------------
---zzfonts
-
--- dh_Toolkit defined font sets for various scaled sizes of windows.
-
-function dh_Toolkit_themes.set_scaled_fonts(scale)
-    dh_log("dh_Toolkit_themes.set_scaled_fonts scale is: " .. scale .. "\n")
-    local new_fonts = GUI.get_OS_fonts()
-
-    if scale == "0.75" then
-        --[[        
-        GUI.fonts = {    
-                    {fonts.sans, 24},	-- 1. Title
-                    {fonts.sans, 15},	-- 2. Header
-                    {fonts.sans, 12},	-- 3. Label
-                    {fonts.sans, 12},	-- 4. Value
-        monospace = {fonts.mono, 10.5},
-        version = 	{fonts.sans, 8, "i"},
-        }        
-        --]]
-        
-        GUI.fonts[1] = {new_fonts.sans, 24}
-        GUI.fonts[2] = {new_fonts.sans, 15}
-        GUI.fonts[3] = {new_fonts.sans, 12}
-        GUI.fonts[4] = {new_fonts.sans, 12}
-        GUI.fonts["monospace"] = {new_fonts.mono, 10.5}
-        GUI.fonts["version"] = {new_fonts.sans, 8}
-            
-        GUI.fonts["sans16"] = {new_fonts.sans, 12}
-        GUI.fonts["sans18"] = {new_fonts.sans, 13.5}
-        GUI.fonts["sans20"] = {new_fonts.sans, 15}
-        GUI.fonts["sans22"] = {new_fonts.sans, 16.5}
-        GUI.fonts["sans24"] = {new_fonts.sans, 18}
-        GUI.fonts["sans28"] = {new_fonts.sans, 21}
-        GUI.fonts["sans32"] = {new_fonts.sans, 24}
-        
-        GUI.fonts["mono16"] = {new_fonts.mono, 12}
-        GUI.fonts["mono18"] = {new_fonts.mono, 14.5}
-        GUI.fonts["mono20"] = {new_fonts.mono, 15}
-        GUI.fonts["mono22"] = {new_fonts.mono, 16.5}
-        GUI.fonts["mono24"] = {new_fonts.mono, 18}
-        GUI.fonts["mono28"] = {new_fonts.mono, 21}
-        GUI.fonts["mono32"] = {new_fonts.mono, 24}
-
-    elseif scale == "1.00" then
-        --[[    
-        GUI.fonts = {    
-                    {fonts.sans, 32},	-- 1. Title
-                    {fonts.sans, 20},	-- 2. Header
-                    {fonts.sans, 16},	-- 3. Label
-                    {fonts.sans, 16},	-- 4. Value
-        monospace = {fonts.mono, 14},
-        version = 	{fonts.sans, 12, "i"},
-        }
-        --]]
-        
-        GUI.fonts[1] = {new_fonts.sans, 32}
-        GUI.fonts[2] = {new_fonts.sans, 20}
-        GUI.fonts[3] = {new_fonts.sans, 16}
-        GUI.fonts[4] = {new_fonts.sans, 16}
-        GUI.fonts["monospace"] = {new_fonts.mono, 14}
-        GUI.fonts["version"] = {new_fonts.sans, 12}
-                    
-        GUI.fonts["sans16"] = {new_fonts.sans, 16}
-        GUI.fonts["sans18"] = {new_fonts.sans, 18}
-        GUI.fonts["sans20"] = {new_fonts.sans, 20}
-        GUI.fonts["sans22"] = {new_fonts.sans, 22}
-        GUI.fonts["sans24"] = {new_fonts.sans, 24}
-        GUI.fonts["sans28"] = {new_fonts.sans, 28}
-        GUI.fonts["sans32"] = {new_fonts.sans, 32}
-        
-        GUI.fonts["mono16"] = {new_fonts.mono, 16}
-        GUI.fonts["mono18"] = {new_fonts.mono, 18}
-        GUI.fonts["mono20"] = {new_fonts.mono, 20}
-        GUI.fonts["mono22"] = {new_fonts.mono, 22}
-        GUI.fonts["mono24"] = {new_fonts.mono, 24}
-        GUI.fonts["mono28"] = {new_fonts.mono, 28}
-        GUI.fonts["mono32"] = {new_fonts.mono, 32}
-        
-    elseif scale == "1.25" then 
-        --[[    
-        GUI.fonts = {    
-                    {fonts.sans, 40},	-- 1. Title
-                    {fonts.sans, 24},	-- 2. Header
-                    {fonts.sans, 20},	-- 3. Label
-                    {fonts.sans, 20},	-- 4. Value
-        monospace = {fonts.mono, 18},
-        version = 	{fonts.sans, 12, "i"},
-        }
-        --]]
-        
-        GUI.fonts[1] = {new_fonts.sans, 40}
-        GUI.fonts[2] = {new_fonts.sans, 25}
-        GUI.fonts[3] = {new_fonts.sans, 20}
-        GUI.fonts[4] = {new_fonts.sans, 20}
-        GUI.fonts["monospace"] = {new_fonts.mono, 17.5}
-        GUI.fonts["version"] = {new_fonts.sans, 12}
-                    
-        GUI.fonts["sans16"] = {new_fonts.sans, 20}
-        GUI.fonts["sans18"] = {new_fonts.sans, 22}
-        GUI.fonts["sans20"] = {new_fonts.sans, 24}
-        GUI.fonts["sans22"] = {new_fonts.sans, 27}
-        GUI.fonts["sans24"] = {new_fonts.sans, 30}
-        GUI.fonts["sans28"] = {new_fonts.sans, 36}
-        GUI.fonts["sans32"] = {new_fonts.sans, 40}
-        
-        GUI.fonts["mono16"] = {new_fonts.mono, 20}
-        GUI.fonts["mono18"] = {new_fonts.mono, 22}
-        GUI.fonts["mono20"] = {new_fonts.mono, 24}
-        GUI.fonts["mono22"] = {new_fonts.mono, 27}
-        GUI.fonts["mono24"] = {new_fonts.mono, 30}
-        GUI.fonts["mono28"] = {new_fonts.mono, 36}
-        GUI.fonts["mono32"] = {new_fonts.mono, 40}
-        
-    elseif scale == "1.50" then
-        --[[
-        GUI.fonts = {    
-                    {fonts.sans, 48},	-- 1. Title
-                    {fonts.sans, 30},	-- 2. Header
-                    {fonts.sans, 24},	-- 3. Label
-                    {fonts.sans, 24},	-- 4. Value
-        monospace = {fonts.mono, 21},
-        version = 	{fonts.sans, 12, "i"},
-        }
-        --]]
-        
-        GUI.fonts[1] = {new_fonts.sans, 48}
-        GUI.fonts[2] = {new_fonts.sans, 30}
-        GUI.fonts[3] = {new_fonts.sans, 24}
-        GUI.fonts[4] = {new_fonts.sans, 24}
-        GUI.fonts["monospace"] = {new_fonts.mono, 21.5}
-        GUI.fonts["version"] = {new_fonts.sans, 12}        
-            
-        GUI.fonts["sans16"] = {new_fonts.sans, 24}
-        GUI.fonts["sans18"] = {new_fonts.sans, 27}
-        GUI.fonts["sans20"] = {new_fonts.sans, 30}
-        GUI.fonts["sans22"] = {new_fonts.sans, 33}
-        GUI.fonts["sans24"] = {new_fonts.sans, 36}
-        GUI.fonts["sans28"] = {new_fonts.sans, 42}
-        GUI.fonts["sans32"] = {new_fonts.sans, 48}
-        
-        GUI.fonts["mono16"] = {new_fonts.mono, 24}
-        GUI.fonts["mono18"] = {new_fonts.mono, 27}
-        GUI.fonts["mono20"] = {new_fonts.mono, 30}
-        GUI.fonts["mono22"] = {new_fonts.mono, 33}
-        GUI.fonts["mono24"] = {new_fonts.mono, 36}
-        GUI.fonts["mono28"] = {new_fonts.mono, 42}
-        GUI.fonts["mono32"] = {new_fonts.mono, 48}
-
-    elseif scale == "2.00" then
-        --[[    
-        GUI.fonts = {    
-                    {fonts.sans, 64},	-- 1. Title
-                    {fonts.sans, 40},	-- 2. Header
-                    {fonts.sans, 32},	-- 3. Label
-                    {fonts.sans, 32},	-- 4. Value
-        monospace = {fonts.mono, 28},
-        version = 	{fonts.sans, 12, "i"},
-        }
-        --]]
-        
-        GUI.fonts[1] = {new_fonts.sans, 64}
-        GUI.fonts[2] = {new_fonts.sans, 40}
-        GUI.fonts[3] = {new_fonts.sans, 32}
-        GUI.fonts[4] = {new_fonts.sans, 32}
-        GUI.fonts["monospace"] = {new_fonts.mono, 28}
-        GUI.fonts["version"] = {new_fonts.sans, 12}
-                    
-        GUI.fonts["sans16"] = {new_fonts.sans, 32}
-        GUI.fonts["sans18"] = {new_fonts.sans, 36}
-        GUI.fonts["sans20"] = {new_fonts.sans, 40}
-        GUI.fonts["sans22"] = {new_fonts.sans, 44}
-        GUI.fonts["sans24"] = {new_fonts.sans, 48}
-        GUI.fonts["sans28"] = {new_fonts.sans, 56}
-        GUI.fonts["sans32"] = {new_fonts.sans, 64}
-        
-        GUI.fonts["mono16"] = {new_fonts.mono, 32}
-        GUI.fonts["mono18"] = {new_fonts.mono, 36}
-        GUI.fonts["mono20"] = {new_fonts.mono, 40}
-        GUI.fonts["mono22"] = {new_fonts.mono, 44}
-        GUI.fonts["mono24"] = {new_fonts.mono, 48}
-        GUI.fonts["mono28"] = {new_fonts.mono, 56}
-        GUI.fonts["mono32"] = {new_fonts.mono, 64}
-        
-    else
-        return
     end
 
 end
@@ -671,11 +596,14 @@ Additional colors defined in dh_Toolkit_themes.
 
     btn_face     -- Face color for Button, Knob, Slider thumb
     btn_outline  -- Outline for Button, Knob, Slider thumb
-    btn_txt      -- Button text 
+    btn_txt      -- Button text
+    aux_bg       -- Alternate BG/Face color for Button, Knob, Slider thumb, etc.
+    aux_txt      -- Alternate Text color for Button, Knob, Slider thumb, etc.
+    thumb_body   -- Slider Thumb     
     elm_active   -- Outline for focused Menubox, Textbox, and TextEditor   
     elm_txt      -- Text Elements text
-    elm_track    -- scrollbar track color
-    elm_thumb    -- scrollbar thumb color
+    --elm_track    -- scrollbar track color
+    --elm_thumb    -- scrollbar thumb color
     panel_border -- Panel border color
     panel_bg     -- Panel fill color
     panel_txt    -- Optional text color for Panel    

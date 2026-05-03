@@ -23,34 +23,36 @@
     
     <div class="pageBody">
     
-        <div class="heading">5.03 dh_Label:</div>
+        <div class="heading">6.03 dh_Label:</div>
     
-        <div class="sectionDefault">             
-Same as Lokasenna Label except for changed property names.
-        </div>     
+<div class="sectionIndented">             
+Same as Lokasenna Label except for changed property names.<br>
+Added property 'text_pos' which can be "left", "center", or "right". 
+This allows additional control when placing the label.
+</div>     
 
-        <div class="sectionDefault">             
+<div class="sectionIndented">             
 Note: init and draw functions added then subtracted 2 pixels 
 from gfx.x and gfx.h. This caused labels to be displayed 
 at design x minus 2 causing problems with tight layout. 
 Changed to eliminate add/subtract. 
 Doesn't seem to be causing any problems.
-        </div>
+</div>
 
-<div class="chartCont">
-<pre>----------------------------------------------------------------------------
-   [color_name] brackets indicate that the color is hardcoded.                      
-----------------------------------------------------------------------------
-Class:           |    Lokasenna Label        |       dh_Label      
-attribute:       | property_name   default   | property_name   default
-----------------------------------------------------------------------------
-text:              caption         ""          text            ""
-font:              font            2 (sans20)  font            sans22
+<div class="chartCont text110">
+<pre>------------------------------------------------------
+attribute:          property_name       default value
+------------------------------------------------------
+text:               text               "Label"
+font:               font               "sans22"
+text position:      text_pos           "left"
+text shadow:        shadow_text         false
 
 -- colors --
-background:        bg              wnd_bg      col_bg          wnd_bg 
-text:              color           txt         col_text        txt
-----------------------------------------------------------------------------</pre>
+background:         col_bg             "wnd_bg" 
+text:               col_text           "txt"
+ 
+------------------------------------------------------</pre>
 </div> 
 
     <br><br>

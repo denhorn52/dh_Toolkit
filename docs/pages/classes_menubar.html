@@ -23,37 +23,73 @@
    
     <div class="pageBody">
     
-        <div class="heading">5.05 dh_Menubar:</div>
+<div class="heading">6.05 dh_Menubar:</div>
 
-        <div class="sectionDefault">
-            Same as Lokasenna Menubar except for: 
-        </div>     
-        <div class="sectionIndented">
-            Changed property name "col_txt" to "col_text".
-        </div>
-        <div class="sectionIndented">             
-            Added ability to add top padding to titles. This was my first attempt to vertically align titles. Later changed code to vertical center titles if "do_pad_top" (default) is false.
-        </div>
+<div class="sectionIndented"><!-- sectiom #1 -->
 
-<div class="chartCont">
-<pre>----------------------------------------------------------------------------
-   [color_name] brackets indicate that the color is hardcoded.                      
-----------------------------------------------------------------------------
-Class:           |   Lokasenna Menubar       |       dh_Menubar      
-attribute:       | property_name   default   | property_name   default
-----------------------------------------------------------------------------
-title padding:     n/a                         do_pad_top      false
-title pad value:   n/a                         pad_top_val     0
-titles font size:  font            2 (sans20)  font            sans22
+See Lokasenna Menubar docs for more detail.
+ 
+<div class="subHeading">Properties:</div>
 
-menus:             menus           {}          menus           {}
+<div class="sectionIndented">
+
+<div class="sectionListItem"> 
+<span class="textEmphasis">menus:</span>
+Specially formatted table to hold the menu titles and 
+the items in the dropdown menus.    
+</div>
+
+<div class="sectionListItem"> 
+<span class="textEmphasis">fullwidth:</span>
+When true the menu extends to the right of the script window.
+</div>
+
+<div class="sectionListItem"> 
+<span class="textEmphasis">limit_w:</span>
+When 'fullwidth' is false this is used to set the 
+width of the menubar. If "limit_w" is less than the width of the 
+combined titles, the latter will be used. If set to 0 then the 
+combined title width will be used.
+</div>
+
+<div class="sectionListItem"> 
+<span class="textEmphasis">do_pad_top</span> and 
+<span class="textEmphasis">pad_top_val:</span>
+This was my first attempt at vertically 
+centering the titles. That is now done automatically. These can 
+still be used to override the auto-center.
+</div>
+
+</div>
+
+
+</div><!-- end Section #1 -->
+
+<div class="chartCont text110">
+<pre>-------------------------------------------------------
+attribute:          property_name       default value      
+-------------------------------------------------------
+menus:              menus               {}
+
+full width:         fullwidth           true
+limit width:        limit_w             0
+
+titles font size:   font               "sans22"
+titles padding:     pad                 0
+pad top:            do_pad_top          false
+pad top value:      pad_top_val         0
+
+shadow element:     shadow              true
 
 -- colors --
-background:        col_bg          elm_frame   col_bg          btn_face
-text:              col_txt         txt         col_text        btn_txt
-mouse over:        col_over        elm_fill    col_over        elm_fill
-----------------------------------------------------------------------------</pre>
+background:         col_bg             "btn_face"
+text:               col_text           "btn_txt"
+mouse over:         col_over           "elm_fill"
+
+------------------------------------------------------</pre>
 </div> 
+
+
 
     <br><br>
     </div>  <!-- end pageBody -->

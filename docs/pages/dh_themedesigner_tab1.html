@@ -27,35 +27,115 @@
 
 <div class="imgContainer"><img src="../images/tab1-only.png" alt="Tab 1 Preferences"></div>
 
-<div class="sectionDefault">
+<div class="sectionDefault left050"> <!-- section # 1 -->
 
 <div class="subHeading">The App Scale panel:</div>
-<p>       
-Displays the current App scale.
-Use the menubox to select a scale setting.
-Click the <span class="textEmphasis110">"Scale App"</span> button to set the scale.        
+
+<div class="sectionDefault left050">
+<p>
+<span class="textEmphasis110">Current Scale: </span>       
+Making a selection from this selection box scales the script 
+window, including all elements and fonts.
+</p>
+<p>
+<span class="textEmphasis110">Current Font Scale: </span> 
+Making a selection from this selection box scales all of the       
+script's fonts relative to 'designed' size. 
+This is included in case a system font's size is different 
+than that of the system the script was designed on. 
+(The font size of native menuboxes and
+message boxes will not change as they are determined by the system.) 
 </p>
 
-<div class="subHeading">The Themes panel:</div>
-<p>       
-Displays the current theme.
-Use the menubox to select a theme.
-If "User" theme is selected it displays the current selected user theme, and a menubox to select a user theme.
-Use the <span class="textEmphasis110">"Set Theme"</span> button to set the theme. (Setting a theme will replace any theme currently being edited.)        
+<p> 
+<span class="textEmphasis110">Use Outlines: </span>       
+Use this checkbox to specify the type of outlines to use.  
+The text elements, knob and slider display boxes, and slider 
+track normally use a highlight/lowlight frame derived from the 
+background color. Alternately, the frames can use a single color 
+outline specified the theme's 'elm_frame' color. 
+
+Check the box to use the latter. (Themes have 
+a false color 'metadata' which is used to specify that the GUI 
+is to always use the single color option.) 
 </p>
 
-<div class="subHeading">The User Themes panel:</div>
-<p>If a user theme is selected the "User Theme Name" textbox displays the name to be used when saving the currently edited theme.</p>
-<p>Type in or edit the name as you see fit.</p>
-<p>(Hint: Right-clicking the "Current User Theme" menubox copies the name in the "Current User Theme" menubox to the "User Theme Name" textbox.)</p>
-<p>Use the <span class="textEmphasis110">"Rename"</span> button to rename the current user theme with the name in the "User Theme Name" textbox.</p>            
-<p>Use the <span class="textEmphasis110">"Delete"</span> button to delete a user theme.</p>
-<p>Use the <span class="textEmphasis110">"Save Theme"</span> button to save the current theme using the name in the "User Theme Name" textbox.</p>
-<p>"Save to console" checkbox. If checked will also print user theme to script console when saving.</p>
+<p> 
+<span class="textEmphasis110">Thick Frames: </span>             
+Use this checkbox is used to specify if thinner or 
+thicker outlines should be displayed. As of 04-16-2026 they are  
+1 pixel or 2 pixel width. 
+</p>
 
 </div>
 
-    <br><br>
+<div class="subHeading">The Themes panel:</div>
+
+<div class="sectionDefault left050">
+
+<p>
+Changing a theme will replace the current 'edit state'  
+with the colors of the selected theme. Be sure to save your 
+work first if so desired. You will be prompted to confirm a 
+theme change. 
+</p>
+
+<p>
+<span class="textEmphasis110">Current dh_theme: </span>             
+Use this menubox to select a dh_Toolkit theme. The theme is 
+loaded upon selection. Changing themes will overwrite the 
+current 'edit state', replacing it with the selected theme's 
+colors. You will be prompted to confirm.
+
+If "User" is selected it displays the 
+<span class="textEmphasis110">"Current User theme" </span>             
+menubox (if there are any user themes). Use that menubox  
+to select a user theme. Same rules apply.
+</p>
+</div>
+
+<div class="subHeading">The User Themes panel:</div>
+<div class="sectionDefault left050">
+
+<p>
+The <span class="textEmphasis110">"User Theme Name"</span> 
+textbox displays the name of the last selected theme when that 
+theme was selected. The name is displayed as a convenience. 
+It can be used as a basis for a new name when saving the 
+currently edited theme.
+Type in or edit the name as you see fit.
+</p>
+
+<p>The <span class="textEmphasis110">"Rename"</span> 
+button is used to rename the current user theme 
+(the one displayed in the "Current User theme" menubox) 
+with the name in the "User Theme Name" textbox. 
+You will be prompted to confirm.
+</p>            
+<p>The <span class="textEmphasis110">"Delete"</span> 
+button is used to delete the user theme (the one displayed in 
+the "Current User theme" menubox). 
+You will be prompted to confirm.
+</p>
+<p>The <span class="textEmphasis110">"Save Theme"</span> 
+button is used to save the current 'edit state' 
+of the theme being edited. It will be saved  
+using the name in the "User Theme Name" textbox. 
+If the "User Theme Name" already exists it will attempt to 
+overwrite the existing user theme. 
+You will be prompted to confirm an overwrite.
+</p>
+<p>The <span class="textEmphasis110">"Save To Console"</span> 
+checkbox determines if the saved theme is also displayed in 
+Reaper's script console. Check it to also print 
+user theme to script console when saving.
+</p>
+</div>
+
+</div> <!-- end section # 1 -->
+
+
+    <br><br><br>
     </div>  <!-- end pageBody -->
   </body>
 

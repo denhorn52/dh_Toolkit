@@ -17,15 +17,16 @@
       <div class="centered-xy"> 
         <div class="pageHeading">Lokasenna Notes</div>
       </div>
+      <a href="dev00_design_notes.html" ><div class="backArrow"></div></a>             
     </div>
     
     <div class="pageBody">
         
-<div class="heading">6.06 Lokasenna Notes:</div>        
+<div class="heading">7.06 Lokasenna Notes:</div>        
                                 
-<div class="sectionDefault">
+<div class="sectionDefault left050">
 I saw this somewhere in the Lokasenna documentation:
-</div> 
+
        
 <div class="sectionIndented">
 Functions can be declared 'local' if they are called (directly) by Lokasenna GUI, e.g., clicking a button.
@@ -35,8 +36,10 @@ If called from within another function they must be global (no 'local') or it cr
 <div class="sectionDefault">
 Example: my_function called from a button click.
 </div> 
+
+</div> 
             
-<div class="preCont">    
+<div class="preCont leftPad top000">                
 <pre>local function Button01_Click()
     my_function()
 end
@@ -52,7 +55,7 @@ What I have found is that "local my_function( )" works
 if it is defined before the "Button01_Click" function definition.
 </div>
 
-<div class="preCont">    
+<div class="preCont leftPad top000">    
 <pre>local function my_function()
     -- do stuff --
 end
@@ -84,4 +87,3 @@ detailed explanation see
   </body>
 
 </html>
-

@@ -23,34 +23,75 @@
     
     <div class="pageBody">
     
-<div class="heading">5.01 dh_Button:</div>
+<div class="heading">6.01 dh_Button:</div>
     
-<div class="sectionDefault">  
+<div class="sectionIndented"><!-- Section #1 -->  
 Same as Lokasenna Button but with some renamed properties and default colors.
+
+
+<div class="subHeading">Properties:</div>
+
+<div class="sectionIndented">
+
+<div class="sectionListItem">
+<span class="textEmphasis110">text:</span>
+The text that appears on the Button face.
 </div>
 
-<div class="sectionDefault">  
-The Button property "func" is where you specify the name of a function which is to be called when clicking the button.
+<div class="sectionListItem">
+<span class="textEmphasis110">font:</span>
+The font for the text.
 </div>
 
-<div class="chartCont">
-<pre>----------------------------------------------------------------------------
-   [color_name] brackets indicate that the color is hardcoded.                      
-----------------------------------------------------------------------------
-Class:           |    Lokasenna Button       |       dh_Button      
-attribute:       | property_name   default   | property_name   default
-----------------------------------------------------------------------------
-text:              caption         ""          text            ""
-font:              font            3 (sans16)  font            sans22
-function:          func       function()end    func       function()end
-parameters:        params          {...}       params          {...}
+<div class="sectionListItem">
+<span class="textEmphasis110">shadow_text:</span>
+If true draws the text with a shadow.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">func:</span>
+The name of a function which is to be called when clicking the button. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">params:</span>
+Any parameters to be passed to the function.
+</div>
+
+</div>
+<!--
+<div class="sectionDefault"> 
+-->
+<div class="top100">
+<span class="textEmphasis125">Note:</span>
+The element shadow is always on. That is because it is used as a 
+visual cue when the Button is clicked.
+</div>
+
+</div><!-- end Section #1 -->
+
+<div class="chartCont text110">
+<pre>--------------------------------------------------------
+attribute:           property_name       default value       
+--------------------------------------------------------
+text:                text               "Button"
+font:                font               "sans22"
+text shadow:         shadow_text         false
+
+function:            func                function()end   
+parameters:          params              {...}
+
+allow sel.outline:   allow_sel_outline   false
 
 -- colors --
-face:              col_fill        elm_frame   col_bg          btn_face    
-outline:           [elm_outline]               col_outline     btn_outline
-text:              col_txt         txt         col_text        btn_txt              
-----------------------------------------------------------------------------</pre>
+face:                col_bg             "btn_face"    
+outline:             col_outline        "btn_outline"
+text:                col_text           "btn_txt"               
+elm sel.outline:     col_active         "elm_active"
+--------------------------------------------------------</pre>
 </div>  
+
+
 
     <br><br>
     </div>  <!-- end pageBody -->
@@ -58,5 +99,3 @@ text:              col_txt         txt         col_text        btn_txt
   </body>
 
 </html>
-
-

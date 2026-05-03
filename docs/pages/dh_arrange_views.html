@@ -23,55 +23,58 @@
     <div class="pageBody">
 
 <div class="heading">2.01 dh_ArrangeViews:</div><br>
+
+<div class="sectionDefault"> <!-- Section # 1 -->
         
 <div class="imgTitle">Collapsed view</div>
 <div class="imgContainer"><img src="../images/arrange-views-collapsed.png" alt="arrange views collapsed"></div>  
         
 <!-- # dh_ARRANGEVIEWS -->  
-                      
-<p>   
+<div class="sectionDefault left050">
 dh_ArrangeViews stores "snapshots" of Reaper's arrange view window 
 (referred to as "views" for this script). Each view will store 
 the start time and end time of the arrange view window, 
 as well as the status of any selected media items, 
 and the position of the edit cursor. 
-</p>
-<p>    
+</div>
+<div class="sectionDefault left050">
 The display has two menuboxes, each with a list of all 
 the current project's saved views.
-Click on a menubox to open a dropdown menu with available views and select one.  
-Click on the <span class="textEmphasis110">“Go”</span> button next to the menubox to restore that view.
-When clicking one of these <span class="textEmphasis110">"Go"</span> buttons 
-the textbox in the bottom row gets the name of the selected view.
-The menuboxes can be set to different views to allow for quick switching between the two. 
-</p>
-<p>
+Click on a menubox to open a dropdown menu with available views 
+and select one. Click on the <span class="textEmphasis110">“Go”</span> 
+button next to the menubox to restore that view. 
+Set the menuboxes to different views to allow for quick switching 
+between them. When selecting a view from either menubox, or 
+clicking one of the "Go" buttons, the textbox in the bottom row 
+gets the name of the selected view. Beside indicating the last 
+selection, it also serves as a convenience for renaming of views.
 Changing project tabs updates the script with the current project data.
+</div>
+
+<div class="sectionDefault left050">
 In Preferences you can select which options to restore when clicking "Go" button. 
 See "Options panel" later on page.
-</p>
-<p>
+</div>
+
+<div class="sectionDefault left050">
 The <span class="textEmphasis110">“More”</span> button (+ sign) 
 expands the window to show more features. I designed it this way 
 so as to be able to keep the window as small as possible 
 so as to not clutter reaper’s interface. Click to expand, 
 click again to collapse.
-</p>
+</div>
         
 <!-- # EXPANDED VIEW -->  
 
+<br>
 <div class="imgTitle">Expanded view</div>
 <div class="imgContainer"><img src="../images/arrange-views-expanded.png" alt="arrange views expanded"></div>  
 
-<p>
+<div class="sectionDefault left050">
 The <span class="textEmphasis110">expanded window</span> reveals 
-a bottom row that has an <span class="textEmphasis110">“Add”</span> button, 
-a textbox with the name of the last selected view, 
-a <span class="textEmphasis110">“Delete”</span> button, 
-a menubox with the names of all the project’s region markers, 
-and a <span class="textEmphasis110">“Go”</span> button to go to selected region.
-</p>
-<p>
+a bottom row that has additional features.
+</div>
+<div class="sectionDefault left050">
 The <span class="textEmphasis110">“Add”</span> button will add 
 the current state of Reaper's arrange view window 
 (start time, end time, selected items, and cursor position) 
@@ -80,13 +83,13 @@ Edit the name in the textbox as you see fit. If you use the
 name of an existing view then that view will be updated with 
 the current view state.You will be prompted if trying to 
 overwrite an existing view.
-</p>
-<p>
+</div>
+<div class="sectionDefault left050">
 The <span class="textEmphasis110">“Del”</span> button will delete 
 the arrange view snapshot with the name in the textbox. 
 You will be prompted to confirm.
-</p>
-<p>
+</div>
+<div class="sectionDefault left050">
 Also displayed is a menubox that has a list of the names 
 of all of the current project’s regions. Select a region 
 from the menubox dropdown menu. With a region selected click 
@@ -95,51 +98,91 @@ to navigate to that region. Right-clicking on the
 <span class="textEmphasis110">“Go”</span> button refreshes 
 the regions list in case any region markers were added, 
 deleted, or modified after the script was opened.
-</p>
+</div>
 
 <!-- # PREFERENCES -->
 
 <div class="heading">Preferences:</div>
 
-<p>                                    
-Right-clicking on the <span class="textEmphasis110">“More”</span> button opens the Preferences window.
-</p>      
+<div class="sectionDefault left050">
+Right-click, or Alt+click on the <span class="textEmphasis110">“More”</span> button to open the Preferences window.
+</div>
 
+<br>
 <div class="imgTitle">Preferences window</div>
 <div class="imgContainer"><img src="../images/arrange-views-prefs.png" alt="preferences window"></div>
  
 <div class="sectionDefault">  <!-- # 3 -->   
  
 <div class="subHeading">The App Scale panel:</div>
-<p>       
-Displays the current App scale.
-Use the menubox to select a scale setting.
-Click the <span class="textEmphasis110">"Scale App"</span> button to set the scale.        
-</p>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Current Scale: </span>       
+Making a selection from this selection box scales the script 
+window, including all elements and fonts.
+</div>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Current Font Scale: </span> 
+Making a selection from this selection box scales all of the       
+script's fonts relative to 'designed' size. This is included 
+in case a system font's size is different than that of the 
+system the script was designed on. 
+(The font size of native menuboxes and
+message boxes will not change as they are determined by the system.) 
+</div>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Use Outlines: </span>  
+Use this checkbox to specify the type of outlines to use.  
+The text elements, knob and slider display boxes, and slider 
+track normally use a highlight/lowlight frame derived from the 
+background color. Alternately, the frames can use a single color 
+outline specified the theme's 'elm_frame' color. 
+
+Check the box to use the latter. (Themes have 
+a false color 'metadata' which is used to specify that the GUI 
+is to always use the single color option.) 
+</div>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Thick Frames: </span>             
+Use this checkbox is used to specify if thinner or 
+thicker outlines should be displayed. As of 04-16-2026 they are  
+1 pixel or 2 pixel width. 
+</div>
 
 <div class="subHeading">The Themes panel:</div>
-<p>       
-Displays the current theme.
-Use the menubox to select a theme.
-If "User" theme is selected it displays the current selected user theme, and a menubox to select a user theme.
-Use the <span class="textEmphasis110">"Set Theme"</span> button to set the theme.
-</p>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Current dh_theme: </span>             
+Use this menubox to select a dh_Toolkit theme for the GUI.
+If "User" theme is selected it displays the 
+<span class="textEmphasis110">"Current User theme"</span> 
+menubox (if there are any user themes). Use that menubox  
+to select a user theme.
+</div>
 
 <div class="subHeading">The Options panel:</div>
 
-<p>       
+<div class="sectionDefault left050">
 Displays the view options. The first four options are always 
 saved when adding a view. If one of these options is checked 
 it will be restored when applying a view. (By unchecking 
 the boxes you can disable if those states are updated 
 when applying a view.)
-</p>
+</div>
 
 </div> <!-- end # 3 -->  
 
-<p>       
-Click the <span class="textEmphasis110">“Close”</span> button to return to the script functionality.       
-</p>
+<div class="subHeading">“Close” button:</div>
+
+<div class="sectionDefault left050">
+Click this to return to the main script.       
+</div>
+<br><br>
+
+</div> <!-- end # 1 -->
 
      <br><br>   
      </div>  <!-- end pageBody --> 
@@ -147,4 +190,3 @@ Click the <span class="textEmphasis110">“Close”</span> button to return to t
   </body>
 
 </html>
-

@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>dh_GUI_Builder</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_GUI_Builder</div>
+      </div>
+    </div>
+    
+    <div class="pageBody">
+
+<div class="heading">4.00 dh_GUI_Builder:</div><br>
+        
+<div class="imgTitle">dh_GUI_Builder (showing Desert theme)</div>
+<div class="imgContainer"><img src="../images/gui-builder.png" alt="dh_GUI_Builder"></div>  
+
+<div class="sectionIndented"> <!-- sectiom #1 -->
+<span class="textEmphasis110">dh_GUI_Builder </span> 
+is used to build GUI's for scripts that utilize the 
+Lokasenna GUI and dh_Toolkit. It consists of a 
+workspace, a properties sidebar, and the top menubar. 
+Layouts can be saved and reloaded. They can also be imported 
+into a script. 
+</div>
+
+<div class="sectionIndented"> 
+<span class="textEmphasis">Note: </span> 
+GUI Builder exposes almost all of an element's colors. 
+While that allows them to be set individually, it is best 
+to use the default color settings otherwise it 
+breaks theming. Notable exceptions are panel colors of which 
+the background is generally set to use either the window background 
+or panel background color, along with their associated text colors. 
+Also, an element's backdrop color also needs to correspond to the 
+background color of where the element is placed. See section 
+<span class="textEmphasis">"3.04 Colors Tab" </span> for more about colors.
+</div>
+
+<!-- end sectiom #1 -->
+
+<div class="heading">4.00.1 The Workspace:</div>
+
+<div class="sectionIndented"><!-- workspace -->
+The workspace represents the window of the target script. 
+It is the area where the elements get placed. 
+It has a grid that can be toggled on or off.
+You can set the size of the project (hence, the workspace) 
+in 'Project Settings'.
+</div>
+
+<div class="sectionIndented">
+It is possible to have a Tabs element control your layout. 
+Create a Tabs element. It is created on layer 1. Leave it there. 
+Now continue to add elements. When an element is first created 
+it is placed on layer 1 (the top-most layer). Then you can 
+change the element's z value to correspond to one of the 
+layers in a Tab's z_set. A z_set is a table of the layers 
+that are displayed when a tab is active. GUI Builder supplies 
+both a Tabs Title Editor and a Tabs Z_Sets Editor to define 
+the tabs and which are to display when a tab is active.
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Right-click </span> 
+on an empty space in the workspace to brings up a menu 
+with all of the elements that are available. Select one and 
+it will be created on layer 1 with its top-left at the mouse position 
+(except for dh_Knob which as a default uses mouse position as center of knob). 
+The right-click also works on a dh_Panel. 
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Right-click </span> on a 
+<span class="textEmphasis">selected </span>  
+element to bring up the 'Delete Element' dialog. 
+This action is disabled for dh_Panel as the panel may obscure most or 
+all of the workspace. For dh_Panel (and all elements) you can 
+still use the alternate method of deleting an element by 
+using 'Alt+click'. You will be prompted to confirm delete.
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Click </span> 
+on an element to select it for editing. When an element 
+gets selected the Properties sidebar gets populated with all of 
+the editable properties of the selected element.
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Middle-mouse button down </span> 
+on the selected element and drag it to a new location. 
+You can also Shift+left mouse button drag to move an element.
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Note: </span> 
+Clicking on an unselected element selects it. For most elements 
+this also triggers the native behavior of the element. The 
+exceptions are checklist and menubox as their native behavior 
+would clash with GUI Builder functionality. On these elements 
+the first click selects the item. A second click triggers 
+its native behavior.
+</div>
+<!-- end workspace -->
+
+<div class="heading">4.00.2 The Properties Sidebar: </div>
+
+<div class="sectionIndented"> <!-- sidebar -->
+When an element gets selected the Properties sidebar gets 
+populated with all of the element's editable properties.
+At the top left is a label that shows the type of the selected 
+element. Clicking on it will deselect the element. 
+</div>
+
+<div class="sectionIndented">
+If more than one page is needed to display all of the properties, 
+then a menubox will appear at the top of the sidebar with the 
+property page numbers. Select a page to display it. While the 
+script is open the current page will be remembered. When the 
+element is reselected it will open to that page.
+</div>
+
+<div class="sectionIndented">
+The element's editable properties are shown in either a textbox, 
+a menubox, a checklist, or with a button that opens an editor. 
+</div>
+
+<div class="sectionIndented">
+Selecting from a menubox instantly updates the element.
+</div>
+
+<div class="sectionIndented">
+Checklists have boolean values. Toggling the option button 
+updates the element.
+</div>
+
+<div class="sectionIndented">
+For properties displayed in textboxes the element will be updated when 
+clicking anywhere outside the textbox, or by clicking the 
+Enter button. The entered value is first checked if is valid (
+a number, a color name, etc,). If it is not valid it will revert 
+to its initial value.
+</div>
+
+<div class="sectionIndented">
+Some properties that are tables display a button. 
+Clicking the button opens an editor. Some editors are just 
+basically supplying a wider textbox which makes it easier 
+to enter data. The Tabs Titles Editor and the Tabs z_sets Editor 
+are more detailed editors. 
+The following image shows the Tabs Titles Editor.
+</div>
+<br>
+<!--<div class="imgTitle">Tabs Titles Editor</div>-->
+<div class="imgContainer"><img src="../images/gui-builder_tabs_title_editor.png" alt="Tabs Titles Editor"></div>  
+
+<!-- end sidebar -->
+
+<div class="heading">4.00.3 The Menubar: </div>
+
+<div class="sectionIndented"> <!-- file -->
+<span class="textEmphasis125">File: </span> 
+
+<div class="sectionIndented">
+<span class="textEmphasis110">New Project: </span> 
+Creates a new project. This will replace the current workspace 
+with a blank one. You will be prompted to confirm.
+You can change the project name in 'Settings -> Project Settings'.
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Save Project: </span> 
+Saves the current workspace to a file in the "projects" directory. 
+The save dialog will appear in the sidebar. The 'name' box 
+will show the name of the current project. Edit it if you wish. 
+The file name will be the textbox name with "_PROJ.lua" 
+appended to it. This option is suggested for saving 
+projects during the development phase. 
+<br>
+Click 'Save'. If the project file already exists you will 
+be prompted to continue. 
+
+</div>
+
+<!--
+<div class="sectionIndented">
+<span class="textEmphasis110">Save Project - Skip defaults: </span> 
+Same as "Save Project" but doesn't save properties if they are 
+the class's defaults.
+</div>
+-->
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Save Elements: </span> 
+Saves the current workspace to a file in the "scripts" directory. 
+The save dialog will appear in the sidebar. The 'name' box 
+will show the name of the current project. Edit it if you wish. 
+The file name will be the textbox name with "_ELMS.lua" 
+appended to it. This option should be used when your layout is 
+ready to be added to your main script. Saving this way the 
+elements file will be located alongside the main script making 
+it more straightforward to import it into the main script.  
+<br>
+Click 'Save'. If the elements file already exists you will 
+be prompted to continue. 
+</div>
+
+<!--
+<div class="sectionIndented">
+<span class="textEmphasis110">Save Elements - Skip Defaults: </span> 
+Same as "Save Elements" but doesn't save properties if they are 
+the class's defaults.
+</div>
+-->
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Save Template: </span> 
+Say you have designed a slider with a configuration that you may 
+want to use in another project. Use this to save it as a template. 
+Saves the currently selected element to a file in the 
+"projects" directory. 
+The save dialog will appear in the sidebar. The 'name' box 
+will show the name of the selected element. Edit it if you wish. 
+The file name will be the textbox name with "_TMPL.lua"  
+appended to it. 
+<br>
+Click 'Save'. If the template file already exists you will 
+be prompted to continue. 
+
+</div>
+
+<!--
+<div class="sectionIndented">
+<span class="textEmphasis110">Save - Selected - Skip defaults: </span> 
+Same as "Save - Selected Only" but doesn't save properties 
+if they are the class's defaults. 
+</div>
+-->
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Load Project: </span> 
+Displays a list of project files in the "projects" directory. 
+Select one to load it. You will be prompted before clearing 
+the workspace.
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Load Elements File: </span> 
+Displays a list of files in the "scripts" directory. 
+Select one to load it. You will be prompted before clearing 
+the workspace.
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Load Template: </span> 
+Displays a list of template files in the "projects" directory. 
+Select one to load it. The element will be placed on layer 1. 
+You can move it to another layer by changing its 'z' value. 
+</div>
+
+</div>
+<!-- end File -->
+
+<div class="imgTitle top100">Template Save Dialog</div>
+<div class="imgContainer"><img src="../images/gui-builder_save_dialog.png" alt="Save Dialog"></div>  
+<br>
+<div class="sectionIndented"> <!-- settings -->
+<span class="textEmphasis125">Settings: </span> 
+
+<div class="sectionIndented"> 
+<span class="textEmphasis110">Project Settings: </span> 
+Opens the 'Project Settings' window. Here you can change the 
+project name, the x and y position where you want your 
+script to open, the width and height of your script window, 
+and docking state. Click 'Save' to save your settings.
+</div>
+
+<div class="sectionIndented"> 
+"Scripts Directory" points to the location of the directory 
+where the elements file is saved to when using "Save Elements". 
+This should be the directory where your scripts are stored. 
+It defaults to the recommended location within the 
+"dh_Toolkit" directory. If for some reason you decide to run 
+your scripts from elsewhere then this should point to that 
+directory. The directory is relative to the GUI Builder directory. 
+Edit it with caution. The default is "../scripts/".
+</div>
+
+<div class="sectionIndented"> 
+<span class="textEmphasis110">Preferences: </span> 
+Opens the 'Preferences' window. 
+Here you can turn grid snapping on or off, toggle grid show, 
+set the grid size, and change the grid color. You can change 
+the size of the grid text. You can also change the relative 
+size of the font used by the GUI. I included the latter 
+in case the system fonts display differently than the system 
+the script was developed on. 
+Click 'Save' to save your settings.
+</div>
+
+</div>
+<!-- end Settings -->
+
+<div class="sectionIndented"> 
+<span class="textEmphasis125">GUI_Scale: </span> 
+Select a scale size from the drop-down menu to resize the 
+entire GUI_Builder, including the workspace.
+</div>
+<!-- end GUI_Scale -->
+
+<div class="sectionIndented"> 
+<span class="textEmphasis125">Set_Theme: </span> 
+Change the theme by selecting one from the drop-down menu. 
+(As of 03-18-2026 user themes not supported.)
+</div>
+<!-- end Set Theme -->
+
+<div class="sectionIndented"> 
+<span class="textEmphasis125">Grid: </span> 
+Click on the option to "Toggle Grid Show" to toggle the 
+visibility of the grid.
+</div>
+<!-- end Grid -->
+
+<div class="sectionIndented"> 
+<span class="textEmphasis125">Help: </span> 
+
+<div class="sectionIndented"> 
+<span class="textEmphasis110">Usage: </span> 
+Opens a popup window displaying some of the common 
+commands.
+</div>
+
+<div class="sectionIndented"> 
+<span class="textEmphasis110">Defaults: </span> 
+Opens a popup window displaying some of the common 
+defaults for the dh_Toolkit classes.
+</div>
+
+</div><!-- end Help -->
+
+<!-- end menubar -->  
+        
+     <br><br><br>   
+     </div>  <!-- end pageBody --> 
+
+  </body>
+
+</html>

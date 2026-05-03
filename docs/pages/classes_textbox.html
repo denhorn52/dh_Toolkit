@@ -23,40 +23,90 @@
    
     <div class="pageBody">
     
-        <div class="heading">5.11 dh_Textbox:</div>
+<div class="heading">6.11 dh_Textbox:</div>
     
-        <div class="sectionDefault">
-            Same as Lokasenna Textbox except changed most of the property names for consistency with other dh_Toolkit classes.
-        </div>
-        <div class="sectionDefault">             
-            Allows all of the color properties to be overridden.
-        </div>
-        <div class="sectionDefault">             
-            Note: Caption is optional. If used it will use "col_cap_bg" and "col_cap_text" colors.
-        </div>
+<div class="sectionIndented"><!-- sectiom #1 -->
+
+<span class="textEmphasis110">Same as Lokasenna Textbox except for:</span>  
+  
+<div class="sectionIndented"><!-- sectiom #2 -->
+
+<div class="sectionListItem"> 
+Changed most of the property names for consistency with other dh_Toolkit classes.
+</div>
+        
+<div class="sectionListItem"> 
+Allows all of the color properties to be overridden.
+</div>
+
+<div class="sectionListItem"> 
+Frame color, by default, uses highlight/lowlight colors that 
+are automatically calculated from 'col_backdrop' color. 
+However, the frame can be set to use a single color (specified 
+by the 'col_frame' property) by setting 
+'frame_use_outline' property to true. Some themes can call for 
+single color outlines regardless of the 'frame_use_outline' setting.
+</div>
+
+<div class="sectionListItem"> 
+Added ability to change the selected text highlight color.
+The property 'col_sel_text' specifies the highlight color. 
+That color is ADDED to the list background color to produce 
+the highlight.
+The GUI color 'sel_txt' is an alpha adjusted color. 
+If 'sel_txt' color is specified it will use 
+its alpha and color. Otherwise it will use the 
+specified color with a default alpha of 0.5.
+</div>
+
+
+</div><!-- end Section #1 -->  
+        
+</div><!-- end Section #1 -->  
  
-<div class="chartCont">
-<pre>----------------------------------------------------------------------------
-   [color_name] brackets indicate that the color is hardcoded.                      
-----------------------------------------------------------------------------
-Class:           |    Lokasenna Textbox      |       dh_Textbox      
-attribute:       | property_name   default   | property_name   default
-----------------------------------------------------------------------------
-text:              retval          ""          retval          ""
-caption font:      font_a          3 (sans16)  font_caption    sans20
-text font:         font_b          monospace   font_text       mono16
-padding top left:  pad             4           pad             4
+<div class="chartCont text110">
+<pre>--------------------------------------------------------
+attribute:          property_name       default value
+--------------------------------------------------------
+text: *             retval              ""
+undo limit:         undo_limit          20
+
+caption:            caption             ""
+caption font:       font_caption       "sans22"
+caption position:   cap_pos            "top"
+caption offset x:   cap_pad_x           4
+caption offset y:   cap_pad_y           4
+caption centered:   cap_centered        false
+
+text font:          font_text          "mono16"
+text padding:       pad                 4
+text align:         align              "left"  
+
+shadow element:     shadow              false
+shadow caption:     shadow_caption      false
+
+frame outline:      frame_use_outline   false
+frame thickness:    frame_thk           2
+allow sel.outline:  allow_sel_outline   false
+
+override sel alpha: use_sel_alpha       false
+override value:     sel_alpha           0.5
 
 -- colors --
-caption bg:        bg              wnd_bg      col_cap_bg      wnd_bg         
-caption text:      color           txt         col_cap_text    txt
-box bg:            [elm_bg]                    col_bg          elm_bg
-box frame:         [elm_frame]                 col_frame       elm_frame
-box text:          color           txt         col_text        elm_txt
-selected text:     [elm_fill]                  col_sel_text    sel_txt
-outline focused:   [elm_fill]                  col_active      elm_active
+box bg:             col_bg             "elm_bg"
+box frame:          col_frame          "elm_frame"
+box text:           col_text           "elm_txt"
+selected text:      col_sel_text       "sel_txt"
+caption text:       col_cap_text       "txt
+
+elm sel.outline:    col_active         "elm_active"
+backdrop:           col_backdrop       "wnd_bg"
+
+* Can set text using GUI.Val
 ----------------------------------------------------------------------------</pre>
-</div> 
+</div>
+
+
 
     <br><br>
     </div>  <!-- end pageBody -->
@@ -64,5 +114,3 @@ outline focused:   [elm_fill]                  col_active      elm_active
   </body>
 
 </html>
-
-

@@ -23,42 +23,200 @@
 
     <div class="pageBody">
 
- <div class="heading">5.02 dh_Knob:</div>
+<div class="heading">6.02 dh_Knob:</div>
     
-<div class="sectionDefault">             
-Draws a knob with optional caption. 
-Caption and entire knob element use the same background and text colors.<br> 
-Same as Lokasenna Knob except changed some property names.<br>
-Added property "centered".<br>
-&nbsp;&nbsp;&nbsp;&nbsp;if centered is false then x and y are to edges of knob.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;if centered is true then x and y are to center of knob.<br>
+<div class="sectionIndented"><!-- sectiom #1 -->
+
+
+<div class="sectionListItem">                        
+<span class="textEmphasis110">Draws a knob with optional caption.</span><br>
+Built upon the Lokasenna Knob. Changed some property names, and 
+added features.
+
+<div class="sectionDefault">                        
+Property 'centered':<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if 'centered' is false then x and y are the top-left of knob body.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if 'centered' is true then x and y are to center of knob.
 </div>
-<div class="sectionListItem">             
-When increasing font_text size one needs to also increase 
-knob w and h, or else text overlaps.
-</div>        
 
-<div class="chartCont">
-<pre>----------------------------------------------------------------------------
-   [color_name] brackets indicate that the color is hardcoded.                      
-----------------------------------------------------------------------------
-Class:           |    Lokasenna Knob         |       dh_Knob      
-attribute:       | property_name   default   | property_name   default
-----------------------------------------------------------------------------
-caption:           caption         nil         caption         nil
-caption font:      font_a          3 (sans16)  font_caption    sans20
-values font:       font_b          4 (sans16)  font_text       sans16
-centered:          n/a             n/a         centered        true
-       
+</div>
+
+
+
+<div class="sectionDefault"> 
+<span class="textEmphasis110">Knobs can have one of several styles:</span><br>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis">Pointer:</span>
+Displays a knob with a triangular pointer attached to the 
+knob body.<br>  
+</div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis">Flange:</span>
+Displays a knob with a flange and a central body.
+The indicator is a white line on a black flange.<br>
+</div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis">Simple:</span>
+Displays a round knob with the indicator on top.<br>
+</div> 
+
+</div>
+
+
+<div class="sectionListItem"> 
+<span class="textEmphasis110">There are several ways to display</span> 
+the current value of the knob. 
+You can use any or a combination of the various ways.
+
+
+<div class="sectionListItemIndented"> 
+<span class="textEmphasis">Values:</span> 
+Values are displayed as numbers around the knob.<br>
+When increasing font_values size one needs to also increase 
+values padding, or else values may overlap.<br>
+The property 'output' can modify how or which values are displayed. 
+I haven't attempted to use this feature. See Lokasenna docs for details.        
+</div> 
+
+<div class="sectionListItemIndented"> 
+<span class="textEmphasis">Tickmarks:</span> 
+Use tickmarks instead of number values.<br>
+The tickmarks are those tiny lines along the track that are 
+usually set to the number of track steps or a fraction thereof. 
+You can set the size of the tickmarks. 
+Hard ticks refers to a set of tickmarks which 
+can be enhanced with length and/or thickness. Hard ticks are 
+specified as a table, e.g., {0, 5, 10} which indicate at which 
+positions the hard ticks will be displayed.
+</div> 
+
+<div class="sectionListItemIndented">  
+<span class="textEmphasis">Min-max values:</span>
+Displays alpha-numerical values at specified steps. 
+Although the property is called 'min_max_values' it can also display 
+additional values. They are specified in a table, e.g., 
+<span class='inlineBlock'>{{0,"0"}, {5,"5"}, {10,"10"}}.</span> 
+Each item contains the position (step) and the value to be displayed. 
+The value is a string so anything alpha-numerical is valid. 
+</div>
+
+<div class="sectionListItemIndented">  
+<span class="textEmphasis">Note:</span>
+The properties 'max', 'hard_ticks', and 'min_max_values'
+have a relationship between them. When changing 'max' be sure 
+to adjust the latter two as necessary.
+</div> 
+
+</div>
+
+<div class="sectionListItem"> 
+<span class="textEmphasis110">Indicator: </span>            
+Indicator color depends on the knob style. 
+For 'pointer' style and 'simple' style it is automatically 
+derived from the body color (default "btn_txt"). 
+'flange' style uses "white"'. 
+</div>
+
+<div class="sectionDefault"> 
+
+<div class="sectionListItem"> 
+<span class="textEmphasis110">Display:</span> 	  
+The current value can be displayed in a box above (or below) the knob. 
+If 'display_style' is "box" the box is similar to a textbox using 
+'display_bg' color. If 'display_style' is "plain"' the values are 
+displayed in the area defined by the display box, but with no 
+outline and using the background color of where the knob is placed. 
+'display_pad_x' and 'display_pad_y' are used to tweak the position of the box. 
+'display_align' is used to position the value text inside the box. 
+It can be "left", "center", or "right".
+</div> 
+
+<div class="sectionIndented"> 
+Frame color, by default, uses highlight/lowlight colors that 
+are automatically calculated from the 'col_backdrop' color. 
+However, the frame can be set to use a single color (specified 
+by the 'col_frame' property) by setting 
+'frame_use_outline' property to true. Some themes can call for 
+single color outlines regardless of the 'frame_use_outline' setting.
+</div>
+
+</div>
+
+
+</div><!-- end Section #1 -->
+
+<div class="chartCont text110">
+<pre>---------------------------------------------------------
+attribute:            property_name       default value       
+---------------------------------------------------------
+knob style:           knob_style         "pointer"
+centered:             centered            true
+min value(number):    min                 0
+max value(number):    max                 10
+increment size:       inc                 1
+default setting:      default             5
+shadow element:       shadow              false
+
+caption (string):     caption             ""
+caption position:     cap_pos            "top" 
+caption font:         font_caption       "sans22"
+caption padding:      cap_pad             4
+shadow caption:       shadow_caption      false
+
+show values:          show_values         false
+values font:          font_values        "sans18"
+values padding:       pad_values          4 
+displayed vals: *     output              nil
+
+show tickmarks:       show_tickmarks      false
+tickmark steps:       tickmark_steps      10 
+tickmark size:        tickmark_size       4
+tickmarks padding:    pad_ticks           4
+hard ticks:           hard_ticks         {0, 5, 10}
+hard tickmark size:   hard_tick_size      6
+thicken hard ticks:   hard_tick_thk       false
+
+show min-max vals:    show_min_max        false
+min-max values:       min_max_values      table
+
+display style:        display_style      "none"
+display position:     display_pos        "top"
+display width:        display_w           48
+display height:       display_h           28
+display font:         font_display       "sans24"
+display pad x:        display_pad_x       0
+display pad y:        display_pad_y       8
+display align:        display_align      "center"
+
+frame outline:        frame_use_outline   false
+frame thickness: **   frame_thk           2
+allow sel.outline:    allow_sel_outline   false
+
 -- colors --
-background:        bg              wnd_bg      col_bg          wnd_bg 
-text:              col_txt         txt         col_text        txt
-knob outline:      [elm_outline]               col_outline     btn_outline
-knob body:         col_body        elm_frame   col_body        btn_face 
-knob pointer:      col_head        elm_fill    col_head *      txt
+background:           col_bg             "wnd_bg" 
+knob body:            col_body           "btn_face" 
+knob outline:         col_outline        "btn_outline"
+knob pointer:         col_indicator ***  "btn_txt"
+caption text:         col_cap_text       "txt"
 
-* color_head is also highlighted text color.  
-----------------------------------------------------------------------------</pre>
+values text:          col_values         "txt"
+
+display bg:           col_display_bg     "elm_bg"
+display text:         col_display_text   "elm_txt"
+display box frame:    col_frame          "elm_frame"
+elm sel.outline:      col_active         "elm_active"
+
+*    Used to modify/format displayed value. 
+       Accepts table or function.
+       Refer to Lokasenna documentation for details.
+**   Display box frame. 
+***  As of 04-16-2026 col_indicator not used.
+       Indicator color is now automatically derived from body color 
+       except 'flange' style uses white.      
+---------------------------------------------------------</pre>
 </div> 
 
     <br><br>

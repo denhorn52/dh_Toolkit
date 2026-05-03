@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Menubar.lua
--- Date: 20250908
+-- Date: 20260330
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Menubar class
@@ -14,7 +14,8 @@
      Changed property name "col_txt" to "col_text". 
      Added properties do_pad_top and pad_top_val to allow for top padding of titles.
      This was my first attempt to vertically align titles. 
-     Later changed code to vertically center titles if "do_pad_top" (default) is false. 
+     Later changed code to vertically center titles if "do_pad_top" (default) is false.
+     20251103 Added property Tab.limit_w. 
 
 ]]--
 ---------------------------------------------------------------------
@@ -27,10 +28,11 @@ if not GUI then
 end
 ---------------------------------------------------------------------
 -- Creation parameters:
--- name, z, x, y, menus[, w, h, pad]
+-- name, z, x, y[, menus, fullwidth, w, h, pad] 
 ---------------------------------------------------------------------
 GUI.dh_Menubar = GUI.Element:new()
-function GUI.dh_Menubar:new(name, z, x, y, w, h, menus, pad) -- Add your own params here
+--function GUI.dh_Menubar:new(name, z, x, y, menus, fullwidth, w, h, pad)
+function GUI.dh_Menubar:new(name, z, x, y, menus, w, h, pad) 
 
 	local mnu = (not x and type(z) == "table") and z or {}
 
@@ -41,33 +43,38 @@ function GUI.dh_Menubar:new(name, z, x, y, w, h, menus, pad) -- Add your own par
 	mnu.x = mnu.x or x
     mnu.y = mnu.y or y
     mnu.w = mnu.w or w
-    mnu.h = mnu.h or h
-    
-    mnu.menus = mnu.menus or menus
-
-    mnu.pad = mnu.pad or pad or 0
+    mnu.h = mnu.h or h or GUI.dh_Menubar.defaults.h
     
     -- Optional parameters should be given default values to avoid errors/crashes:
-    if not mnu.do_pad_top then
-        mnu.do_pad_top = false
+    
+    mnu.menus = mnu.menus or menus or GUI.dh_Menubar.defaults.menus
+        
+    if (mnu.fullwidth == nil) and (fullwidth == nil) then
+        mnu.fullwidth = true
+    else
+        mnu.fullwidth = mnu.fullwidth or fullwidth 
     end
-    mnu.pad_top_val = mnu.pad_top_val or 0    
 
-    mnu.font = mnu.font or "sans22"
+    -- This will be maximum element width if not fullwidth.
+    -- This is necessary to dynamically change width (as in GUI Builder).
+    mnu.limit_w = mnu.limit_w or GUI.dh_Menubar.defaults.limit_w
+
+    mnu.pad = mnu.pad or pad or GUI.dh_Menubar.defaults.pad
+    
+    mnu.do_pad_top = mnu.do_pad_top or GUI.dh_Menubar.defaults.do_pad_top
+
+    mnu.pad_top_val = mnu.pad_top_val or GUI.dh_Menubar.defaults.pad_top_val    
+
+    mnu.font = mnu.font or GUI.dh_Menubar.defaults.font
 
 ----colors----------------------------------------------------
-    mnu.col_bg = mnu.col_bg or "btn_face" --or "wnd_bg"    
-    mnu.col_text = mnu.col_text or "btn_txt"
-    mnu.col_over = mnu.col_over or "elm_fill"
+    mnu.col_bg = mnu.col_bg or GUI.dh_Menubar.defaults.col_bg   
+    mnu.col_text = mnu.col_text or GUI.dh_Menubar.defaults.col_text
+    mnu.col_over = mnu.col_over or GUI.dh_Menubar.defaults.col_over
 --------------------------------------------------------------
 
-    if mnu.shadow == nil then
-        mnu.shadow = true
-    end
-
-    if mnu.fullwidth == nil then
-        mnu.fullwidth = true
-    end
+    --mnu.shadow = mnu.shadow or false
+    if mnu.shadow == nil then mnu.shadow = true end
 
 	GUI.redraw_z[mnu.z] = true
 
@@ -77,9 +84,28 @@ function GUI.dh_Menubar:new(name, z, x, y, w, h, menus, pad) -- Add your own par
 
 end
 
+GUI.dh_Menubar.defaults = {
+
+    h = 28,
+    fullwidth = true,
+    limit_w = 0,
+    menus = {},
+    font = "sans22",
+    pad = 0,
+    
+    shadow = true,
+    do_pad_top = false,
+    pad_top_val = 0,
+ 
+    col_bg = "btn_face",    
+    col_text = "btn_txt",
+    col_over = "elm_fill",    
+}
 
 function GUI.dh_Menubar:init()
-    --GUI.Msg("dh_Menubar:init name : " .. self.name)
+
+    --GUI.Msg("\ndh_Menubar:init name : " .. self.name)
+    
     if gfx.w == 0 then return end
 
     self.buff = self.buff or GUI.GetBuffer()
@@ -91,7 +117,6 @@ function GUI.dh_Menubar:init()
     gfx.dest = self.buff
     gfx.setimgdim(self.buff, -1, -1)
 
-
     -- Store some text measurements
     GUI.font(self.font)
 
@@ -102,18 +127,21 @@ function GUI.dh_Menubar:init()
         self.menus[i].width = gfx.measurestr(self.menus[i].title)
 
     end
-
-    --self.w = self.w or 0
-    --self.w = self.fullwidth and (GUI.cur_w - self.x) or math.max(self.w, self:measuretitles(nil, true))
-    --self.h = self.h or gfx.texth
     
-    self.w = self.fullwidth and (self.w - self.x) or math.max(self.w, self:measuretitles(nil, true))    
+    --GUI.Msg("    limit_w : " .. tostring(self.limit_w))    
+        
+    -- Determine width.
+    self.w = self.fullwidth and (GUI.cur_w - self.x) or math.max(self.limit_w or 0, self:measuretitles(nil, true))
+    self.h = self.h or gfx.texth
     
+    self.w = math.floor(self.w + 0.5)
+    self.h = math.floor(self.h + 0.5)    
+  
     --GUI.Msg("dh_Menubar:init gfx.texth : " .. tostring(gfx.texth))
     --GUI.Msg("dh_Menubar:init gfx.w : " .. tostring(gfx.w))    
     --GUI.Msg("dh_Menubar:init GUI.cur_w : " .. tostring(GUI.cur_w))
     --GUI.Msg("dh_Menubar:init GUI.cur_w - self.x : " .. tostring(GUI.cur_w - self.x))
-   -- GUI.Msg("dh_Menubar:init self.w : " .. tostring(self.w))        
+    --GUI.Msg("dh_Menubar:init self.w : " .. tostring(self.w))        
 
     -- Draw the background + shadow
     gfx.setimgdim(self.buff, self.w, self.h * 2)

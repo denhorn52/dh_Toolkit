@@ -1,7 +1,7 @@
 --dh_Template-mult.lua 
 -- version 1.0 
 -- Author: Dennis R. Horn
--- Date: 2025-09-08
+-- Date: 2026-03-15
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -29,7 +29,7 @@
 -- dh_Toolkit provides the theming and scaling capabilities.
 -- dh_Toolkit provides a "Preferences" window to select scale and theme options,
 --   and an optional Checklist which can be used for project specific options.
--- The "Preferences" window is designed at 600 x 400 using z-layers 9-20.
+-- The "Preferences" window is designed at 600 x 400 using z-layers 490-500.
 -- This template provides for three window heights'
 -- The dh_Toolkit directory contains the scripts that can be used
 --   within Reaper. It is to be placed in your Reaper "scripts" directory.
@@ -113,10 +113,10 @@ loadfile(lib_path .. "Core.lua")()
 
 --[[ DEV NOTE: Comment out classes not being used. ]]
 
-GUI.req("Classes/Class - Button.lua")()
-GUI.req("Classes/Class - Frame.lua")()
+--GUI.req("Classes/Class - Button.lua")()
+--GUI.req("Classes/Class - Frame.lua")()
 --GUI.req("Classes/Class - Knob.lua")()
-GUI.req("Classes/Class - Label.lua")()
+--GUI.req("Classes/Class - Label.lua")()
 --GUI.req("Classes/Class - Listbox.lua")()
 --GUI.req("Classes/Class - Menubar.lua")()
 --GUI.req("Classes/Class - Menubox.lua")()
@@ -151,13 +151,18 @@ if not dhtk_path or dhtk_path == "" then
     return
 end
 
---loadfile(dhtk_path .. "common/dh_Toolkit_core.lua")()
 package.path = package.path .. ";" .. dhtk_path .. "?.lua"
+
+-- !!! Load GUI.overrides.
+require "common/GUI_overrides"
 
 ----------------------------------------
 --[[ DEV NOTE: !!! Necessary. ]]--
 DHTK = require "common/dh_Toolkit_core"
 ----------------------------------------
+-- Set to true if script uses dh_Toolkit Prefs window.
+-- Set to false if script handles Prefs in its own way (as with GUI Builder).)
+DHTK.USE_DHTK_PREFS = true
 
 --[[ DEV NOTE: Replace with a name you choose. ]]--
 -- This is the name to be used as the section name when 
@@ -167,6 +172,7 @@ DHTK.EXT_STATE_NAME = "dh_Template-mult"
 --[[ DEV NOTE: Must be true when using multiple window heights. ]]--
 DHTK.MULTIPLE_HEIGHTS = true
 
+--[[ DEV NOTE: Set script window sizes. ]]--
 -- Script window dimensions at 1.00x scale.
 -- 600 x 340 is minimum size for "Preferences" window.
 DHTK.APP_WIDTH = 600
@@ -187,30 +193,30 @@ DHTK.s_PREFS_HEIGHT = DHTK.PREFS_HEIGHT
      Comment out classes not used. 
      dh_Menubox and dh_Options are needed for "Preferences" window.]]--
 
--- Needed for core.
-local dh_btn = require "classes/dh_Button"     
-local dh_lbl = require "classes/dh_Label"
-local dh_mbx = require "classes/dh_Menubox"     
-local dh_panel = require "classes/dh_Panel"     
+-- dh_Toolkit classes 
 
---local dh_knob = require "classes/dh_Knob"
---local dh_lbx = require "classes/dh_Listbox"
---local dh_mbr = require "classes/dh_Menubar"
-local dh_opt = require "classes/dh_Options"
---local dh_sld = require "classes/dh_Slider"
---local dh_tabs = require "classes/dh_Tabs"
---local dh_tbx = require "classes/dh_Textbox"
---local dh_tbx = require "classes/dh_TextEditor"
+-- Needed for core.
+require "classes/dh_Button"     
+require "classes/dh_Label"
+require "classes/dh_Menubox"  
+require "classes/dh_Options"   
+require "classes/dh_Panel"   
+  
+--require "classes/dh_Knob"  
+--require "classes/dh_Listbox"
+--require "classes/dh_Menubar"
+--require "classes/dh_Slider_H"
+--require "classes/dh_Slider_V"
+--require "classes/dh_Tabs"
+--require "classes/dh_Textbox" 
+--require "classes/dh_TextEditor"
+
 ----------------------------------------
 --[[ DEV NOTE: !!! Necessary. Must be after req dh_Options ]]--
 DHTK.init_DHTK()
 -----------------------------------------
 
--- May be used to access some toolkit functions.
--- Or may use DHTK.shared
-local dhtks = require "common/dh_Toolkit_shared"
-
--- May be used for saving and loading ext states.
+-- Used for saving/loading to extstate.
 local json = require "common/json"
 
 --======================================
@@ -336,23 +342,19 @@ end
 
 --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 -- This frame is optional. It is provided as possible starting point.
-GUI.New("frm_Main", "Frame", {
+GUI.New("pnl_Main", "dh_Panel", {
     z = 100,
     x = 0,
     y = 0,
     w = DHTK.APP_WIDTH, 
     h = DHTK.APP_MIN_HEIGHT, 
     shadow = false,
-    fill = false,
-    color = "wnd_bg",
-    bg = "wnd_bg",
-    round = 0,
-    text = "",
-    txt_indent = 0,
-    txt_pad = 0,
-    pad = 8, 
-    font = "sans16",
-    col_txt = "txt"
+    border_width = 2,    
+    radius = 0,        
+    col_bg = "wnd_bg",
+    col_border = "panel_border",
+    col_text = "txt",
+    col_backdrop = "wnd_bg",    
 })
 -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 --[[ DEV NOTE: 
@@ -361,29 +363,29 @@ GUI.New("frm_Main", "Frame", {
      Feel free to move to another layer,
        or have other mechanism to open and close "Preferences" window. 
 --]]
-GUI.New("btn_Prefs", "Button", {
+GUI.New("btn_Prefs", "dh_Button", {
     z = 99,
     x = 456, 
     y = 8, 
     w = 80, 
     h = 28, 
-    caption = "Prefs",
+    text = "Prefs",
     font = "sans24",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
-	func = btn_ShowPrefsWindow
+    col_bg = "btn_face",
+    col_text = "btn_txt",
+    func = DHTK.showPrefsWindow,
 })
---zz0406
-GUI.New("btn_MinMax", "Button", {
+
+GUI.New("btn_MinMax", "dh_Button", {
     z = 35,
     x = 552, 
     y = 8, 
     w = 32, 
-    h = 32, 
-    caption = "+",
+    h = 32,
+    text = "+", 
     font = "sans32",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    col_bg = "btn_face",
+    col_text = "btn_txt",
     func = btn_MinMaxClick,
     r_func = btn_MinMaxRightClick,
     r_params = {} -- Must include if using r_func or script crashes.
@@ -398,7 +400,7 @@ GUI.New("btn_MinMax", "Button", {
      Can use this as a template. 
 --]]
 
-GUI.New("lbl_Options", "Label", {
+GUI.New("lbl_Options", "dh_Label", {
     z = 499, 
     x = 372, 
     y = 32, 
@@ -411,42 +413,25 @@ GUI.New("chkl_Options",	"dh_Checklist",	{
     x = 368, 	
     y = 56,  
     w = 220, 
-    h = 236,
+    h = 240,
 	caption = "",
 	--shadow = false,
 	--opts = template_options_names, -- defined in "my data"
 	opts= {},
 	dir = "v", 
-	pad = 8,
-	
-	frame = true,
-    field = false,
-    border_width = 1, 
+
+    border_width = 2, 
     radius = 0,	
 	
+	col_bg = "panel_bg",  
     col_border = "panel_border",	
-	--col_bg = "panel_bg",  -- caption bg color
-	col_text = "txt", 
-	col_field = "panel_bg",
-	
+	col_text = "panel_txt", 
+    col_backdrop = "wnd_bg",
+    	
 	font_caption = "sans22",
 	font_text = "sans22",
 
 })
-
-----------------------------------------
-------      Tips Display      ------
-----------------------------------------
---zztips
---<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
---[[ DEV NOTE:
-     There is some extra room at bottom of "Preferences" window. 
-     I used it to include some useful tips.
-     You may use, alter, or discard. ]]--
---GUI.New("lbl_tip_01", "Label", 19, 18, 332, "Go button Click - go to view indicated by menubox.", false, "sans20", "txt", "elm_fill" )
---GUI.New("lbl_tip_02", "Label", 19, 18, 352, "Go button Shift + Click - update view indicated by menubox.", false, "sans20", "txt", "elm_fill" )
---GUI.New("lbl_tip_03", "Label", 19, 18, 372, "Go button Alt + Click - rename view with text in textbox.", false, "sans20", "txt", "elm_fill" )
--->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 --======================================
   ------   Method Overrides  ------
@@ -509,7 +494,7 @@ local function populateLists(proj)
     if (retval == 1) then
         local opts = json.decode(json_string) -- should return Lua table
             
-        if type(opts) == "table" and dhtks.hash_table_length(opts) > 0 then
+        if type(opts) == "table" and DHTK.hash_table_length(opts) > 0 then
             template_options = opts
           
             -- Update checklist --
@@ -678,6 +663,8 @@ populateLists(proj_before_change)
 --]==]
 
 local function dhMain()
+
+    --[[ DEV NOTE: This condition used by dh_Toolkit. ]]--
 	if GUI.resized then
         -- If the window's size has been changed, reopen it
         -- at the current position with the size we specified.	

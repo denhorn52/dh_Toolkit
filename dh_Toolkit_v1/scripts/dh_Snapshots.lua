@@ -1,7 +1,7 @@
 --dh_Snapshots.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 2025-09-08
+-- Date: 20260330
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -46,9 +46,6 @@
 ---------------------------------------
 --zztodo
 --[==[
-
-> ? Check if dh_Toolkit. If not use only Lokasenna classes.
-  Still want to use themes even if no scaling./
 
 > reaper.BR_GetMediaTrackByGUID(ReaProject proj, string guidStringIn)
 
@@ -139,10 +136,10 @@ if not lib_path or lib_path == "" then
 end
 loadfile(lib_path .. "Core.lua")()
 
-GUI.req("Classes/Class - Button.lua")()
-GUI.req("Classes/Class - Frame.lua")()
+--GUI.req("Classes/Class - Button.lua")()
+--GUI.req("Classes/Class - Frame.lua")()
 --GUI.req("Classes/Class - Knob.lua")()
-GUI.req("Classes/Class - Label.lua")()
+--GUI.req("Classes/Class - Label.lua")()
 --GUI.req("Classes/Class - Listbox.lua")()
 --GUI.req("Classes/Class - Menubar.lua")()
 --GUI.req("Classes/Class - Menubox.lua")()
@@ -158,8 +155,8 @@ if missing_lib then return 0 end
 
 GUI.name = "dh_Snapshots v1.0"
 
---Hide the version number since I'm using a small window.
---GUI.Draw_Version = function () end
+-- Hide the version number since I'm using a small window.
+GUI.Draw_Version = function () end
 
 -- Lighten up shadow color.
 -- !!! Would like to make this part of theming.
@@ -170,51 +167,50 @@ GUI.colors["shadow"] = {0,0,0,32}
 --======================================
 -- Adds current directory to path.
 
--- Next line from XRaym Preset script.lua. 
---local script_folder = debug.getinfo(1).source:match("@?(.*[\\|/])")
---package.path = package.path .. ";" .. script_folder .. "?.lua"
-
 local dhtk_path = reaper.GetExtState("dh_Toolkit", "lib_path_v1")
 if not dhtk_path or dhtk_path == "" then
     reaper.MB("Couldn't load dh_Toolkit. Please install 'dh_Toolkit v1 for Lua', available on ReaPack, then run the 'Set dh_Toolkit v1 library path.lua' script in your Action List.", "Whoops!", 0)
     return
 end
 
---loadfile(dhtk_path .. "common/dh_Toolkit_core.lua")()
 package.path = package.path .. ";" .. dhtk_path .. "?.lua"
+
+-- !!! Load GUI.overrides.
+require "common/GUI_overrides"
 
 ----------------------------------------
 DHTK = require "common/dh_Toolkit_core"
 ----------------------------------------
+-- Set to true if script uses dh_Toolkit Prefs window.
+-- Set to false if script handles Prefs in its own way (as with GUI Builder).)
+DHTK.USE_DHTK_PREFS = true
 
 DHTK.EXT_STATE_NAME = "dh_Snapshots"
 
 -- Script window dimensions at 1.00x scale.
-DHTK.APP_WIDTH = 640
-DHTK.APP_HEIGHT = 400
+DHTK.APP_WIDTH = 600
+DHTK.APP_HEIGHT = 340
 
 --------------------------------
--- Needed for core.
-local dh_btn = require "classes/dh_Button"     
-local dh_lbl = require "classes/dh_Label"
-local dh_mbx = require "classes/dh_Menubox"     
-local dh_panel = require "classes/dh_Panel"     
+-- dh_Toolkit classes 
 
---local dh_knob = require "classes/dh_Knob"
-local dh_lbx = require "classes/dh_Listbox"
---local dh_mbr = require "classes/dh_Menubar"
-local dh_opt = require "classes/dh_Options"
---local dh_sld = require "classes/dh_Slider"
---local dh_tabs = require "classes/dh_Tabs"
-local dh_tbx = require "classes/dh_Textbox"
---local dh_tbx = require "classes/dh_TextEditor"
+-- Needed for core.
+require "classes/dh_Button"     
+require "classes/dh_Label"
+require "classes/dh_Menubox"  
+require "classes/dh_Options"   
+require "classes/dh_Panel"   
+  
+require "classes/dh_Listbox"
+require "classes/dh_Options"
+require "classes/dh_Textbox" 
 
 --------------------------------
 -- !!! Necessary. Must be after req dh_Options
 DHTK.init_DHTK()
 --------------------------------
 
-local dhtks = require "common/dh_Toolkit_shared"
+-- Used for saving/loading to extstate.
 local json = require "common/json"
 
 --======================================
@@ -227,8 +223,8 @@ local json = require "common/json"
 -- These need to be declared before function definitions.
 local POPUP_WIDTH = 480
 local POPUP_HEIGHT = 256
-local POPUP_LEFT = 80
-local POPUP_TOP = 56
+local POPUP_LEFT = 60
+local POPUP_TOP = 44
 
 --------------------------------------------
 -- List of snapshot names. Each name must be unique. Sorted alphabetically.
@@ -351,7 +347,7 @@ local function renameSnapshot()
     --dh_log(" ****  renameSnapshot  ****")
         
     -- Validate textbox text --
-    local retval, new_name = dhtks.validate_name(GUI.Val("tbx_SnapshotName"))
+    local retval, new_name = DHTK.validate_name(GUI.Val("tbx_SnapshotName"))
     
     if not retval then return end
     
@@ -490,7 +486,7 @@ local function buildTrackList()
 		   
 		    fx_instance["params"] = params
 		   
-		    --dh_log(">>> size of params : " .. dhtks.hash_table_length(fx_instance["params"]))
+		    --dh_log(">>> size of params : " .. DHTK.hash_table_length(fx_instance["params"]))
 		   
 		    table.insert(fx_table, fx_instance)
 
@@ -526,7 +522,7 @@ local function saveSnapshot(is_new)
 	-- there is no need to validate snapshot_name.
 	
 	if is_new == true then
-	    retval, snapshot_name = dhtks.validate_name(snapshot_name)
+	    retval, snapshot_name = DHTK.validate_name(snapshot_name)
         if not retval then return end
 	end
 
@@ -794,7 +790,7 @@ local function applySnapshot()
 	                                --dh_log(">>> apply: is_fx_enabled : " .. tostring(is_fx_enabled))
 	                
 	                                -- # Iterate and set params --
-	                                --dh_log(">>> size of fx_instance['params'] : " .. dhtks.hash_tablelength(fx_instance["params"]))
+	                                --dh_log(">>> size of fx_instance['params'] : " .. DHTK.hash_tablelength(fx_instance["params"]))
 	                 
 	                                for _, param in ipairs(fx_instance["params"]) do
 	                
@@ -1030,55 +1026,46 @@ end
   --------      ELEMENTS      --------
 --======================================
 --zzelements
- 
--- Adjustments to core elements to accommodate options..
-if GUI.elms["pnl_ScaleSection"] then GUI.elms["pnl_ScaleSection"].h = 264 end
-if GUI.elms["pnl_ThemesSection"] then GUI.elms["pnl_ThemesSection"].h = 264 end
 
 --------------------------------
 ------    Main Window    ------
 --------------------------------
 
-GUI.New("frm_Main", "Frame", {
+GUI.New("pnl_Main", "dh_Panel", {
     z = 50,
     x = 0,
     y = 0,
     w = DHTK.APP_WIDTH, 
     h = DHTK.APP_HEIGHT, 
     shadow = false,
-    fill = true,         
-    color = "wnd_bg",    	
-    bg = "wnd_bg",       
-    round = 0,
-    text = "",
-    txt_indent = 0,
-    txt_pad = 0,
-    pad = 8, 
-    font = "sans16",
-    col_txt = "txt"
+    border_width = 0,
+    radius = 0,    
+    col_bg = "wnd_bg",
+    col_border = "panel_border",
+    col_text = "txt",
 })
 
-GUI.New("lbl_Snapshots", "Label", {
+GUI.New("lbl_Snapshots", "dh_Label", {
     z = 49,
     x = 32, 
     y = 8, 
-    caption = "Snapshots",
+    shadow = false,
+    text = "Snapshots",
     font = "sans32",
-    color = "txt",
-    bg = "wnd_bg",    
-    shadow = false
+    col_bg = "wnd_bg",    
+    col_text = "txt",
 })
 
-GUI.New("btn_Prefs", "Button", {
+GUI.New("btn_Prefs", "dh_Button", {
     z = 49,
     x = 488, 
     y = 12, 
     w = 80, 
     h = 28, 
-    caption = "Prefs",
-    font = "sans24",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    text = "Prefs",
+    font = "sans28",
+    col_bg = "btn_face",	    
+    col_text = "btn_txt",
 	func = DHTK.showPrefsWindow
 })
 
@@ -1087,54 +1074,55 @@ GUI.New("lbx_SnapshotsNames", "dh_Listbox", {
     x = 16, 
     y = 48, 
     w = DHTK.APP_WIDTH - 32, 
-    h = 272, 
+    h = 236, 
     list = {},
     multi = false, --!!! Must be false
     caption = "",
-    pad = 4,
-    shadow = true,
-    font_text = "sans32",        -- list font
+    pad = 8,
+    font_text = "sans28",
+    line_height = 1.1,        
     col_text = "elm_txt",
-    col_sel_text = "sel_txt",    
+    col_sel_text = "sel_txt",
+    col_backdrop = "wnd_bg",    
 })
 
 
-GUI.New("btn_AddSnapshot", "Button", {
+GUI.New("btn_AddSnapshot", "dh_Button", {
     z = 49,
     x = 32, 
-    y = 332, 
+    y = 296, 
     w = 96, 
-    h = 36,  
-    caption = "Add",
+    h = 32,  
+    text = "Add",
     font = "sans28",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    col_bg = "btn_face",	
+    col_text = "btn_txt",
 	func = btn_AddSnapshotClick
 })
 
-GUI.New("btn_ApplySnapshot", "Button", {
+GUI.New("btn_ApplySnapshot", "dh_Button", {
     z = 49,
     x = 178, 
-    y = 332, 
+    y = 296, 
     w = 240, 
-    h = 36, 
-    caption = "Apply",
+    h = 32, 
+    text = "Apply",
     font = "sans28",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    col_bg = "btn_face",	
+    col_text = "btn_txt",
 	func = btn_ApplySnapshotClick
 })
 
-GUI.New("btn_DeleteSnapshot", "Button", {
+GUI.New("btn_DeleteSnapshot", "dh_Button", {
     z = 49,
     x = 472, 
-    y = 332, 
+    y = 296, 
     w = 96, 
-    h = 36, 
-    caption = "Delete",
+    h = 32, 
+    text = "Delete",
     font = "sans28",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",
+    col_bg = "btn_face",
+    col_text = "btn_txt",
 	func = btn_DeleteSnapshotClick
 })
 
@@ -1149,7 +1137,6 @@ GUI.New("bg_SaveSnapshotDialog", "dh_Panel", {
     y = 0,
     w = DHTK.APP_WIDTH, 
     h = DHTK.APP_HEIGHT, 
-    --shadow = false,
     border_width = 0,
     radius = 0,
     col_bg = {0, 0, 0, 96},
@@ -1165,32 +1152,32 @@ GUI.New("frm_SaveSnapshotDialog", "dh_Panel", {
     border_width = 6, 
     radius = 8, 
     col_border = "panel_border",	
-    col_bg = "panel_bg"
+    col_bg = "panel_bg",
+    col_text = "panel_txt",
+    col_backdrop = "shadow",
 })
 
-GUI.New("lbl_SaveSnapshotDialog", "Label", {
+GUI.New("lbl_SaveSnapshotDialog", "dh_Label", {
     z = 25,
     x = POPUP_LEFT + 120, 
     y = POPUP_TOP + 16, 
-    caption = "Create new Snapshot",
+    text = "Create new Snapshot",
     font = "sans32",
-    color = "txt",
-    bg = "panel_bg",    
-    shadow = false
+    col_bg = "panel_bg",        
+    col_text = "panel_txt",
 })
 
-GUI.New("lbl_SnapshotName", "Label", {
+GUI.New("lbl_SnapshotName", "dh_Label", {
     z = 27,
     x = POPUP_LEFT + 44,  
     y = POPUP_TOP + 64, 
-	caption = [[Use only alphanumeric, $, &, +, -, or _.
+	text = [[Use only alphanumeric, $, &, +, -, or _.
 	Parentheses and brackets are allowed.
 	Spaces are converted to underscores.
 	]],
     font = "sans24",
-    color = "txt",
-    bg = "panel_bg",
-    shadow = false
+    col_bg = "panel_bg",
+    col_text = "panel_txt",
 })
 
 --!!! Keep this with its own z to prevent unnecessary 
@@ -1204,34 +1191,37 @@ GUI.New("tbx_SnapshotName", "dh_Textbox", {
     h = 36, 
     caption = "",
     font_text = "mono20",   --Need mono font in textbox
+    pad = 8,
     col_text = "elm_txt",
-    col_sel_text = "sel_txt",    
+    col_sel_text = "sel_txt",
+    col_backdrop = "panel_bg",    
 })
 
-GUI.New("btn_ConfirmSaveSnapshot", "Button", {
+GUI.New("btn_ConfirmSaveSnapshot", "dh_Button", {
     z = 27,
     x = POPUP_LEFT + 48, 
     y = POPUP_TOP + 196, 
     w = 144, 
-    h = 36, 
-    caption = "Save",
-    font = "sans32",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    h = 32, 
+    text = "Save",
+    font = "sans28",
+    col_bg = "btn_face",	
+    col_text = "btn_txt",
+    -- added property for this script
     is_new = true,
 	func = btn_ConfirmSaveSnapshotClick
 })
 
-GUI.New("btn_CancelSaveSnapshot", "Button", {
+GUI.New("btn_CancelSaveSnapshot", "dh_Button", {
     z = 27,
     x = POPUP_LEFT + 290, 
     y = POPUP_TOP + 196, 
     w = 144, 
-    h = 36, 
-    caption = "Cancel",
-    font = "sans32",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    h = 32, 
+    text = "Cancel",
+    font = "sans28",
+    col_bg = "btn_face",	    
+    col_text = "btn_txt",
 	func = hideSaveSnapshotDialogBox
 })
 
@@ -1241,50 +1231,38 @@ GUI.New("btn_CancelSaveSnapshot", "Button", {
 -- This gets added to Preferences window. Watch those z layers.
 --zzoptions 
 
-GUI.New("lbl_Options", "Label", {
-    z = 499, 
+GUI.New("lbl_Options", "dh_Label", {
+    z = 487, 
     x = 372, 
     y = 32, 
-    caption = "Options", 
-    font = "sans22",
+    text = "Options", 
+    font_text = "sans22",
 })
 
 GUI.New("chkl_Options",	"dh_Checklist",	{
-	z = 489, 
+	z = 487, 
     x = 368, 	
     y = 56,  
     w = 220, 
-    h = 264,
+    h = 272,
     --shadow = false,
 	caption = "",
 	dir = "v", 
-	pad = 8,
+
 	opt_size = 16, 	
 	opts= snapshot_options_names,
-	
-	frame = true,
-    field = false,
-    border_width = 1, 
+
+    border_width = 2, 
     radius = 0,	
-	
+    
+	col_bg = "panel_bg",	
     col_border = "panel_border",	
-	col_text = "txt", 
-	col_field = "panel_bg",
+	col_text = "panel_txt", 
+
 	--col_opt_outline = "txt"
 	--col_opt_fill = "panel_border",
 	font_text = "sans22",
 })
-
---------------------------------
-------  Tips Display  ------
---------------------------------
---zztips
--- There is some extra room at bottom of "Preferences" window. 
--- I used it to include some useful tips.
-
-GUI.New("lbl_tip_01", "Label", 499, 18, 324, "Add button Click - Opens dialog box. Enter name for new snapshot.", false, "sans20", "txt", "wnd_bg" )
-GUI.New("lbl_tip_02", "Label", 499, 18, 344, "Add button Shift + Click - Updates selected snapshot.", false, "sans20", "txt", "wnd_bg" )
-GUI.New("lbl_tip_03", "Label", 499, 18, 364, "Add button Alt + Click - Opens dialog box. Enter new name to rename snapshot.", false, "sans20", "txt", "wnd_bg" )
 
 --======================================
   ------   Method Overrides  ------
@@ -1365,37 +1343,57 @@ local function populateLists(proj)
     snapshots_table = {}  -- Actual snapshot data.
     
 	local has_snapshots = false
-	local retval = 0
-	local ret_string = nil
-	local json_string = ""
     
     -- retval = 0 if it extstate doesn't exist
     -- retval = 1 if extstata has any value including ([], "", " ")
     -- Therefore maybe not necessary to check for retval.
     -- Only interested in returned string.
 
-    retval, json_string = reaper.GetProjExtState(proj, "dh_Snapshots", "snapshots_table")
+    local retval, ret_string = reaper.GetProjExtState(proj, "dh_Snapshots", "snapshots_table")
 
-    -- Ext state snapshots exists
     if (retval == 1) then
+    
+  	    local temp_snapshots_table    
+    
+        -- json decode ret_string --
+        
+        if ret_string and ret_string ~= "" then
+            temp_snapshots_table = json.decode(ret_string)  -- should return Lua table
+        end
        
-        snapshots_table = json.decode(json_string) -- returns Lua table
         -- Check if it is table and has entries --
-        if type(snapshots_table) == "table" and (dhtks.hash_table_length(snapshots_table) > 0) then
-            
-            has_snapshots = true
+        
+        if (type(temp_snapshots_table) == "table") 
+            and (DHTK.hash_table_length(temp_snapshots_table) > 0) 
+        then
+        
+            --dh_log(">>> extstate has snapshots") 
+
             --dh_log(" > has_snapshots = TRUE")
-            --dh_log(" > SIZE of snapshots_table: " .. dhtks.hash_table_length(snapshots_table))
+            --dh_log(" > SIZE of snapshots_table: " .. DHTK.hash_table_length(snapshots_table))
       
             ------------------------------------------------ 
             -- Build snapshots_names from snapshots_table.
             ------------------------------------------------
             --dh_log(" >>> Building snapshots_names from snapshots_table")
             
-		    for k, v in pairs(snapshots_table) do
+		    for k, v in pairs(temp_snapshots_table) do
+		    
+		        -- Skip any invalid keys.
+		        if k == " " or k == "" or type(k) ~= "string" then 
+		            temp_snapshots_table[k] = nil
+		            goto next 
+		        end                        
+		    
+                -- Build snapshots_names table.
 		        table.insert(snapshots_names, k)
-		        --dh_log("build table snapshot name is: " .. k)
+		        
+		        ::next::
+		        
 		    end
+		    
+            has_snapshots = true
+            snapshots_table = temp_snapshots_table
       
             table.sort(snapshots_names)            
                         
@@ -1403,38 +1401,44 @@ local function populateLists(proj)
 
     end
     
-    --??? Redundant?
-    if not has_snapshots then
-       snapshots_table = {}
-    end
  
     --dh_log(" > END SIZE of snapshots_names: " .. #snapshots_names)
-    --dh_log(" > END SIZE of snapshots_table: " .. dhtks.hash_table_length(snapshots_table))
+    --dh_log(" > END SIZE of snapshots_table: " .. DHTK.hash_table_length(snapshots_table))
 
     -- This updates listbox.
     
-    --??? Is this assignment really necessary?
     GUI.elms.lbx_SnapshotsNames.list = snapshots_names
+    GUI.Val("lbx_SnapshotsNames", has_snapshots and 1 or 0)
     
+    --[=[
     if has_snapshots then
         GUI.Val("lbx_SnapshotsNames", 1)
     else    
         --??? I think this is necessary because this function not called by GUI element.
-        GUI.elms.lbx_SnapshotsNames:redraw()
+        GUI.Val("lbx_SnapshotsNames", 0)
+        --GUI.elms.lbx_SnapshotsNames:redraw()
     end
-      
+    --]=]  
+    
     ------------------------------------
     ------ Get snapshot_options ------
     ------------------------------------
     -- If unsucessful, snapshot_options will keep previous values.
-
-    retval, json_string = reaper.GetProjExtState(proj, "dh_Snapshots", "snapshot_options")
+--zzopts
+    retval, ret_string = reaper.GetProjExtState(proj, "dh_Snapshots", "snapshot_options")
     
     if (retval == 1) then
     
-        local opts = json.decode(json_string) -- should return Lua table
+        local opts
+        
+        -- json decode ret_string --
+        
+        if ret_string and ret_string ~= "" then
+            opts = json.decode(ret_string)  -- should return Lua table
+        end
     
-        if type(opts) == "table" and dhtks.hash_table_length(opts) > 0 then
+        if type(opts) == "table" and DHTK.hash_table_length(opts) > 0 then
+        
             snapshot_options = opts
           
             -- Update checklist --
@@ -1444,15 +1448,15 @@ local function populateLists(proj)
             for _, opt in ipairs(snapshot_options_names) do
                 table.insert(bool_table, snapshot_options[opt])
             end
+            
+            -- chkl_Options.optarray has snapshot_options_names
+            -- val updates chkl_Options.optsel
                     
             GUI.Val('chkl_Options', bool_table)
 
         end
    
     end 
-   
-  --!!! Can get rid of json string when done loading?
-  json_string = nil
   
 end  --<populateLists>
 
@@ -1507,7 +1511,7 @@ local function saveProjExtState(proj)
         end
     end
     
-    --dh_log("> after remove bad keys size of snapshots_table: " .. dhtks.hash_table_length(snapshots_table))
+    --dh_log("> after remove bad keys size of snapshots_table: " .. DHTK.hash_table_length(snapshots_table))
 
     -- When starting script or changing tabs snapshots_table = {}
     -- Therefore after encoding json_string is at least = {}.

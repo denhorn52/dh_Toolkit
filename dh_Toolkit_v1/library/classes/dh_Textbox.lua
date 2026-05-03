@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Textbox.lua
--- Date: 20250908
+-- Date: 20260330
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Textbox class
@@ -14,7 +14,10 @@
      Same as Lokasenna Textbox except changed most of the property names for consistency with other dh_Toolkit classes.
      Changed some property names and default values.
      Allows all of the color properties to be overridden.
-     
+     Added property allow_sel_outline.
+     20260223: Replace element frame with highlighted drawn.
+               Added properties for frame modification.
+          
 ]]--
 
 ---------------------------------------------------------------------
@@ -41,44 +44,53 @@ function GUI.dh_Textbox:new(name, z, x, y, w, h, caption, pad)
 
 	txt.x = txt.x or x
     txt.y = txt.y or y
-    txt.w = txt.w or w
-    txt.h = txt.h or h
+    txt.w = txt.w or w or GUI.dh_Textbox.defaults.w
+    txt.h = txt.h or h or GUI.dh_Textbox.defaults.h
 
     txt.retval = txt.retval or ""
 
-	txt.caption = txt.caption or caption or ""
-	txt.pad = txt.pad or pad or 4
+	txt.caption = txt.caption or caption or GUI.dh_Textbox.defaults.caption
+	txt.font_caption = txt.font_caption or GUI.dh_Textbox.defaults.font_caption
+	txt.cap_pos = txt.cap_pos or GUI.dh_Textbox.defaults.cap_pos
+	txt.cap_pad_x = txt.cap_pad_x or GUI.dh_Textbox.defaults.cap_pad_x
+	txt.cap_pad_y = txt.cap_pad_y or GUI.dh_Textbox.defaults.cap_pad_y
+	txt.cap_centered = txt.cap_centered or GUI.dh_Textbox.defaults.cap_centered
 
-    if txt.shadow == nil then
-        txt.shadow = true
-    end
+	-- Forcing a safe monospace font to make our lives easier
+	txt.font_text = txt.font_text or GUI.dh_Textbox.defaults.font_text
+	txt.pad = txt.pad or pad or GUI.dh_Textbox.defaults.pad
+    txt.align_text = txt.align_text or GUI.dh_Textbox.defaults.align_text  -- left, center, right
+    
+    txt.shadow = txt.shadow or GUI.dh_Textbox.defaults.shadow
+    txt.shadow_caption = txt.shadow_caption or GUI.dh_Textbox.defaults.shadow_caption
+    
+    txt.frame_use_outline = txt.frame_use_outline or GUI.dh_Textbox.defaults.frame_use_outline	
+    txt.frame_thk = txt.frame_thk or GUI.dh_Textbox.defaults.frame_thk
+
+    if txt.allow_sel_outline == nil then 
+        txt.allow_sel_outline = GUI.dh_Textbox.defaults.allow_sel_outline 
+    end    
     
 ----colors----------------------------------
     -- Caption   
-	txt.col_cap_bg = txt.col_cap_bg or "wnd_bg"
-    txt.col_cap_text = txt.col_cap_text or "txt"
+    txt.col_cap_text = txt.col_cap_text or GUI.dh_Textbox.defaults.col_cap_text
     
     -- Box
-    txt.col_frame = txt.col_frame or "elm_frame" 
-    txt.col_bg = txt.col_bg or "elm_bg"
-    txt.col_active = txt.col_active or "elm_active"  --"elm_fill"
+    txt.col_bg = txt.col_bg or GUI.dh_Textbox.defaults.col_bg    
+    txt.col_frame = txt.col_frame or GUI.dh_Textbox.defaults.col_frame 
 
 	-- Box Text
-	txt.col_text = txt.col_text or "elm_txt"  --"txt"
-	txt.col_sel_text = txt.col_sel_text or "sel_txt"  --"elm_fill"
+	txt.col_text = txt.col_text or GUI.dh_Textbox.defaults.col_text
+	txt.col_sel_text = txt.col_sel_text or GUI.dh_Textbox.defaults.col_sel_text
+
+    txt.col_active = txt.col_active or GUI.dh_Textbox.defaults.col_active	
+    txt.col_backdrop = txt.col_backdrop or GUI.dh_Textbox.defaults.col_backdrop	
 ---------------------------------------------
---zzz
-	-- If true uses sel_alpha to override sel_txt alpha.
-	txt.use_sel_alpha = txt.use_sel_alpha or false
+
 	-- Use negative value to darken.
-	txt.sel_alpha = txt.sel_alpha or 0.5
+	txt.sel_alpha = txt.sel_alpha or GUI.dh_Textbox.defaults.sel_alpha
 	    	
-	txt.font_caption = txt.font_caption or "sans20"
-	txt.font_text = txt.font_text or "mono16"	
-
-    txt.cap_pos = txt.cap_pos or "left"
-
-    txt.undo_limit = txt.undo_limit or 20
+    txt.undo_limit = txt.undo_limit or GUI.dh_Textbox.defaults.undo_limit
 
     txt.undo_states = {}
     txt.redo_states = {}
@@ -101,29 +113,98 @@ function GUI.dh_Textbox:new(name, z, x, y, w, h, caption, pad)
 
 end
 
+GUI.dh_Textbox.defaults = {
+    w = 96,
+    h = 28,
+    retval = "",
+    font_text = "mono16",
+    pad = 4,
+    align_text = "left",
+    undo_limit = 20,
+    
+	caption = "",
+	font_caption = "sans22",
+	cap_pos = "top",
+    cap_pad_x = 4,
+    cap_pad_y = 4,
+	cap_centered = false,    
+	shadow_caption = false,
+    shadow = false,
+    
+    frame_use_outline = false,
+    frame_thk = 2,    
+    allow_sel_outline = true,
+    
+    col_bg = "elm_bg",
+    col_frame = "elm_frame",
+    col_cap_text = "txt",
+	col_text = "elm_txt",        	
+	col_sel_text = "sel_txt",	
+    sel_alpha = 0.5,	    	    
+    col_active = "elm_active",
+    col_backdrop = "wnd_bg", 
+
+}
+
 
 function GUI.dh_Textbox:init()
 
+    --GUI.Msg("dh_Textbox:init")
+    
 	local x, y, w, h = self.x, self.y, self.w, self.h
+	
+	local sd = self.shadow and GUI.shadow_dist or 0
 
-	self.buff = GUI.GetBuffer()
+	self.buff = self.buff or GUI.GetBuffer()
 
 	gfx.dest = self.buff
 	gfx.setimgdim(self.buff, -1, -1)
-	gfx.setimgdim(self.buff, 2*w, h)
+    gfx.setimgdim(self.buff, w + sd, h + sd)
 
-	GUI.color(self.col_bg)
-	gfx.rect(0, 0, 2*w, h, 1)
+	-- Draw shadow.
+	
+	if self.shadow then
+	    GUI.color(GUI.colors["shadow"])
+        gfx.rect(1, 1, w + sd - 1, h + sd - 1, 1)        
+	end
 
-	GUI.color(self.col_frame)
-	gfx.rect(0, 0, w, h, 0)
+    -- Draw frame.
 
-	GUI.color(self.col_active)
-	gfx.rect(w, 0, w, h, 0)
-	gfx.rect(w + 1, 1, w - 2, h - 2, 0)
+    local frm_thk = tonumber(self.frame_thk)
+     
+    if ((GUI.colors["metadata"]) 
+       and (GUI.colors["metadata"][4] == 0)) 
+       or self.frame_use_outline   
+    then  
+    
+        -- # use OUTLINE and outline color.
+        
+        GUI.color(self.col_frame)
+        gfx.rect(0, 0, w, h, 1) -- draw 1 px wide frame          
+       
+    else    
+       
+        local ll_color, hl_color = DHTK.get_hilite_colors(self.col_backdrop)
+    
+        ---- # HIGHLIGHT bottom and right of track ----
+        GUI.color(hl_color)
+        gfx.rect(0, 0, w, h, 1)
+    
+        ---- # LOWLIGHT top and left of track ----
+        GUI.color(ll_color)
+        gfx.rect(0, 0, w - frm_thk, h - frm_thk, 1)
+        
+    end    
+	
+    -- Draw box.
+    
+    GUI.color(self.col_bg)
+    gfx.rect(frm_thk, frm_thk, w - (2 * frm_thk), h - (2 * frm_thk), 1)    	
 
     -- Make sure we calculate this ASAP to avoid errors with
     -- dynamically-generated textboxes
+    -- Do it here if window already open. 
+    -- Otherwise do it in draw if not already set.
     if gfx.w > 0 then self:wnd_recalc() end
 
 end
@@ -140,33 +221,55 @@ end
 ------------------------------------
 
 function GUI.dh_Textbox:draw()
+
+    local x, y, w, h = self.x, self.y, self.w, self.h
+    
+    local sd = self.shadow and GUI.shadow_dist or 0
 	
 	-- Some values can't be set in :init() because the window isn't
 	-- open yet - measurements won't work.
 	if not self.wnd_w then self:wnd_recalc() end
 
+	-- Draw the caption
 	if self.caption and self.caption ~= "" then self:drawcaption() end
 
 	-- Blit the textbox frame, and make it brighter if focused.
     --        src, scale, rot, srcx,                     srcy, srcw,   srch,  destx,  desty,  destw, desth, rotxoffs, rotyoffs)	
-	gfx.blit(self.buff, 1, 0, (self.focus and self.w or 0), 0, self.w, self.h, self.x, self.y)
-
+	--gfx.blit(self.buff, 1, 0, (self.focus and self.w or 0), 0, self.w, self.h, self.x, self.y)
+	
+	-- Blit the background and frame.
+	gfx.blit(self.buff, 1, 0, 0, 0, w + sd, h + sd, x, y)
+	
     if self.retval ~= "" then self:drawtext() end
-
+    
+	-- Focused?    
+	
 	if self.focus then
-
+        
+        --GUI.Msg("dh_Textbox:draw if self.focus")        
+        
 		if self.sel_s then self:drawselection() end
 		if self.show_caret then self:drawcaret() end
+		
+		if self.allow_sel_outline then
+    		GUI.color(self.col_active)
+    	    --gfx.rect(x - 1, y - 1, w + 2, h + 2, 0)
+    	    gfx.rect(x - 2, y - 2, w + 4, h + 4, 0)
+    		-- Thicken highlight.
+    	    --gfx.rect(x - 2, y - 2, w + 4, h + 4, 0)		
+		end
 
-	end
+	end	
 
     self:drawgradient()
 
 end
 
-
+--zzcap
 function GUI.dh_Textbox:drawcaption()
 
+    --GUI.Msg("dh_Textbox:drawcaption self.cap_pad_x : " .. tostring(self.cap_pad_x))
+    
     local caption = self.caption
 
     GUI.font(self.font_caption)
@@ -174,26 +277,49 @@ function GUI.dh_Textbox:drawcaption()
     local str_w, str_h = gfx.measurestr(caption)
 
     if self.cap_pos == "left" then
-        gfx.x = self.x - str_w - self.pad
-        gfx.y = self.y + (self.h - str_h) / 2
-
+    
+        gfx.x = self.x - str_w - self.cap_pad_x
+        if self.cap_centered then
+            gfx.y = self.y + (self.h - str_h) / 2
+        else
+            gfx.y = self.y + self.cap_pad_y
+        end
+        
     elseif self.cap_pos == "top" then
-        gfx.x = self.x + (self.w - str_w) / 2
-        gfx.y = self.y - str_h - self.pad
-
+    
+        if self.cap_centered then
+            gfx.x = self.x + (self.w - str_w) / 2
+        else
+            gfx.x = self.x + self.cap_pad_x  
+        end      
+        gfx.y = self.y - str_h - self.cap_pad_y
+        
     elseif self.cap_pos == "right" then
-        gfx.x = self.x + self.w + self.pad
-        gfx.y = self.y + (self.h - str_h) / 2
-
+    
+        gfx.x = self.x + self.w + self.cap_pad_x
+        if self.cap_centered then
+            gfx.y = self.y + (self.h - str_h) / 2
+        else
+            gfx.y = self.y + self.cap_pad_y
+        end
+        
     elseif self.cap_pos == "bottom" then
-        gfx.x = self.x + (self.w - str_w) / 2
-        gfx.y = self.y + self.h + self.pad
-
+    
+        if self.cap_centered then
+            gfx.x = self.x + (self.w - str_w) / 2
+        else
+            gfx.x = self.x + self.cap_pad_x 
+        end               
+        gfx.y = self.y + self.h + self.cap_pad_y
+        
     end
 
-    GUI.text_bg(caption, self.col_cap_bg)
+    --GUI.text_bg(str, self.col_backdrop)
+    
+    GUI.color(self.col_backdrop)        
+    gfx.rect(gfx.x, gfx.y, str_w, str_h, 1)
 
-    if self.shadow then
+    if self.shadow_caption then
         GUI.shadow(caption, self.col_cap_text, "shadow")
     else
         GUI.color(self.col_cap_text)
@@ -207,17 +333,27 @@ function GUI.dh_Textbox:drawtext()
 
 	GUI.color(self.col_text)
 	GUI.font(self.font_text)
+	
+    local text = string.sub(self.retval, self.wnd_pos + 1)
+	
+    --local str_w, str_h = gfx.measurestr(text)
 
-    local str = string.sub(self.retval, self.wnd_pos + 1)
-
-    -- I don't think self.pad should affect the text at all. Looks weird,
-    -- messes with the amount of visible text too much.
-	gfx.x = self.x + 4 -- + self.pad
+    -- Draws a string at gfx_x, gfx_y; clipped to (gfx_x, gfx_y, right, bottom) 
+    -- Adjustments: aligns to defined box.
+    -- align: 0 = left, 1= center, 2 = right, 4 = center vert
+    
+    local align = (self.align_text == "left") and (0 + 4)
+               or (self.align_text == "center") and (1 + 4)
+               or  (2 + 4)  -- right
+    
+	gfx.x = self.x + self.pad  
 	gfx.y = self.y + (self.h - gfx.texth) / 2
-    local r = gfx.x + self.w - 8 -- - 2*self.pad
-    local b = gfx.y + gfx.texth
-
-	gfx.drawstr(str, 0, r, b)
+	
+    local r = self.x + self.w - self.pad 
+    --local b = gfx.y + gfx.texth
+    local b = self.y + self.h - 4
+    
+	gfx.drawstr(text, align, r, b)
 
 end
 
@@ -245,37 +381,44 @@ end
 function GUI.dh_Textbox:drawselection()
 
     local x, w
+
+    --if sel_txt use its alpha else use sel_alpha
+    -- To darken need a negative alpha.
+    -- sel_text alpha always positive, sel_alpha can be set negative.
     
-    -- If color is "sel_txt" will use sel_txt alpha or override.
-    -- If color not "sel_txt" will use sel_alpha.
-    
-    GUI.color(self.col_sel_text)
-    
-    if self.col_sel_text == "sel_txt" and self.use_sel_alpha == false then
-        --GUI.Msg("self.use_sel_txt alpha")
-        gfx.a = GUI.colors.sel_txt[4]
+    local alpha
+
+    if self.col_sel_text == "sel_txt" then
+        alpha = GUI.colors.sel_txt[4]
+        if self.sel_alpha <= 0 then
+            alpha = -alpha
+        end
     else
-        -- Probably don't want to use color other than sel_txt, but just in case.
-        --GUI.Msg("self.use_sel_alpha")
-        gfx.a = self.sel_alpha -- default 0.5 
+        alpha = self.sel_alpha 
     end
     
---[[    
-    -- GUI.colors["sel_txt"] will have its alpha set.
-    if self.col_sel_text == "sel_txt" then
-        GUI.color("sel_txt")
+    --GUI.Msg("    lbx col_sel_text : " .. self.col_sel_text)
+    --GUI.Msg("    self.sel_alpha : " .. tostring(self.sel_alpha))        
+    --GUI.Msg("    alpha : " .. tostring(alpha))
+    
+    if self.sel_alpha < 0 then
+        -- Invert color.
+        local r,g,b,a = table.unpack(GUI.colors[self.col_sel_text])
+        r = 1 - r
+        g = 1 - g
+        b = 1 - b
+    
+        gfx.set(r,g,b,alpha)
+    
     else
         GUI.color(self.col_sel_text)
-        gfx.a = 0.5                 
-    end  
---]]      
-      
+    end    
+         
     gfx.mode = 1 -- additive
 
     local s, e = self.sel_s, self.sel_e
 
     if e < s then s, e = e, s end
-
 
     local x = GUI.clamp(self.wnd_pos, s, self:wnd_right())
     local w = GUI.clamp(x, e, self:wnd_right()) - x
@@ -372,6 +515,9 @@ end
 function GUI.dh_Textbox:lostfocus()
 
     self:redraw()
+    --if self.allow_sel_outline then
+        self:redraw()
+    --end    
 
 end
 
@@ -637,13 +783,9 @@ function GUI.dh_Textbox:getcaret(x)
 
 end
 
-
-
-
 ------------------------------------
 -------- Char/string helpers -------
 ------------------------------------
-
 
 function GUI.dh_Textbox:insertstring(str, move_caret)
 
@@ -855,13 +997,9 @@ GUI.dh_Textbox.keys = {
 
 }
 
-
-
-
 ------------------------------------
 -------- Misc. helpers -------------
 ------------------------------------
-
 
 function GUI.dh_Textbox:undo()
 
@@ -915,8 +1053,6 @@ function GUI.dh_Textbox:seteditorstate(retval, caret, wnd_pos, sel_s, sel_e)
     self.sel_s, self.sel_e = sel_s or nil, sel_e or nil
 
 end
-
-
 
 -- See if we have a new-enough version of SWS for the clipboard functions
 -- (v2.9.7 or greater)

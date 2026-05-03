@@ -1,7 +1,7 @@
 --dh_ArrangeViews.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 2025-09-08
+-- Date: 20260330
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -56,22 +56,12 @@
     btn_Delete_View_Click    maybe on success
     btn_Select_Region_Click  maybe
 
-x Menubox.lua opens gfx menu with upper right at mouse position.
-    Change Menubox.lua to facilitate different positioning.
-    Maybe offer option?
-
 x Selecting MIDI item opens MIDI editor - I don't want that.
 
 > Put Lokasenna logo on Prefs page. 
     Probably not without modifying Core.lua. See Core.lua line 539 GUI.Draw_Version.
 
-> THEME EDITOR: This may take some doing.
-  Can use color tiles to select elm colors. Display in real time.
-  Have reset button to clear.
-  Have save button to write code block to console so that it can
-    be copied to dh_Themes.lua,
-    or can save to ext state (maybe file?).
-    
+
 --]==]
 
 ---------------------------------------
@@ -116,14 +106,15 @@ if not lib_path or lib_path == "" then
 end
 loadfile(lib_path .. "Core.lua")()
 
-GUI.req("Classes/Class - Button.lua")()
-GUI.req("Classes/Class - Frame.lua")()
-GUI.req("Classes/Class - Label.lua")()
+--GUI.req("Classes/Class - Button.lua")()
+--GUI.req("Classes/Class - Frame.lua")()
+--GUI.req("Classes/Class - Label.lua")()
 --GUI.req("Classes/Class - Listbox.lua")()
 --GUI.req("Classes/Class - Menubox.lua")()
 --GUI.req("Classes/Class - Options.lua")()
 --GUI.req("Classes/Class - Tabs.lua")()
-GUI.req("Classes/Class - Textbox.lua")()
+--GUI.req("Classes/Class - Textbox.lua")()
+--GUI.req("Classes/Class - TextEditor.lua")()
 --GUI.req("Classes/Class - Window.lua")()
 
 -- If any of the requested libraries weren't found, abort the script.
@@ -135,17 +126,16 @@ GUI.name = "dh_ArrangeViews v1.0"
 GUI.Draw_Version = function () end
 
 -- Lighten up shadow color.
--- !!! Would like to make this part of theming.
+-- ??? Would like to make this part of theming.
 GUI.colors["shadow"] = {0,0,0,32}
+
+--!!! Disable for deployment.
+reaper.ClearConsole()
 
 --======================================
 -- dh_Toolkit requirements 
 --======================================
 -- Adds current directory to path.
-
--- Next line from XRaym Preset script.lua. 
---local script_folder = debug.getinfo(1).source:match("@?(.*[\\|/])")
---package.path = package.path .. ";" .. script_folder .. "?.lua"
 
 local dhtk_path = reaper.GetExtState("dh_Toolkit", "lib_path_v1")
 if not dhtk_path or dhtk_path == "" then
@@ -153,12 +143,18 @@ if not dhtk_path or dhtk_path == "" then
     return
 end
 
---loadfile(dhtk_path .. "common/dh_Toolkit_core.lua")()
 package.path = package.path .. ";" .. dhtk_path .. "?.lua"
+
+-- !!! Load GUI.overrides.
+require "common/GUI_overrides"
 
 ----------------------------------------
 DHTK = require "common/dh_Toolkit_core"
 ----------------------------------------
+-- Set to true if script uses dh_Toolkit Prefs window.
+-- Set to false if script handles Prefs in its own way (as with GUI Builder).)
+DHTK.USE_DHTK_PREFS = true
+
 DHTK.EXT_STATE_NAME = "dh_ArrangeViews"
 
 DHTK.MULTIPLE_HEIGHTS = true
@@ -169,7 +165,7 @@ DHTK.APP_WIDTH = 640
 -- Design heights of the window states.
 DHTK.APP_MIN_HEIGHT = 48
 DHTK.APP_EXP_HEIGHT = 88
-DHTK.PREFS_HEIGHT = 308
+DHTK.PREFS_HEIGHT = 340
 
 -- Scaled heights of the window states.
 DHTK.s_APP_MIN_HEIGHT = DHTK.APP_MIN_HEIGHT
@@ -177,25 +173,23 @@ DHTK.s_APP_EXP_HEIGHT = DHTK.APP_EXP_HEIGHT
 DHTK.s_PREFS_HEIGHT = DHTK.PREFS_HEIGHT
 
 -----------------------------------------
--- Needed for core.
-local dh_btn = require "classes/dh_Button"     
-local dh_lbl = require "classes/dh_Label"
-local dh_mbx = require "classes/dh_Menubox"     
-local dh_panel = require "classes/dh_Panel"     
+-- dh_Toolkit classes 
 
---local dh_knob = require "classes/dh_Knob"
---local dh_lbx = require "classes/dh_Listbox"
---local dh_mbr = require "classes/dh_Menubar"
-local dh_opt = require "classes/dh_Options"
---local dh_sld = require "classes/dh_Slider"
---local dh_tabs = require "classes/dh_Tabs"
---local dh_tbx = require "classes/dh_Textbox"
---local dh_tbx = require "classes/dh_TextEditor"
+-- Needed for core.
+require "classes/dh_Button"     
+require "classes/dh_Label"
+require "classes/dh_Menubox"  
+require "classes/dh_Options"   
+require "classes/dh_Panel"   
+  
+require "classes/dh_Textbox"  
+
 -----------------------------------------
 -- !!! Necessary. Must be after req dh_Options
 DHTK.init_DHTK()
 -----------------------------------------
-local dhtks = require "common/dh_Toolkit_shared"
+
+-- Used for saving/loading to extstate.
 local json = require "common/json"
 
 --======================================
@@ -306,7 +300,7 @@ end
 local function renameView(menubox)
     --dh_log("****  renameView  ****")
         
-    local retval, new_name = dhtks.validate_name(GUI.Val("tbx_ViewName"))
+    local retval, new_name = DHTK.validate_name(GUI.Val("tbx_ViewName"))
     
     if not retval then return end
 
@@ -341,7 +335,7 @@ local function renameView(menubox)
         arrange_views_table[mbx_name] = nil
         
         -- Update menubox text --
-        GUI.Val(menubox, dhtks.table_index_from_value(arrange_views_names, new_name))
+        GUI.Val(menubox, DHTK.table_index_from_value(arrange_views_names, new_name))
         
         --GUI.redraw_z[11] = true
 	    GUI.elms.mbx_ArrangeView01:redraw()
@@ -374,7 +368,7 @@ local function createView(new, menubox)
 	
 	    --dh_log(">***  Clicked on Add button ***")
 	    
-	    retval, view_name = dhtks.validate_name(GUI.Val("tbx_ViewName"))
+	    retval, view_name = DHTK.validate_name(GUI.Val("tbx_ViewName"))
 	    
         if not retval then return end
 
@@ -520,7 +514,7 @@ local function deleteView()
 	--dh_log("**** deleteView ****")
 	
 	-- Abort if no saved views --
-	if not(dhtks.hash_table_length(arrange_views_table) > 0) then return end
+	if not(DHTK.hash_table_length(arrange_views_table) > 0) then return end
 
     -- Get name from textbox --
     
@@ -598,7 +592,7 @@ local function goToArrangeView(menubox)
 	--dh_log("**** goToArrangeView ****")
 
     -- Abort if no saved view to go to --
-	if not(dhtks.hash_table_length(arrange_views_table) > 0) then return end
+	if not(DHTK.hash_table_length(arrange_views_table) > 0) then return end
 
     ---- Get name from menubox ----
     	
@@ -825,7 +819,7 @@ local function goToArrangeView(menubox)
   	reaper.PreventUIRefresh(-1)
 	-----------------------------------------------------
 	
-  	dhtks.return_focus_to_reaper()
+  	DHTK.return_focus_to_reaper()
  	
 end --<goToArrangeView>
 
@@ -890,19 +884,20 @@ local function selectRegion()
 	
 	end
   	
-  	dhtks.return_focus_to_reaper()
+  	DHTK.return_focus_to_reaper()
 		
 end --<selectRegion>
 
 local function refreshRegionsList()
 
-    --dh_log("**** refreshRegionsList ****")
+    --GUI.Msg("**** refreshRegionsList ****")
 
  	region_names_list = {}
+ 	regions_list = {} 	
 
 	local num_all, num_markers, num_regions = reaper.CountProjectMarkers(0)
-	--dh_log("num_all is " .. tostring(num_all))
-	--dh_log("num_regions is " .. tostring(num_regions))
+	--GUI.Msg("num_all is " .. tostring(num_all))
+	--GUI.Msg("num_regions is " .. tostring(num_regions))
 
 	if num_regions > 0 then 
 	
@@ -917,6 +912,16 @@ local function refreshRegionsList()
 		        --dh_log("retval is " .. tostring(retval) .. " ; isrgn is " .. tostring(isrgn))
 		        --dh_log("region name is " .. name)
 		        --dh_log("markrgnindexnumber is " .. tostring(markrgnindexnumber))
+		        
+		        --dh_log("#region name is " .. tostring(#name))
+		        --dh_log("type of region name is " .. type(name))
+		        
+		        if name == "" then
+		            name = tostring(markrgnindexnumber)
+		        end
+		        
+		        --dh_log(" region name is " .. tostring(name))
+		        
 		        table.insert(region_names_list, name)
 		    
 		        regions_list[name] = markrgnindexnumber
@@ -933,8 +938,18 @@ local function refreshRegionsList()
 			GUI.elms.mbx_Regions.curr_opt = 1
 			
 		end
-		 
-	end 
+		
+	else
+	    --GUI.Msg("refreshRegionsList NO regions ")		
+		GUI.elms.mbx_Regions.optarray = {}
+		GUI.elms.mbx_Regions.curr_opt = 0		
+
+	end
+	
+	--GUI.Msg("refreshRegionsList ready to redraw ")	
+	--do return end
+	GUI.elms.mbx_Regions:redraw() 	
+	 
 end --<refreshRegionsList>
 
 --======================================
@@ -952,7 +967,7 @@ local function btn_Go_1_Click()
 	else
 	    goToArrangeView('mbx_ArrangeView01')
 	end
-	--dhtks.return_focus_to_reaper()
+	--DHTK.return_focus_to_reaper()
 end
 
 -- Go to view 2. Shift<8>+click to update view. Alt<16>+click to rename. Ctl<4>
@@ -965,23 +980,32 @@ local function btn_Go_2_Click()
 	else
 	    goToArrangeView('mbx_ArrangeView02')
 	end
-	--dhtks.return_focus_to_reaper()
+	--DHTK.return_focus_to_reaper()
 end
 
 -- Toggles Main window expanded or not.
 --zzmore
 local function btn_MoreClick()
+
+    if GUI.mouse.cap & 16 == 16 then
+	    GUI.h = DHTK.s_PREFS_HEIGHT
+	    GUI.resized = true
+	    DHTK.showPrefsWindow()    
+        return
+    end
+
 	if DHTK.window_settings.is_window_expanded then
 		-- unexpand --
-		GUI.elms.btn_More.caption = "+"
+		GUI.elms.btn_More.text = "+"
 		DHTK.window_settings.is_window_expanded = false
 		GUI.h = DHTK.s_APP_MIN_HEIGHT
 	else
 		-- expand --
-		GUI.elms.btn_More.caption = "-"
+		GUI.elms.btn_More.text = "-"
 		DHTK.window_settings.is_window_expanded = true
 		GUI.h = DHTK.s_APP_EXP_HEIGHT	
 	end
+	GUI.elms.btn_More:init()
 	GUI.resized = true
 
 end
@@ -996,17 +1020,17 @@ end
 
 local function btn_AddViewClick()
 	createView(true, nil)  -- true is new
-	--dhtks.return_focus_to_reaper()	
+	--DHTK.return_focus_to_reaper()	
 end
 
 local function btn_DeleteViewClick()
 	deleteView()
-	--dhtks.return_focus_to_reaper()
+	--DHTK.return_focus_to_reaper()
 end
 
 local function btn_SelectRegionClick()
 	selectRegion()
-	--dhtks.return_focus_to_reaper()
+	--DHTK.return_focus_to_reaper()
 end
 
 --======================================
@@ -1016,24 +1040,16 @@ end
   
 -- Probably should keep each menubox in it's own layer.
 
-GUI.New("Frame1", "Frame", {
+GUI.New("Panel1", "dh_Panel", {
     z = 50,
     x = 0,
     y = 0,
     w = DHTK.APP_WIDTH,
     h = DHTK.APP_EXP_HEIGHT,
     shadow = false,
-    fill = true,        -- Fill in the frame.Defaults to false.
-    color = "wnd_bg", -- Frame (and fill) color. Defaults to "elm_frame".
-    bg = "wnd_bg",     -- Color to be drawn underneath the text. Defaults to "wnd_bg",
-                         -- but will use the frame's fill color instead if fill = true    
-    round = 0,
-    text = "",
-    txt_indent = 0,
-    txt_pad = 0,
-    pad = 8, 
-    font = "sans16",
-    col_txt = "txt"
+    col_bg = "wnd_bg",
+    border_width = 2,
+    radius = 0,    
 })
 
 --------------------------------
@@ -1050,37 +1066,35 @@ GUI.New("mbx_ArrangeView01", "dh_Menubox", {
     optarray = {},
     curr_opt = 0,
     font_text = "sans24",
-    col_text = "elm_txt",
-    pad = 4, 
-
-    align = 0
+    pad = 4,
+    align_text = "left",
 })
---zzbtn
-GUI.New("btn_Go_1", "Button", {
+
+GUI.New("btn_Go_1", "dh_Button", {
     z = 32,
     x = 256, 
     y = 8, 
     w = 32, 
     h = 32, 
-    caption = "Go",
+    text = "Go",
     font = "sans22",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    col_bg = "btn_face",	    
+    col_text = "btn_txt",
     func = btn_Go_1_Click,
     --r_func = btn_Go_1_RightClick,
     --r_params = {} -- Must include if using r_func or script crashes.
 })
 
-GUI.New("btn_Go_2", "Button", {
+GUI.New("btn_Go_2", "dh_Button", {
     z = 33,
     x = 304, 
     y = 8, 
     w = 32, 
     h = 32, 
-    caption = "Go",
+    text = "Go",
     font = "sans22",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    col_bg = "btn_face",	
+    col_text = "btn_txt",
     func = btn_Go_2_Click,
     --r_func = btn_Go_2_RightClick,
     --r_params = {} -- Must include if using r_func or script crashes.
@@ -1092,27 +1106,25 @@ GUI.New("mbx_ArrangeView02", "dh_Menubox", {
     y = 8, 
     w = 224, 
     h = 32, 
-    text = "",
     noarrow = false,
     optarray = {},
     curr_opt = 0,
     font_text = "sans24",
-    col_text = "elm_txt",
     pad = 4,
-     
-    align = 0
+    align_text = "left",
+    col_text = "elm_txt",
 })
 
-GUI.New("btn_More", "Button", {
+GUI.New("btn_More", "dh_Button", {
     z = 35,
     x = 592, 
     y = 8, 
     w = 32, 
     h = 32, 
-    caption = "+",
-    font = "sans32",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    text = "+",
+    font = "mono32",
+    col_bg = "btn_face",	
+    col_text = "btn_txt",
     func = btn_MoreClick,
     r_func = btn_MoreRightClick,
     r_params = {} -- Must include if using r_func or script crashes.
@@ -1122,44 +1134,41 @@ GUI.New("btn_More", "Button", {
 --------  Bottom row  --------
 --------------------------------
 --zzbtn
-GUI.New("btn_AddView", "Button", {
+GUI.New("btn_AddView", "dh_Button", {
     z = 36,
     x = 16, 
     y = 48, 
     w = 36, 
     h = 32, 
-    caption = "Add",
+    text = "Add",
     font = "sans22",
-    col_txt = "btn_txt",
-    col_fill = "btn_face",	
+    col_bg = "btn_face",	    
+    col_text = "btn_txt",
     func = btn_AddViewClick
 })
 
 --!!! Keep this with its own z to prevent unnecessary 
 -- redraws when textbox is focused.
-GUI.New("tbx_ViewName", "Textbox", {
+GUI.New("tbx_ViewName", "dh_Textbox", {
     z = 37,
     x = 66, 
     y = 48, 
     w = 224, 
     h = 32, 
     caption = "",
-    font_b = "mono18",   --textbox needs mono font
-    col_txt = {1,1,1,1}, --"elm_txt", use this for dh_Textbox
-    color = "elm_txt",
-    col_fill = "elm_frame"
+    font_text = "mono18",   --textbox needs mono font
 })
 --zzbtn
-GUI.New("btn_DeleteView", "Button", {
+GUI.New("btn_DeleteView", "dh_Button", {
     z = 38,
     x = 304, 
     y = 48, 
     w = 36, 
     h = 32, 
-    caption = "Del",
+    text = "Del",
     font = "sans22",
+    col_bg = "btn_face",	    
     col_txt = "btn_txt",
-    col_fill = "btn_face",	
     func = btn_DeleteViewClick
 })
  
@@ -1174,21 +1183,21 @@ GUI.New("mbx_Regions", "dh_Menubox", {
     optarray = {},
     curr_opt = 0,
     font_text = "sans24",
-    col_text = "elm_txt",
     pad = 4, 
-    align = 0
+    align_text = "left",
+    col_text = "elm_txt",
 })
 
-GUI.New("btn_SelectRegion", "Button", {
+GUI.New("btn_SelectRegion", "dh_Button", {
     z = 40,
     x = 592, 
     y = 48, 
     w = 32, 
     h = 32, 
-    caption = "Go",
+    text = "Go",
     font = "sans22",
+    col_bg = "btn_face",	
     col_txt = "btn_txt",
-    col_fill = "btn_face",	
     func = btn_SelectRegionClick,
     r_func = refreshRegionsList,
     r_params = {} --!!! Must include if using r_func or script crashes.
@@ -1200,49 +1209,35 @@ GUI.New("btn_SelectRegion", "Button", {
 -- This gets added to Preferences window. Watch those z layers.
 --zzoptions 
 
-GUI.New("lbl_Options", "Label", {
-    z = 499, 
+GUI.New("lbl_Options", "dh_Label", {
+    z = 487, 
     x = 372, 
     y = 32, 
-    caption = "Options", 
+    text = "Options", 
     font = "sans22",
 })
 
 GUI.New("chkl_Options",	"dh_Checklist",	{
-	z = 489, 
+	z = 487, 
     x = 368, 	
     y = 56,  
-    w = 220, 
-    h = 236,
+    w = 236, 
+    h = 272,
     --shadow = false,
     caption = "",
 	dir = "v", 
-	pad = 8,
 	opt_size = 16, 
     opts = view_options_names,	
-	      
-	frame = true,
-    field = false,
-    border_width = 1, 
+    
+    border_width = 2,
     radius = 0,
     	
+	col_bg = "panel_bg",    	
     col_border = "panel_border",	
-	col_text = "txt", 
-	col_field = "panel_bg",
-	--col_opt_outline = "txt"
-	--col_opt_fill = "panel_border",
-	font_text = "sans22",
-})
+	col_text = "panel_txt", 
 
---------------------------------
-------   Tips Display   ------
---------------------------------
---zztips
--- There is some extra room at bottom of "Preferences" window. 
--- I used it to include some useful tips.
-GUI.New("lbl_tip_01", "Label", 19, 18, 296, "Go button Click - go to view indicated by menubox.", false, "sans20", "txt", "elm_fill" )
-GUI.New("lbl_tip_02", "Label", 19, 18, 316, "Go button Shift + Click - update view indicated by menubox.", false, "sans20", "txt", "elm_fill" )
-GUI.New("lbl_tip_03", "Label", 19, 18, 336, "Go button Alt + Click - rename view with text in textbox.", false, "sans20", "txt", "elm_fill" )
+	font_text = "sans24",
+})
 
 --======================================
   ------   Method Overrides  ------
@@ -1322,10 +1317,10 @@ local function populateLists(proj)
     --dh_log("--------------------------")
     
     --<<< testing
-	local projname = reaper.GetProjectName(proj)
+	--local projname = reaper.GetProjectName(proj)
 	--dh_log(" > projname: " .. projname)
     -->>>
-    
+
     --------------------------------------
     ------ Get arrange_views_table ------
     --------------------------------------
@@ -1333,64 +1328,75 @@ local function populateLists(proj)
     arrange_views_table = {} -- Actual view data
     
     local has_views = false
-  	local temp_views_table = nil
-  	local json_string = ""
-  	    	 
+  	local temp_views_table
+
     -- retval = 0 if it extstate doesn't exist
-    -- retval = 1 if extstata has any value including ([], "", " ")
+    -- retval = 1 if extstate has any value including ([], "", " ")
     -- If retval = 0 then json_decode throws error.
 
     local retval, ret_string = reaper.GetProjExtState(0, 'dh_ArrangeViews', 'arrange_views')
     
-    --dh_log("> populate: json_string of arrange_views_table is\n " .. ret_string  .. "\n")
- 
+    --dh_log(" > retval: " .. tostring(retval))
+
     if (retval == 1) then
-        
-        -- Decode ret_string --
+    
+        --dh_log("> populate: ret_string of arrange_views_table is\n " .. ret_string  .. "\n")
+        --dh_log(">    size of ret_string : " .. tostring(#ret_string)  .. "\n")        
+            
+        -- json decode ret_string --
         
         if ret_string and ret_string ~= "" then
             temp_views_table = json.decode(ret_string)  -- should return Lua table
         end
     
-        if type(temp_views_table) == "table" then 
+        --dh_log("    type of temp_views_table : " .. type(temp_views_table))
+        --dh_log(">    size of temp_views_table : " .. tostring(DHTK.hash_table_length(temp_views_table))  .. "\n")
     
-            -- Remove any key(s) that are " ".
-            --!!! Probably don't need this here - doesn't hurt.
-            
+        -- Check if it is table and has entries --
+        
+        if (type(temp_views_table) == "table") 
+            and (DHTK.hash_table_length(temp_views_table) > 0) 
+        then
+        
+            --dh_log(">>> extstate has views") 
+    
             for k, v in pairs(temp_views_table) do
-                if k == " " or k == "" or type(k) ~= "string" then
+            
+                -- Skip any invalid keys.
+                if k == " " or k == "" or type(k) ~= "string" then 
                     temp_views_table[k] = nil
-                end
+                    goto next 
+                end                        
+                
+                -- Build arrange_views_names table.
+                table.insert(arrange_views_names, k)
+            
+                ::next::
+                
             end
-
-            if dhtks.hash_table_length(temp_views_table) > 0 then
-                has_views = true
-                arrange_views_table = temp_views_table
-            end
-          
-        end
+            
+            has_views = true
+            arrange_views_table = temp_views_table
+            
+            table.sort(arrange_views_names)
+            
+            GUI.elms.mbx_ArrangeView01.optarray = arrange_views_names
+            GUI.elms.mbx_ArrangeView02.optarray = arrange_views_names
+            
+        else
+        
+            --dh_log(">>> extstate does NOT have views") 
+            GUI.elms.mbx_ArrangeView01.optarray = arrange_views_names
+            GUI.elms.mbx_ArrangeView02.optarray = arrange_views_names
+            GUI.Val("mbx_ArrangeView01", 0)	  
+            GUI.Val("mbx_ArrangeView02", 0)
+         
+        end 
 
     end -- <retval arrange_views>
     
     if has_views then
-    
-        --dh_log(">** if HAS_arrange_views_table **")
         
-        ---------------------------------------------------------
-        -- Build arrange_views_names from arrange_views_table --
-        ---------------------------------------------------------
-        --dh_log("-- Building arrange_views_names from arrange_views_table --")
-        
-        for k, v in pairs(arrange_views_table) do
-            --dh_log("> build table view name is: " .. k)
-            table.insert(arrange_views_names, k)
-        end
-        
-        table.sort(arrange_views_names)
-        
-        GUI.elms.mbx_ArrangeView01.optarray = arrange_views_names
-        GUI.elms.mbx_ArrangeView02.optarray = arrange_views_names
-      
         --------------------------------
         --     Get current views     --
         --------------------------------
@@ -1401,9 +1407,10 @@ local function populateLists(proj)
         if retval == 1 then 
         
             local current_views = json.decode(ret_string)
+            
             if ret_string then
             
-                if type(current_views) == "table" and dhtks.hash_table_length(current_views) == 2 then
+                if type(current_views) == "table" and DHTK.hash_table_length(current_views) == 2 then
                     if current_views[1] == 0 then current_views[1] = 1 end
                     if current_views[2] == 0 then current_views[2] = 1 end
                     GUI.Val("mbx_ArrangeView01", current_views[1])
@@ -1414,21 +1421,8 @@ local function populateLists(proj)
         
         end
           
-    end -- <has_views>
+    end  --<has_views>
      
-    -- If retval==0, no table, or empty table.
-        	
-    if not has_views then
-    	
-   	    --dh_log("> if NOT has_arrange_views_table")
-        
-        GUI.elms.mbx_ArrangeView01.optarray = arrange_views_names
-        GUI.elms.mbx_ArrangeView02.optarray = arrange_views_names
-        GUI.Val("mbx_ArrangeView01", 0)	  
-        GUI.Val("mbx_ArrangeView02", 0)	  
-        
-    end
-
     -------------------------------
     ----   Get view options   ----
     -------------------------------
@@ -1438,14 +1432,15 @@ local function populateLists(proj)
     retval, ret_string = reaper.GetProjExtState(0, "dh_ArrangeViews", "view_options")
 
     --dh_log("----   Get view options   ----")
+    --dh_log(" > retval: " .. tostring(retval))
 
-    if (retval == 1) then
+    if retval == 1 then
     
     	local opts = json.decode(ret_string)  -- should return Lua table 
 
-        if type(opts) == "table" and dhtks.hash_table_length(opts) > 0 then
+        if type(opts) == "table" and DHTK.hash_table_length(opts) > 0 then
             view_options = opts
-            --dh_log("> SIZE of view_options: " .. dhtks.hash_table_length(view_options))
+            --dh_log("> SIZE of view_options: " .. DHTK.hash_table_length(view_options))
             
             -- Update checklist selected --
             
@@ -1460,11 +1455,10 @@ local function populateLists(proj)
         end
     end
     
-    --xxx
-    refreshRegionsList()
+    -- Clear textbox.
+    GUI.Val('tbx_ViewName', "")
 
-    -- Get rid of json string when done loading.
-    json_string = nil
+    refreshRegionsList()
     	 
 end --<populateLists>
 
@@ -1505,12 +1499,12 @@ local function saveProjExtState(proj)
     ----  Save views table  ----
 
     -- arrange_views_table should not have any empty keys.
-    -- But if somehow possible this happens:
+    -- But if somehow possible it happens:
  
     ---- Remove item(s) with empty keys ----
     -- Type of arrange_views_table should always be "table" by design.
     --!!! Could probably use arrange_views_name instead.
-    
+    --[=[
     if type(arrange_views_table) == "table" then 
         for k, v in pairs(arrange_views_table) do
             --dh_log("> arrange_views_table key: <" .. k .. ">")
@@ -1520,7 +1514,7 @@ local function saveProjExtState(proj)
             end
         end
     end
-
+    --]=]
     -- When starting script or changing tabs arrange_views_table = {}
     -- Therefore after encoding json_string is at least = {}.
     -- Check it anyway? 
@@ -1528,18 +1522,36 @@ local function saveProjExtState(proj)
     ---- Encode arrange_views_table ----
        
     -- If, for some reason, arrange_views_table isn't table
-    -- then json_string is "".    
-        
+    -- then json_string is "". 
+       
+    --[=[    
     if (type(arrange_views_table) == "table") then
-        if dhtks.hash_table_length(arrange_views_table) > 0 then
+        if DHTK.hash_table_length(arrange_views_table) > 0 then
             has_table = true
         end
         json_string = json.encode(arrange_views_table)
     end
+    --]=]
+    
+    if (type(arrange_views_table) == "table") 
+        and (DHTK.hash_table_length(arrange_views_table) > 0) 
+    then
+        
+        -- Remove any item(s) with empty keys.
+        for k, v in pairs(arrange_views_table) do
+            if k == " " or k == "" then
+                arrange_views_table[k] = nil
+            end
+        end
+        
+        has_table = true
 
-    --dh_log("> saving ext: json_string of arrange_views_table is\n " .. json_string  .. "\n")
-    reaper.SetProjExtState(proj, "dh_ArrangeViews", "arrange_views", json_string)
-
+        json_string = json.encode(arrange_views_table)
+        --dh_log("> saving ext: json_string of arrange_views_table is\n " .. json_string  .. "\n")
+        reaper.SetProjExtState(proj, "dh_ArrangeViews", "arrange_views", json_string)
+        
+    end
+    
     ---- Save current views ----
 
     if has_table then
@@ -1601,9 +1613,9 @@ reaper.atexit(Exit)
 GUI.Val("chkl_Options", view_options_selected)
 
 if DHTK.window_settings.is_window_expanded == false then
-    GUI.elms.btn_More.caption = "+"
+    GUI.elms.btn_More.text = "+"
 else
-    GUI.elms.btn_More.caption = "-"
+    GUI.elms.btn_More.text = "-"
 end
 
 -- Need to call this here to scale both GUI elms and user elms.

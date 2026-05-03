@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Panel.lua
--- Date: 20250908
+-- Date: 20260330
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Frame class
@@ -19,6 +19,9 @@
        when trying to align text with adjacent elements. So I added a property "use_pixels"
        to try to overcome that. If "use_pixels" is set it will override "line_height".
        (As of 7-12-2025 text only accepts a table of string values.)
+     20251105 Added caption.
+     20251219 Changed way text is drawn.
+     20260204 Changed way panel is drawn.
 --]]
 ---------------------------------------------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
@@ -31,18 +34,16 @@ end
 
 -- Requires dh_Toolkit_shared for modified roundrect function.
 -- At least until I implement it in a different way.
-local dhtks = require "common/dh_Toolkit_shared"
 
 ---------------------------------------------------------------------
 --  Creation parameters:
---	name, z, x, y, w, h[, border_width, radius]
+--	name, z, x, y, w, h[, bw, rad]
 ---------------------------------------------------------------------
 GUI.dh_Panel = GUI.Element:new()
 
 function GUI.dh_Panel:new(name, z, x, y, w, h, bw, rad)
 
 	local panel = (not x and type(z) == "table") and z or {}
-	panel = (not x and type(z) == "table") and z or {}
 
 	panel.name = name
 	panel.type = "dh_Panel"
@@ -51,45 +52,47 @@ function GUI.dh_Panel:new(name, z, x, y, w, h, bw, rad)
 
 	panel.x = panel.x or x
     panel.y = panel.y or y
-    panel.w = panel.w or w
-    panel.h = panel.h or h
-	
-	-- panel.frame is redundant as border_width == 0 is no border,
-	-- but I will leave it as it seems intuitive to specify.
-	
-	--if panel.frame == nil then
-    --    panel.frame = true
-    --end
+    panel.w = panel.w or GUI.dh_Panel.defaults.w
+    panel.h = panel.h or GUI.dh_Panel.defaults.h
     
-    -- Same with panel.fill as it will automatically be filled,
-    -- either with specified color or wnd_bg.
-	
-	--if panel.fill == nil then
-    --    panel.fill = false
-    --end
-    
-    if panel.shadow == nil then
-        panel.shadow = false
-    end
+	panel.border_width = panel.border_width or bw or GUI.dh_Panel.defaults.border_width
+	panel.radius = panel.radius or rad or GUI.dh_Panel.defaults.radius	
 
-	panel.border_width = panel.border_width or bw or 2
-	panel.radius = panel.radius or rad or 0  -- radius of bg rectangle.	
+--zzcap	
+	panel.caption = panel.caption or GUI.dh_Panel.defaults.caption
+	panel.font_caption = panel.font_caption or GUI.dh_Panel.defaults.font_caption
+	--panel.cap_pos = panel.cap_pos or GUI.dh_Panel.defaults.cap_pos
+	panel.cap_pad_x = panel.cap_pad_x or GUI.dh_Panel.defaults.cap_pad_x
+	panel.cap_pad_y = panel.cap_pad_y or GUI.dh_Panel.defaults.cap_pad_y
+	panel.cap_centered = panel.cap_centered or GUI.dh_Panel.defaults.cap_centered
 	
+--zztext	
+	-- Forcing a safe monospace font to make our lives easier
+	panel.font_text = panel.font_text or GUI.dh_Panel.defaults.font_text
+	panel.pad = panel.pad or GUI.dh_Panel.defaults.pad
+	
+	panel.text = panel.text or GUI.dh_Panel.defaults.text
+
+	panel.line_height = panel.line_height or GUI.dh_Panel.defaults.line_height
+	panel.use_pixels = panel.use_pixels or GUI.dh_Panel.defaults.use_pixels
+	panel.line_height_pixels = panel.line_height_pixels or GUI.dh_Panel.defaults.line_height_pixels
+	
+    panel.shadow = panel.shadow or GUI.dh_Panel.defaults.shadow
+    panel.shadow_caption = panel.shadow_caption or GUI.dh_Panel.defaults.shadow_caption
+
 ----colors------------------------------------------------
-	panel.col_border = panel.col_border or "elm_frame"
-	panel.col_bg = panel.col_bg or "wnd_bg"
-	panel.col_text = panel.col_text or "txt"
-----------------------------------------------------------  
-
-    panel.font = panel.font or "mono16"
-    panel.pad = panel.pad or 4
-    panel.line_height = panel.line_height or 1.25
-    panel.use_pixels = panel.use_pixels or 0
+    -- Caption
+    panel.col_cap_text = panel.col_cap_text or GUI.dh_Panel.defaults.col_cap_text    
     
-    panel.text = panel.text or nil
-    
-	panel.func = panel.func or function () end
-	panel.params = panel.params or {}  --{...}    
+    -- Panel
+	panel.col_bg = panel.col_bg or GUI.dh_Panel.defaults.col_bg    
+	panel.col_border = panel.col_border or GUI.dh_Panel.defaults.col_border
+	panel.col_text = panel.col_text or GUI.dh_Panel.defaults.col_text
+	panel.col_backdrop = panel.col_backdrop or GUI.dh_Panel.defaults.col_backdrop    
+---------------------------------------------------------- 
+        
+	panel.func = panel.func or GUI.dh_Panel.defaults.func
+	panel.params = panel.params or GUI.dh_Panel.defaults.params   
 
 	GUI.redraw_z[panel.z] = true
 
@@ -99,93 +102,183 @@ function GUI.dh_Panel:new(name, z, x, y, w, h, bw, rad)
 
 end
 
+GUI.dh_Panel.defaults = {
+    w = 128,
+    h = 128,
+    border_width = 2,
+    radius = 0,
+    shadow = false,	
+    
+	caption = "",
+	font_caption = "sans22",    
+	--cap_pos = "top",
+    cap_pad_x = 4,
+    cap_pad_y = 4,
+	cap_centered = false,
+	shadow_caption = false,
+
+	text = nil,    
+	font_text = "mono16",	
+	pad = 4,
+	
+    line_height = 1.25,	
+    use_pixels = false,
+    line_height_pixels = 24,
+	
+    func = function () end,
+    params = {...},
+
+    col_bg = "wnd_bg",
+    col_border = "panel_border",
+    col_text = "txt",
+    col_cap_text = "txt", 
+	col_backdrop = "wnd_bg",         	        
+}
+
 
 function GUI.dh_Panel:init()
+
+    -- gfx.roundrect adds 1px to x and y. Compensate.
+    -- GUI.roundrect yields undesirable results when using alpha (shadow), 
+    --   overlapping draws compound alpha.
+    -- Radius is to inside of border.
 
     local x, y, w, h = self.x, self.y, self.w, self.h
     local bw = self.border_width
     local rad = self.radius  -- radius of bg rectangle.
-    local sh_d = self.shadow and 2 or 0
-
-	self.buff = self.buff or GUI.GetBuffer()
-
-	gfx.dest = self.buff
-	gfx.setimgdim(self.buff, -1, -1)
-	--gfx.setimgdim(self.buff, 2 * w, h)
-	-- Add 2 for shadow.
-	gfx.setimgdim(self.buff, w + 2, h + 2)
-
-    --GUI.Msg("**** dh_Panel.init ready to draw outer rectangle ****")
-    --GUI.Msg("> dh_Panel.init elm z is: " .. self.z)
-    --GUI.Msg("> dh_Panel.init elmname is: " .. self.name .. " : width is: " .. w)
-    --GUI.Msg("> dh_Panel.init elm radius is: " .. rad)
+    local sd = self.shadow and GUI.shadow_dist or 0
+    local sa = GUI.colors["shadow"][4]
+    -- In case element created before gfx opened.    
+    if sa > 1 then sa = sa / 255 end
     
-    -- If no border then no shadow. Draw only bg then return.
+	self.buff = self.buff or GUI.GetBuffer()
+	gfx.setimgdim(self.buff, -1, -1)
+    gfx.setimgdim(self.buff, w + sd, h + sd)
+    gfx.dest = self.buff
+    
+    -- Draw backdrop for better antialiasing of roundrect.
+    if rad > 0 then
+
+        GUI.color(self.col_backdrop)
+        gfx.rect(0, 0, w + sd, h + sd)
+           
+    end
+
+    -- # If no border then no shadow. Draw only bg then return.
+    
     if bw == 0 then
-        --GUI.Msg("> dh_Panel.init elmname is: " .. self.name)
-	    GUI.color(self.col_bg)
+
+        GUI.color(self.col_bg)
+        
         if rad > 0 then
-            --GUI.roundrect(0, 0, w, h, rad, 1, 1)
-            dhtks.roundrect(0, 0, w, h, rad, 1, 1)
+            GUI.roundrect(0, 0, w - 1, h - 1, rad, 1, 1)
         else
             gfx.rect(0, 0, w, h, 1)
         end
+        
         return
     end
     
-    --!!! GUI.roundrect yields wierd results when using shadow. 
-    -- It seems that gfx.circle sometimes adds 1 to x and y when it shouldn't.
-    -- I rewrote this function and put it in dh_Toolkit_shared as a hack.
+    ---- Has a border ----
     
-    -- Draw outer shadow.
+    -- # Draw outer shadow.
+--zzsh
+    -- Temporary buffer for drawing shadow.
+    local sh_buff
 
     if self.shadow then
-        GUI.color(GUI.colors["shadow"])
+
         if rad > 0 then
-            --GUI.roundrect(2, 2, w, h, rad + bw + sh_d, 1, 1)
-            --GUI.roundrect(0, 0, w + 2, h + 2, rad + bw + sh_d, 1, 1)
-            dhtks.roundrect(0, 0, w + 2, h + 2, rad + bw + sh_d, 1, 1)
+        
+            if self.shadow then
+                sh_buff = sh_buff or GUI.GetBuffer()
+                gfx.setimgdim(sh_buff, -1, -1)
+                gfx.setimgdim(sh_buff, w, h)
+            end
+
+            gfx.dest = sh_buff
             
-                        
+            -- Draw shadow shape opaque.    
+            GUI.color("black")
+            GUI.roundrect(0, 0, w - 1, h - 1, rad + bw + sd + 1, 1, 1)
+                                    
+            -- Then lighten whole buffer.
+            gfx.muladdrect(0, 0, w, h, 1, 1, 1, sa, 0, 0, 0, 0 )     
+            
+            --# Blit shadow to main buffer.
+            gfx.dest = self.buff
+            gfx.blit(sh_buff, 1, 0, 0, 0, w, h, sd, sd)        
+
         else
-            gfx.rect(2, 2, w, h, 1)
+            
+            GUI.color(GUI.colors["shadow"])
+            gfx.rect(sd, sd, w, h, 1)
+
         end
+
     end
     
-	-- Draw border rectangle.
-	
+    -- # Draw border
+
     GUI.color(self.col_border)
+    
+    -- rad is to inside of border.
     if rad > 0 then
-        -- This is adding 1 to w and h.
-        --GUI.roundrect(0, 0, w, h, rad + bw, 1, 1)
-        dhtks.roundrect(0, 0, w, h, rad + bw, 1, 1)
+        GUI.roundrect(0, 0, w - 1, h - 1, rad + bw, 1, 1)
     else
         gfx.rect(0, 0, w, h, 1)
     end
-	
-	-- Draw inner shadow.
-	
-    if self.shadow and bw > 0 then
-        GUI.color(GUI.colors["shadow"])
+    
+    -- # Draw background
+    
+    GUI.color(self.col_bg)
+
+    if rad > 0 then
+        GUI.roundrect(bw, bw, w - ((2 * bw)) - 1, h - ((2 * bw)) - 1, rad, 1, 1)
+    else
+        gfx.rect(bw, bw, w - ((2 * bw)), h - ((2 * bw)), 1)
+    end	            
+
+    -- # Draw inner shadow.    
+
+    if self.shadow then
+    
         if rad > 0 then
-            --GUI.roundrect(bw, bw, w - (2 * bw) , h - (2 * bw), rad + bw, 1, 1)
-            dhtks.roundrect(bw, bw, w - (2 * bw) , h - (2 * bw), rad + bw, 1, 1)
+    
+            -- Reinitialize shadow buffer.
+            gfx.setimgdim(sh_buff, -1, -1)
+            gfx.setimgdim(sh_buff, w, h)        
+            gfx.dest = sh_buff
+        
+            -- Draw shadow shape opaque.    
+            GUI.color("black")
+            GUI.roundrect(0, 0, w - (2 * bw) - 1, h - (2 * bw) - 1, rad, 1, 1) 
+                   
+            -- Then lighten whole buffer.
+            gfx.muladdrect(0, 0, w - (2 * bw), h - (2 * bw), 1, 1, 1, sa, 0, 0, 0, 0 )     
+        
+            --# Blit shadow to main buffer
+            gfx.dest = self.buff
+            gfx.blit(sh_buff, 1, 0, 0, 0, w - (2 * bw), h - (2 * bw), bw, bw) 
+                   
+            -- Draw inner bg rectangle --   
+            GUI.color(self.col_bg)
+            GUI.roundrect(bw + sd, bw + sd, w - ((2 * bw) + sd) - 1, h - ((2 * bw) + sd) - 1, rad, 1, 1)            
+        
         else
+            GUI.color(GUI.colors["shadow"])
             gfx.rect(bw, bw, w - (2 * bw) , h - (2 * bw), 1)
+
+            -- Draw inner bg rectangle --
+            GUI.color(self.col_bg)
+            gfx.rect(bw + sd, bw + sd, w - ((2 * bw) + sd), h - ((2 * bw) + sd), 1)
+        
         end
+
     end
     
-    -- Draw inner bg rectangle --
- 
-    --GUI.Msg("** dh_Panel.init bw is: " .. tostring(bw))
-    GUI.color(self.col_bg)
-    
-    if rad > 0 then
-        --GUI.roundrect(bw + sh_d, bw + sh_d, w - ((2 * bw) + sh_d), h - ((2 * bw) + sh_d), rad, 1, 1)
-        dhtks.roundrect(bw + sh_d, bw + sh_d, w - ((2 * bw) + sh_d), h - ((2 * bw) + sh_d), rad, 1, 1)
-    else
-        gfx.rect(bw + sh_d, bw + sh_d, w - ((2 * bw) + sh_d), h - ((2 * bw) + sh_d), 1)
-    end	    
+    --!!! IMPORTANT !
+    if sh_buff then GUI.FreeBuffer(sh_buff) end
 
 end
 
@@ -194,53 +287,230 @@ function GUI.dh_Panel:draw()
     --GUI.Msg("== dh_Panel:draw elmname is: " .. self.name .. " : width is: " .. self.w)
 
 	local x, y, w, h = self.x, self.y, self.w, self.h
+    local sd = self.shadow and GUI.shadow_dist or 0
 	
+	-- Expand for shadow.
 	if self.shadow then
-	    w = w + 2
-	    h = h + 2
+	    w = w + sd
+	    h = h + sd
 	end
 
 	gfx.blit(self.buff, 1, 0, 0, 0, w, h, x, y)
 	
-	-- Draw the text
-	if self.text then
+	-- Draw the caption.
+	if self.caption and self.caption ~= "" then 
+	    self:drawcaption() 
+	end
+	
+	-- Draw the text.
+	--if self.text and self.text ~= "" then
+	if self.text and (#self.text > 0) then	
 	    self:drawtext()
 	end
 	
 end
 
+--zzcap
+function GUI.dh_Panel:drawcaption()
+
+    --GUI.Msg("dh_Panel:drawcaption self.cap_pad_x : " .. tostring(self.cap_pad_x))
+    
+    local caption = self.caption
+
+    GUI.font(self.font_caption)
+
+    local str_w, str_h = gfx.measurestr(caption)
+    
+--[=[ # Currently only using top position.
+    if self.cap_pos == "left" then
+        gfx.x = self.x - str_w - self.cap_pad_x
+        if self.cap_centered then
+            gfx.y = self.y + (self.h - str_h) / 2
+        else
+            gfx.y = self.y + self.cap_pad_y
+        end
+    elseif self.cap_pos == "top" then
+        if self.cap_centered then
+            gfx.x = self.x + (self.w - str_w) / 2
+        else
+            gfx.x = self.x + self.cap_pad_x  
+        end      
+        gfx.y = self.y - str_h - self.cap_pad_y
+    elseif self.cap_pos == "right" then
+        gfx.x = self.x + self.w + self.cap_pad_x
+        if self.cap_centered then
+            gfx.y = self.y + (self.h - str_h) / 2
+        else
+            gfx.y = self.y + self.cap_pad_y
+        end
+    elseif self.cap_pos == "bottom" then
+        if self.cap_centered then
+            gfx.x = self.x + (self.w - str_w) / 2
+        else
+            gfx.x = self.x + self.cap_pad_x
+        end               
+        gfx.y = self.y + self.h + self.cap_pad_y
+    end
+--]=]
+
+    gfx.y = self.y - str_h - self.cap_pad_y
+
+    if self.cap_centered then
+        gfx.x = (self.x + (self.w - str_w) / 2) + self.cap_pad_x
+    else
+        gfx.x = self.x + self.cap_pad_x  
+    end  
+
+
+    --GUI.text_bg(str, self.col_backdrop)
+    
+    GUI.color(self.col_backdrop)
+    gfx.rect(gfx.x, gfx.y, str_w, str_h, 1)
+
+    if self.shadow_caption then
+        GUI.shadow(caption, self.col_cap_text, "shadow")
+    else
+        GUI.color(self.col_cap_text)
+        gfx.drawstr(caption)
+    end
+
+end
+
+ --zztext
 function GUI.dh_Panel:drawtext()
 
-    --if self.text then
-            
+    --local str_arr = {}
+     
+    local str_arr = self.text
+     
+    --GUI.Msg("\n# text type : " .. type(str_arr))
+    --GUI.Msg("  text size : " .. tostring(#str_arr))    
+     
+    if (type(str_arr) == "table") and (#str_arr > 0) then
+    
         GUI.color(self.col_text)
-	    GUI.font(self.font)    
+        GUI.font(self.font_text)              
         
-        if type(self.text) == "table" then
-        
-            local str_w, str_h = gfx.measurestr("M")
-                        
-            if self.use_pixels > 0 then
-                str_h = self.use_pixels
-            else    
-                str_h = str_h * self.line_height
-            end
+        local str_w, str_h = gfx.measurestr("M")
+   	    local str_x = self.x + self.pad + self.border_width
+   	    local str_y = self.y + self.pad        
 
-            local str_x = self.x + self.pad + self.border_width
-            local str_y = self.y + self.pad + self.border_width
-
-            
-            for _, str in ipairs(self.text) do
-            
-                gfx.x = str_x
-                gfx.y = str_y
-                gfx.drawstr(str)
-                str_y = str_y + str_h
-            end
-        
+        if self.use_pixels then
+            str_h = self.line_height_pixels
+        else    
+            str_h = str_h * self.line_height
         end
         
-    --end
+        -- How many lines can fit vertically.        
+        local disp_h = (self.h - 2 * (self.border_width + self.pad)) // str_h
+        
+        -- How many chars can fit left to right.
+        --local line_w = (self.w - 2 * (self.border_width + self.pad)) // str_w
+        
+        -- Alt: use right, bottom.  
+        local r = self.x + self.w - (self.border_width + self.pad)
+        local b = str_y + str_h
+        
+        local ath = self.h - 2 * (self.border_width + self.pad)
+        --GUI.Msg("available text height : " .. tostring(ath))
+        --GUI.Msg("str_h : " .. tostring(str_h))
+        --GUI.Msg("b     : " .. tostring(b))                             
+          
+        for i = 1, math.min(disp_h, #str_arr) do
+         
+    	   --local str = string.sub(str_arr[i], 1, line_w - 1)         
+         
+           gfx.x = str_x
+           gfx.y = str_y
+         
+    	   --gfx.drawstr(str)
+    	   gfx.drawstr(str_arr[i], 0, r, b)    	   
+   	    
+    	   str_y = str_y + str_h
+    	   b = b + str_h
+    	             
+        end 
+         
+    end
+             
+--[==[
+
+         local start_pos = 1
+         local end_pos = 1
+         local temp_str = ""
+          
+         local c_idx = 1
+        
+        while start_pos < #self.text do 
+         
+            end_pos = start_pos + line_w -1
+            if end_pos > #text then end end_pos = #text
+         
+            temp_str = string.sub(text, start_pos, end_pos)
+             
+            table.insert(str_arr, temp_str)
+          
+            start_pos = end_pos + 1
+        end        
+        
+    	for i = self.wnd_pos.y, math.min(self:wnd_bottom() - 1, #str_arr) do
+    			
+            gfx.x = str_x
+    	    gfx.y = str_y
+    	    
+    	    local str = string.sub(str_arr[i], self.wnd_pos.x + 1, self:wnd_right() - 1)
+    
+    	    gfx.drawstr(str)
+   	    
+    	    str_y = str_y + str_h    	    
+        	    
+        end    
+--]==]        
+
+     
+--[==[     
+     if type(text) == "table" then
+     
+         str_arr = text
+     
+     -- 20260315: not implemented due to a conflict in GUI Builder.
+     elseif type(text) == "string" then
+     
+         -- Comma separated string.
+         -- Parse the string of options into a table
+         local tempidx = 1
+         for word in string.gmatch(self.text, '([^,]*)') do
+             str_arr[tempidx] = word
+             tempidx = tempidx + 1
+         end
+
+         --[=[
+         -- How many chars can fit left to right.
+         local line_w = (self.w - 2 * (self.border_width + self.pad)) / strw 
+         
+         local start_pos = 1
+         local end_pos = 1
+         local temp_str = ""
+          
+         local c_idx = 1
+        
+         while start_pos < #self.text do 
+         
+             end_pos = start_pos + line_w -1
+             if end_pos > #text then end end_pos = #text
+         
+             temp_str = string.sub(text, start_pos, end_pos)
+             
+             table.insert(str_arr, temp_str)
+          
+             start_pos = end_pos + 1
+         end
+         --]=]
+     else 
+         return
+     end
+--]==]
+         
 
 end
 

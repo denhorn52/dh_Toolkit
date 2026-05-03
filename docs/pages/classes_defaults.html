@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Classes-defaults</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+  
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <!--<div class="tocHeading">dh_Toolkit</div>-->
+        <div class="pageHeading">Classes-defaults</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a>       
+    </div>
+    
+    <div class="pageBody">
+
+<div class="subHeading">6.14 Classes-defaults</div>
+ 
+<div class="classesChart">
+<pre>---------------------------------------------------------------------------------------
+                       Class defaults:
+  [color_name] brackets indicate that the color is hardcoded. 
+   Notes: This chart last updated 03-15-2026. 
+          Later changes may not be reflected.    
+----------------------------------------------------------------------------------------
+Class:            |         Lokasenna             |        dh_Toolkit      
+attribute:        | property_name   value         | property_name       value       
+----------------------------------------------------------------------------------------
+Button:                    
+----------------------------------------------------------------------------------------
+text:               caption         ""              text               "Button"
+font:               font            3 (sans16)      font               "sans22"
+text shadow:        n/a             n/a             shadow_text         false
+
+function:           func            function()end   func                function()end
+parameters:         params          {...}           params              {...}
+
+allow sel.outline:  n/a             n/a             allow_sel_outline   false
+
+-- colors --
+face:               col_fill       "elm_frame"      col_bg             "btn_face"    
+outline:           [elm_outline]                    col_outline        "btn_outline"
+text:               col_txt        "txt"            col_text           "btn_txt"               
+elm sel.outline:    n/a             n/a             col_active         "elm_active"
+
+----------------------------------------------------------------------------------------
+Frame/dh_Panel: 
+----------------------------------------------------------------------------------------
+border width:       n/a             n/a             border_width        2
+radius:             round           0               radius              0
+fill: *             fill            false           n/a                 n/a
+shadow panel:       shadow          false           shadow              false
+
+caption:            n/a             n/a             caption            ""
+caption font:       n/a             n/a             font_caption       "sans22"                                                  
+caption offset x:   n/a             n/a             cap_x               4
+caption offset y:   n/a             n/a             cap_y               4
+caption centered:   n/a             n/a             cap_centered        false
+shadow caption:     n/a             n/a             shadow_caption      false
+
+text:               text            ""              text                ""
+
+text font:          font            3 (sans16)      font_text          "mono16"
+text padding:       pad             0               pad                 4  
+text indentt:       txt_indent      0               n/a                 n/a  
+line height:        n/a             n/a             line_height         1.25
+  use pixels:       n/a             n/a             use_pixels          false
+  pixels:           n/a             n/a             line_height_pixels  24
+
+function:           func            function()end   func                function()end
+parameters:         params          {...}           params              {...}
+
+-- colors --
+background:         n/a             n/a             col_bg             "wnd_bg" 
+frame/border:       color **       "elm_frame"      col_border         "panel_border"
+text:               col_txt        "txt"            col_text           "txt"
+caption text:       n/a             n/a             col_cap_text       "txt"
+
+backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
+
+*   Lokasenna frame only. If true the element background will 
+      be filled with 'color'.
+**  frame color, and background color if fill is true.
+
+----------------------------------------------------------------------------------------
+Knob:   When increasing the font size for values, one needs to also increase 
+          knob w and h, or else text overlaps.
+----------------------------------------------------------------------------------------
+knob style:         n/a             n/a             knob_style         "pointer"
+centered: *         n/a             n/a             centered            true
+min value(number):  min             nil             min                 0
+max value(number):  max             nil             max                 10
+increment size:     inc             1               inc                 1
+default setting:    default         nil             default             5
+shadow element:    [auto drawn for knob body]       shadow              false
+
+caption (string):   caption         nil             caption             ""
+caption position:   n/a             n/a             cap_pos            "top" 
+caption font:       font_a          3 (sans16)      font_caption       "sans22"
+caption offset x:   cap_x           0               n/a                 n/a
+caption offset y:   cap_y           0               n/a                 n/a
+caption padding:    n/a             n/a             cap_pad             4
+shadow caption:    [auto drawn]                     shadow_caption      false
+
+show values:        vals            nil             show_values         false
+values font:        font_b          4 (sans16)      font_values        "sans18"
+values padding: **  n/a             n/a             pad_values          4 
+displayed vals: *** output          nil             output              nil
+
+show tickmarks:     n/a             n/a             show_tickmarks      false
+tickmark steps:     n/a             n/a             tickmark_steps      10 ****
+tickmark size:      n/a             n/a             tickmark_size       4
+tickmarks padding:  n/a             n/a             pad_ticks           4
+hard ticks:         n/a             n/a             hard_ticks         {0, 5, 10}
+hard tickmark size: n/a             n/a             hard_tick_size      6
+thicken hard ticks: n/a             n/a             hard_tick_thk       false
+
+show min-max vals:  n/a             n/a             show_min_max        false
+min-max values:     n/a             n/a             min_max_values      (see knob page)
+
+display style:      n/a             n/a             display_style      "none"
+display position:   n/a             n/a             display_pos        "top"
+display width:      n/a             n/a             display_w           48
+display height:     n/a             n/a             display_h           28
+display font:       n/a             n/a             font_display       "sans24"
+display pad x:      n/a             n/a             display_pad_x       0
+display pad y:      n/a             n/a             display_pad_y       8
+display align:      n/a             n/a             display_align      "center"
+
+frame outline:      n/a             n/a             frame_use_outline   false
+frame thickness:    n/a             n/a             frame_thk           2
+allow sel.outline:  n/a             n/a             allow_sel_outline   false
+
+-- colors --
+background:         bg             "wnd_bg"         col_bg             "wnd_bg" 
+knob body:          col_body       "elm_frame"      col_body           "btn_face" 
+knob outline:      [elm_outline]                    col_outline        "btn_outline"
+knob pointer: ***** col_head       "elm_fill"       n/a                 n/a
+values text:        col_txt        "txt"            col_values         "txt"
+
+caption text:       n/a             n/a             col_cap_text       "txt"
+
+display bg: ******  n/a             n/a             col_display_bg     "elm_bg"
+display text:       n/a             n/a             col_display_text   "elm_txt"
+display frame:      n/a             n/a             col_frame          "elm_frame"
+elm sel.outline:    n/a             n/a             col_active         "elm_active"
+
+*      When true knob is positioned using x, y as center of knob.
+**     Adjust radius of displayed values
+***    Used to modify/format displayed value. Accepts table or function.
+         Refer to Lokasenna documentation for details.
+****   Should correspond in some way to knob steps.
+         (Knob.max - Knob.min) / Knob.inc
+*****  If show_values then is also the highlighted text color. 
+****** If display_style is "box".
+
+----------------------------------------------------------------------------------------
+Label:   
+----------------------------------------------------------------------------------------
+text:               caption         ""              text               "Label"
+font:               font            2 (sans20)      font               "sans22"
+text position:      n/a             n/a             text_pos           "left"
+text shadow:        n/a             n/a             shadow_text         false
+
+-- colors --
+background:         bg             "wnd_bg"         col_bg             "wnd_bg" 
+text:               color          "txt"            col_text           "txt"
+ 
+----------------------------------------------------------------------------------------
+Listbox:  
+----------------------------------------------------------------------------------------
+list:               list            {}              list                {}
+multiple select:    multi           false           multi               false
+scrollbar width:    [8]                             scrollbar_width     8
+shadow element:     n/a             n/a             shadow              false
+
+caption:            caption         ""              caption             ""
+caption font:       font_a          3 (sans16)      font_caption       "sans22"
+caption position:   n/a             n/a             cap_pos            "top"
+caption offset x:   n/a             n/a             cap_pad_x           4
+caption offset y:   n/a             n/a             cap_pad_y           4
+caption centered:   n/a             n/a             cap_centered        false
+caption padding:    pad             4               n/a                 n/a
+shadow caption:     shadow          true            shadow_caption      false
+
+text font:          font_b          4 (sans16)      font_text          "sans22"
+padding:            pad             4               pad                 4
+line height         n/a                             line_height         1.20
+
+override sel alpha: n/a             n/a             use_sel_alpha       false
+override value:     n/a             n/a             sel_alpha           0.5
+
+frame outline:      n/a             n/a             frame_use_outline   false
+frame thickness:    n/a             n/a             frame_thk           2
+allow sel.outline:  n/a             n/a             allow_sel_outline   false
+
+-- colors --
+list bg:            bg             "elm_bg"         col_bg             "elm_bg" 
+list frame:        [elm_frame]                      col_frame          "elm_frame"
+list text:          color          "txt"            col_text           "elm_txt"
+selected text:     [elm_fill]                       col_sel_text       "sel_txt"
+caption text:       color          "txt"            col_cap_text       "txt"
+
+scrollbar track:   [tab_bg]                         col_track          "btn_face"
+scrollbar thumb:    col_fill       "elm_fill"       col_thumb *        "btn_txt"
+scrollbar outline: [elm_outline]                    col_sb_outline *   "elm_outline"
+
+elm sel.outline:    n/a             n/a             col_active         "elm_active"
+backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
+
+* Maybe automated using track color as basis. 
+
+----------------------------------------------------------------------------------------
+Menubar:  
+----------------------------------------------------------------------------------------
+menus:              menus           {}              menus               {}
+
+full width:         fullwidth       true            fullwidth           true
+limit width:        n/a             n/a             limit_w             0
+
+titles font size:   font            2 (sans20)      font               "sans22"
+titles padding:     pad             0               pad                 0
+pad top: *          n/a             n/a             do_pad_top          false
+pad top value: *    n/a             n/a             pad_top_val         0
+
+shadow element:     shadow          true            shadow              true
+
+-- colors --
+background:         col_bg         "elm_frame"      col_bg             "btn_face"
+text:               col_txt        "txt"            col_text           "btn_txt"
+mouse over:         col_over       "elm_fill"       col_over           "elm_fill"
+
+* Titles normally centered vertically. Use these to override.
+If width and height are not specified they will be determined
+  by text size. Probably best to specify. Default height is 28px.
+
+----------------------------------------------------------------------------------------
+Menubox:  
+----------------------------------------------------------------------------------------
+menu options: *     opts            " "             opts               {}
+selected option:    retval          1               curr_opt **         0
+no arrow:           noarrow         false           noarrow             false
+shadow element:     shadow          true            shadow              false
+
+caption:            caption         nil             caption             ""
+caption font:       font_a          3 (sans16)      font_caption       "sans22"
+caption position:   n/a             n/a             cap_pos            "top"
+caption offset x:   n/a             n/a             cap_pad_x           4
+caption offset y:   n/a             n/a             cap_pad_y           4
+caption centered:   n/a             n/a             cap_centered        false
+caption padding:    pad             4               n/a                 n/a
+shadow caption:     shadow          true            shadow_caption      false
+
+text font:          font_b          4 (sans16)      font_text          "sans22"
+text align:         align           0               align_text         "left" 
+text padding:       n/a             n/a             pad                 4
+
+frame outline:      n/a             n/a             frame_use_outline   false
+frame thickness:    n/a             n/a             frame_thk           2
+allow sel.outline:  n/a             n/a             allow_sel_outline   false
+
+-- colors --
+box frame:         [elm_frame]                      col_frame          "elm_frame"
+box bg:            [elm_bg]                         col_bg             "elm_bg"
+box text:           col_txt        "txt"            col_text           "elm_txt"
+box face:           n/a             n/a             col_face           "btn_face"
+caption text:       col_cap        "txt"            col_cap_text       "txt"
+
+elm sel.outline:    n/a             n/a             col_active         "elm_active"
+backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
+
+*  See note at end regarding "opts".
+** Set this to the index of the option to be initially selected.
+
+----------------------------------------------------------------------------------------
+Options: 
+----------------------------------------------------------------------------------------
+options: *          opts            {}              opts               {"Option 1"}
+
+direction:          dir             "v"             dir                "v"
+swap:               swap            false           swap                false
+
+draw frame:         frame           true            n/a                 n/a
+border width:       n/a             n/a             border_width        2
+round corners:      n/a             n/a             radius              0
+shadow frame:       shadow          true            shadow              false
+
+caption:            caption         nil             caption            ""
+caption font:       font_a          2 (sans20)      font_caption       "sans22"
+caption position:   n/a             n/a             cap_pos            "above"
+caption offset x:   n/a             n/a             cap_pad_x           4
+caption offset y:   n/a             n/a             cap_pad_y           4
+caption centered:   n/a             n/a             cap_centered        false
+shadow caption:     n/a             n/a             shadow_caption      false  
+
+option size:        opt_size        20              opt_size            14
+option padding x:   pad             4               pad_x               4
+option padding y:   pad             4               pad_y               6
+
+options font:       font_b          3 (sans16)      font_text          "sans22"
+shadow text:        shadow          true            shadow_text         false
+
+allow sel.outline:  n/a             n/a             allow_sel_outline   false
+
+-- colors --
+field/background:   n/a             n/a             col_bg             "wnd_bg"
+frame/border:      [elm_frame]                      col_border         "panel_border"
+options text:       col_txt        "txt"            col_text           "txt"
+caption text:       col_txt        "txt"            col_cap_text       "txt"
+
+elm sel.outline:    n/a             n/a             col_active         "elm_active"
+backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
+
+* See note at end regarding "opts".
+
+----------------------------------------------------------------------------------------
+Slider: Properties depend on Slider type (see Slider page). 
+----------------------------------------------------------------------------------------
+direction:          dir             "h"             n/a                 n/a
+track thickness:    [8]                             track_thk           8
+show thumbs:        show_handles    true            n/a                 n/a
+thumb style:        n/a             n/a             thumb_style        "long"
+border width:       n/a             n/a             border_width        2
+radius:             n/a             n/a             radius              0
+shadow element:    [auto drawn for thumbs]          shadow              false
+
+min value(number):  min             nil             min                 0
+max value(number):  max             nil             max                 10
+increment size:     inc             1               inc                 1
+default setting:    defaults        nil             default             5
+fill from default:  n/a             n/a             fill_from_default   false
+
+caption (string):   caption         nil             caption            ""
+caption font:       font_a          3 (sans16)      font_caption       "sans22"
+caption position:   n/a             n/a             cap_pos            "top"         
+caption offset x:   cap_x           0               cap_pad_x           4
+caption offset y:   cap_y           0               cap_pad_y           4
+caption centered:   n/a             n/a             cap_centered        false
+shadow caption:    [auto drawn]                     shadow_caption      false
+
+show values:        show_values     true            show_values         false
+values font:        font_b          4 (sans16)      font_values        "sans18"
+values padding:     n/a             n/a             pad_values          4
+displayed vals:     output          nil             output              nil
+
+show tickmarks:     n/a             n/a             show_tickmarks      false
+tickmark steps:     n/a             n/a             tickmark_steps      10 
+show default ticks: n/a             n/a             show_default_tickmarks false
+default tickmarks:  n/a             n/a             default_tickmarks   (see slider page)
+
+show min-max vals:  n/a             n/a             show_min_max        false
+min-max values:     n/a             n/a             min_max_values      (see slider page)
+
+display style:      n/a             n/a             display_style      "none"
+display position:   n/a             n/a             display_pos        "top"
+display width:      n/a             n/a             display_w           48
+display height:     n/a             n/a             display_h           26
+display font:       n/a             n/a             font_display       "sans24"
+display pad x:      n/a             n/a             display_pad_x       8
+display pad y:      n/a             n/a             display_pad_y       8
+display align:      n/a             n/a             display_align      "center"
+
+track offset:       n/a             n/a             track_offset        0
+tickmarks offset:   n/a             n/a             tickmarks_offset    0
+
+frame outline:      n/a             n/a             frame_use_outline   false
+frame thickness:    n/a             n/a             frame_thk           2
+allow sel.outline:  n/a             n/a             allow_sel_outline   false
+
+-- colors --
+background:         bg             "wnd_bg"         col_bg             "wnd_bg" 
+border:             n/a             n/a             col_border         "panel_border"
+track bg:          [elm_bg]                         col_track          "elm_bg"
+track outline: *   [elm_outline]                    col_frame          "elm_frame"
+track_fill:         col_fill       "elm_fill"       col_fill           "track_fill" 
+thumb body:         col_hnd        "elm_frame"      col_thumb          "thumb_body"
+thumb outline:     [elm_outline]                    col_thumb_outline  "btn_outline"
+caption text:       col_txt        "txt"            col_cap_text       "txt"
+
+values text:        col_txt        "txt"            col_values         "txt"
+display bg: **      n/a             n/a             col_display_bg     "elm_bg"
+display text:       n/a             n/a             col_display_text   "elm_txt"
+
+elm sel.outline:    n/a             n/a             col_active         "elm_active"
+backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
+
+*    Affects track outline and display box.
+**   If display_style is "box".
+
+----------------------------------------------------------------------------------------
+Tabs:  
+----------------------------------------------------------------------------------------
+tab names: *        opts            {}              opts                {"Tab 1"}
+tab width:          tab_w           48              tab_w               48
+tab height:         tab_h           20              tab_h               24
+full width:         fullwidth       true            fullwidth           true
+limit width:        n/a             n/a             limit_w             0
+
+font tab active:    font_a          3 (sans16)      font_tab_active    "sans24"
+font tab inactive:  font_b          4 (sans16)      font_tab_inactive  "sans22"
+pad between tabs:   pad             8               pad                 8
+
+-- colors --
+background:         bg             "elm_bg"         col_bg             "elm_bg"   
+text:               col_ txt       "txt"            col_text           "txt"
+active tab:         col_tab_a      "wng_bg"         col_tab_active     "tab_active" 
+inactive tab:       col_tab_b      "tab_bg"         col_tab_inactive   "tab_inactive"
+
+* See note at end regarding "opts".
+
+----------------------------------------------------------------------------------------
+Textbox:  
+----------------------------------------------------------------------------------------
+text: *             retval          ""              retval              ""
+undo limit:         undo_limit      20              undo_limit          20
+
+caption:            caption         ""              caption             ""
+caption font:       font_a          3 (sans16)      font_caption       "sans22"
+caption position:   n/a             n/a             cap_pos            "top"
+caption offset x:   n/a             n/a             cap_pad_x           4
+caption offset y:   n/a             n/a             cap_pad_y           4
+caption centered:   n/a             n/a             cap_centered        false
+
+text font:          font_b         "monospace"      font_text          "mono16"
+text padding:       pad             4               pad                 4
+text align:         align           0               align_text         "left" 
+
+shadow element:     n/a             n/a             shadow              false
+shadow caption:     shadow          true            shadow_caption      false
+
+frame outline:      n/a             n/a             frame_use_outline   false
+frame thickness:    n/a             n/a             frame_thk           2
+allow sel.outline:  n/a             n/a             allow_sel_outline   false
+
+override sel alpha: n/a             n/a             use_sel_alpha       false
+override value:     n/a             n/a             sel_alpha           0.5
+
+-- colors --
+box bg:            [elm_bg]                         col_bg             "elm_bg"
+box frame:         [elm_frame]                      col_frame          "elm_frame"
+box text:           color          "txt"            col_text           "elm_txt"
+selected text:     [elm_fill]                       col_sel_text       "sel_txt"
+caption text:       color          "txt"            col_cap_text       "txt
+
+elm sel.outline:    n/a             n/a             col_active         "elm_active"
+backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
+
+* Can set text using GUI.Val
+
+----------------------------------------------------------------------------------------
+TextEditor:  
+----------------------------------------------------------------------------------------
+text: *             retval          {}              retval              {}
+undo limit:         undo_limit      20              undo_limit          20
+scrollbar width:    [8]                             scrollbar_width     8
+
+caption:            caption         ""              caption             ""
+caption font:       font_a          3 (sans16)      font_caption       "sans22"
+caption position:   n/a             n/a             cap_pos            "top"
+caption offset x:   n/a             n/a             cap_pad_x           4
+caption offset y:   n/a             n/a             cap_pad_y           4
+caption centered:   n/a             n/a             cap_centered        false
+
+text font:          font_b         "monospace"      font_text          "mono16"
+text padding:       pad             4               pad                 4
+text align:         align           0               align_text         "left" 
+
+shadow element:     n/a             n/a             shadow              false
+shadow caption:     shadow          true            shadow_caption      false
+
+frame outline:      n/a             n/a             frame_use_outline   false
+frame thickness:    n/a             n/a             frame_thk           2
+allow sel.outline:  n/a             n/a             allow_sel_outline   false
+
+line height         n/a             n/a             line_height         1.20
+override sel alpha: n/a             n/a             use_sel_alpha       false
+override value:     n/a             n/a             sel_alpha           0.5
+
+-- colors --
+box bg:            [elm_bg]                         col_bg             "elm_bg"
+box frame:         [elm_frame]                      col_frame          "elm_frame"
+box text:           color          "txt"            col_text           "elm_txt"
+selected text:     [elm_fill]                       col_sel_text       "sel_txt"
+caption text:       color          "txt"            col_cap_text       "txt
+
+scrollbar track:   [tab_bg]                         col_track          "btn_face"
+scrollbar thumb:    col_fill       "elm_fill"       col_thumb **       "btn_txt" 
+scrollbar outline: [elm_outline]                    col_sb_outline **  "elm_outline"
+
+elm sel.outline:    n/a             n/a             col_active         "elm_active"
+backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
+
+*  Can set text using GUI.Val
+** Maybe automated using track color as basis. 
+
+----------------------------------------------------------------------------------------
+Window:
+----------------------------------------------------------------------------------------
+dh_Toolkit increases title height and title font.
+----------------------------------------------------------------------------------------
+
+Note: Options can be specified as a table of strings using 
+  opts or optarray, or a comma separated string using opts.
+  Options are ultimately stored in optarray.
+  If optarray or opts is not specified, or if optarray is 
+  specified as an empty table (optarray = { } or opts = { }) 
+  then optarray will be initialized to {"Option1"}. 
+  If specified as a comma separated string (opts = "Option1, 
+  Option2, Option3") it will be converted to a table and get 
+  stored in optarray. </pre>
+</div> <!-- end classesChart -->
+
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+<!--
+--------------------20              36              52                  72    
+--------------------xxx-------------xxx-------------xxx-----------------xxx
+-->
+
+</html>

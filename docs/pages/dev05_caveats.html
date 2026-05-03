@@ -17,20 +17,24 @@
       <div class="centered-xy"> 
         <div class="pageHeading">Caveats and Cautions</div>
       </div>
+      <a href="dev00_design_notes.html" ><div class="backArrow"></div></a>             
     </div>
     
     <div class="pageBody">
         
-<div class="heading">6.05 Caveats and Cautions:</div>        
+<div class="heading">7.05 Caveats and Cautions:</div>   
+     
+<div class="sectionIndented">
       
-<p>
+<div class="sectionDefault">
 During development there were times when a script would crash. There were
 also times where it would also crash Reaper.
 I believe the crashes were related to one of the following:
-</p>
+</div>
 
-<div class="sectionIndented">
+<div class="sectionDefault">
 <span class="textEmphasis110">json.encode using json.lua</span><br>
+<div class="sectionDefault left050">
 dh_Toolkit scripts use json.lua by <a href="https://github.com/rxi/json.lua">rxi</a> 
 to encode data for saving to Reaper ExtState. Trying to encode 
 values which are unrepresentable in JSON will never result 
@@ -38,14 +42,39 @@ in type conversion or other magic: sparse arrays, tables with mixed key types
 or invalid numbers (NaN, -inf, inf) will raise an error.        
 </div>
 
-<div class="sectionIndented">
+<div class="sectionDefault">
 <span class="textEmphasis110">reaper's "gfx" graphics engine</span><br>
+<div class="sectionDefault left050">
 Menubar and Menubox mouseup events call gfx.showmenu.
 Calling gfx.showmenu will crash Reaper if string parameter is nil or empty. 
 Needs at least one space " ".
 gfx.drawstring is similar. It needs at least an empty string "".  
 Be sure to provide proper string to elements requiring them.        
 </div>
+
+<div class="sectionDefault">
+<span class="textEmphasis110">REASCRIPT FATAL FLAW:</span><br>
+
+Say a script contains the following code:
+<pre>
+	if self.cap_centered then
+	    gfx = self.x + (self.w - str_w) / 2
+	else
+        gfx.x = self.x + self.cap_pad_x
+</pre>
+
+gfx (not gfx.x) was inadvertently set to a number value so the script crashes, 
+and takes everything with it. Everything fades and the 
+error message box just reopening when you try to close it.
+Cannot close Reaper as it has become unresponsive. 
+In Windows one needs to open the Task Manager ("Ctrl+Alt+Del"), 
+search for the Reaper process, End Task. 
+<br><br>
+Be careful of your gfx assignments!  
+</div>
+
+
+
         
 <br>        
 <hr>        
@@ -54,12 +83,12 @@ Clicking on Menubar or Menubox calls gfx.showmenu which displays
 a popup menu. The font and font-size used in the popup menus
 are determined by the operating system and cannot be changed by
 the script.
- </div>         
+</div>   
+       
+</div>       
 
-    <br><br>
+    <br><br><br>
     </div>  <!-- end pageBody -->
   </body>
 
 </html>
-
-

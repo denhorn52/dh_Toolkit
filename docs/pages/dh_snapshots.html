@@ -26,58 +26,64 @@
 
 <div class="heading">2.02 dh_Snapshots:</div>
 
-<p>               
+<div class="sectionDefault left050">
 This script is used to store "snapshots" of the Mixer Control Panel state. 
-It saves and restores individual track visibility (in the Mixer Control Panel), 
+It saves and restores individual track visibility (of the Mixer Control Panel), 
 which tracks are selected, and individual track solo, mute, pan, and volume settings. 
 It can also save fx enabled states. Which settings are affected 
 can be set in the "Preferences" window. It does not affect 
 any track routing, or phasing. The script window contains 
 a listbox with all the mixer control panel snapshots created with this script. 
 Changing project tabs updates the script with the current project data.
-</p>
+</div>
   
-<div class="imgTitle">Snapshots window</div>
+<br>
+<div class="imgTitle">Snapshots window (showing Desert theme)</div>
 <div class="imgContainer"><img src="../images/snapshots.png" alt="Snapshots window"></div>
 
-<p>               
-    Click on an item to select it then click on the <span class="textEmphasis110">“Apply”</span> button to apply it. 
-</p>
+<div class="sectionDefault left050">
+Click on an item to select it then click on the <span class="textEmphasis110">“Apply”</span> 
+button to apply it. 
+</div>
   
-<p>               
-    To create a new snapshot click on the <span class="textEmphasis110">“Add”</span> button. This opens the "Create New Snapshot" dialog box (more on this later).
-</p>
+<div class="sectionDefault left050">
+To create a new snapshot click on the <span class="textEmphasis110">“Add”</span> button. 
+This opens the "Create New Snapshot" dialog box (more on this later).
+</div>
             
-<p>               
-    To rename a snapshot Alt+click on the <span class="textEmphasis110">“Add”</span> button. This opens the "Rename Snapshot" dialog box.
-</p>
+<div class="sectionDefault left050">
+To rename a snapshot Alt+click on the <span class="textEmphasis110">“Add”</span> button. 
+This opens the "Rename Snapshot" dialog box.
+</div>
             
-<p>               
-    Clicking the <span class="textEmphasis110">“Delete”</span> button will delete the currently selected snapshot. You will be prompted to confirm the deletion.
-</p>
+<div class="sectionDefault left050">
+Clicking the <span class="textEmphasis110">“Delete”</span> button will delete the currently 
+selected snapshot. You will be prompted to confirm the deletion.
+</div>
     
-<p>               
-    Clicking the <span class="textEmphasis110">“Prefs”</span> button will open the <span class="textEmphasis110">"Preferences"</span> window .<br>
-</p>
+<div class="sectionDefault left050">
+Clicking the <span class="textEmphasis110">“Prefs”</span> button will open the 
+<span class="textEmphasis110">"Preferences"</span> window .<br>
+</div>
     
-<p>               
+<div class="sectionDefault left050">
 <span class="textEmphasis110">Note:</span> 
 A snapshot is a list of reaper tracks and their states. 
 It is highly likely that tracks are added or removed between, 
 or even during script usage. Tracks that are no longer available 
-I consider to be “ghost” tracks. When applying a snapshot 
+are considered to be “ghost” tracks. When applying a snapshot 
 and it encounters a ghost track, the script will prompt you 
 if you want to remove the track reference from the snapshot. 
 Click “Yes” to remove the reference. (This will not affect 
 the project as the track has already been removed.) 
 There is also an option in Preferences to automatically remove them.
-</p>
+</div>
 
 <!-- # CREATE NEW SNAPSHOT -->
         
 <div class="heading">Create New Snapshot:</div>
 
-<p>               
+<div class="sectionDefault left050">
 Clicking on the <span class="textEmphasis110">“Add”</span> button 
 opens the <span class="textEmphasis110">“Create New Snapshot”</span> dialog box. 
 It has a textbox where you enter the name that you want for the new snapshot. 
@@ -86,8 +92,9 @@ Enter or modify the name as you desire then click the
 <span class="textEmphasis110">“Save”</span> button to save it. 
 If the name already exists you will be prompted if you want 
 to overwrite the existing snapshot.
-</p>
+</div>
         
+<br>        
 <div class="imgTitle">Create new snapshot window</div>
 <div class="imgContainer"><img src="../images/snapshots-add.png" alt="Create new snapshot window"></div> 
 
@@ -95,7 +102,7 @@ to overwrite the existing snapshot.
 
 <div class="heading">Rename Snapshot:</div>
 
-<p>               
+<div class="sectionDefault left050">
 Alt+Click on the <span class="textEmphasis110">“Add”</span> button 
 opens the <span class="textEmphasis110">“Rename Snapshot”</span> dialog box. 
 It has a textbox where you enter the new name that you desire. 
@@ -104,8 +111,9 @@ Enter or modify the name as you desire then click the
 <span class="textEmphasis110">“Save”</span> button to save it. 
 If the name already exists a message box will warn you. 
 You cannot rename to an existing name in the list.
-</p>
+</div>
         
+<br>        
 <div class="imgTitle">Rename snapshot window</div>
 <div class="imgContainer"><img src="../images/snapshots-rename.png" alt="Rename snapshot window"></div>
 
@@ -113,49 +121,86 @@ You cannot rename to an existing name in the list.
 
 <div class="heading">Preferences:</div>
 
-<p>               
+<div class="sectionDefault left050">
 Clicking the <span class="textEmphasis110">“Prefs”</span> button 
 will open the <span class="textEmphasis110">"Preferences"</span> window.
-</p>
+</div>
     
+<br>        
 <div class="imgTitle">Preferences window</div>
 <div class="imgContainer"><img src="../images/snapshots-prefs.png" alt="Preferences window"></div>   
 
 <div class="sectionDefault"> <!-- # 4 -->       
         
 <div class="subHeading">The App Scale panel:</div>
-<p>               
-Displays the current App scale.
-Use the menubox to select a scale setting.
-Click the "Scale App" button to set the scale.        
-</p>
-        
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Current Scale: </span>       
+Making a selection from this selection box scales the script 
+window, including all elements and fonts.
+</div>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Current Font Scale: </span> 
+Making a selection from this selection box scales all of the       
+script's fonts relative to 'designed' size. This is included 
+in case a system font's size is different than that of the 
+system the script was designed on. 
+(The font size of native menuboxes and
+message boxes will not change as they are determined by the system.) 
+</div>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Use Outlines: </span>       
+Use this checkbox to specify the type of outlines to use.  
+The text elements, knob and slider display boxes, and slider 
+track normally use a highlight/lowlight frame derived from the 
+background color. Alternately, the frames can use a single color 
+outline specified the theme's 'elm_frame' color. 
+
+Check the box to use the latter. (Themes have 
+a false color 'metadata' which is used to specify that the GUI 
+is to always use the single color option.) 
+</div>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Thick Frames: </span>             
+Use this checkbox is used to specify if thinner or 
+thicker outlines should be displayed. As of 04-16-2026 they are  
+1 pixel or 2 pixel width. 
+</div>
+
 <div class="subHeading">The Themes panel:</div>
-<p>               
-Displays the current theme.
-Use the menubox to select a theme.
-If "User" theme is selected it displays the current selected user theme, and a menubox to select a user theme.
-Use the "Set Theme" button to set the theme. (Setting a theme will replace any theme currently being edited.)        
-</p>
+
+<div class="sectionDefault left050">
+<span class="textEmphasis110">Current dh_theme: </span>             
+Use this menubox to select a dh_Toolkit theme for the GUI.
+If "User" theme is selected it displays the 
+<span class="textEmphasis110">"Current User theme"</span> 
+menubox (if there are any user themes). Use that menubox  
+to select a user theme.
+</div>
+
+
 
 <div class="subHeading">The Options panel:</div>
             
-<p>               
+<div class="sectionDefault left050">
 Displays the snapshot options. The first six options are always saved 
 when adding a snapshot. If an option is checked that option 
 will be restored when applying the snapshot (by clicking the “Apply” button). 
 By unchecking the boxes you can disable if those states are updated. 
-</p>
+</div>
   
-<p>               
+<div class="sectionDefault left050">
 The <span class="textEmphasis110">fx_enabled</span> option, 
 if checked, will save the enabled states of all the tracks fx 
 when adding a new snapshot. If this option is checked when applying a snapshot, 
 and the enabled states were saved, then they will be applied 
 when clicking the "Apply" button.   
-</p>
+</div>
   
-<p>               
+<div class="sectionDefault left050">
 If the <span class="textEmphasis110">fx_params</span> option if checked, 
 and the fx_enabled option is checked, then all parameters 
 of each enabled fx will be saved when adding a new snapshot. 
@@ -164,9 +209,9 @@ and the enabled states were saved, and the parameters were saved,
 then they will be applied when clicking the "Apply" button. 
 This options can result in large file size (I haven't tested performance) 
 and should probably remained unchecked except for limited instances.  
-</p>
+</div>
   
-<p>               
+<div class="sectionDefault left050">
 The <span class="textEmphasis110">auto_del_ghost_items</span> option: 
 It's possible that a reaper track has been deleted, 
 but the snapshot still holds a reference to it. I call these "ghost tracks". 
@@ -174,18 +219,19 @@ They are harmless, but there is no need to have them around.
 If this box is unchecked you will be prompted to remove them 
 when applying a snapshot. If this option is checked then the 
 reference will be removed automatically.      
-</p>
+</div>
 
+<div class="subHeading">“Close” button:</div>
+<div class="sectionDefault left050">
+Click this to return to the main script.       
+</div>
+
+<br><br> 
+    
 </div> <!-- end # 4 -->
-
-<p>               
-Click the <span class="textEmphasis110">“Close”</span> button to return to the main script.       
-</p>
 
     <br><br> 
     </div>  <!-- end pageBody -->
   </body>
 
 </html>
-
-
