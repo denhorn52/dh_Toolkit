@@ -94,6 +94,7 @@ DHTK.EXT_STATE_NAME = "dh_GUI_builder"
 -- dh_Toolkit classes (Modified Lokasenna's classes).
 
 require "classes/dh_Button"
+require "classes/dh_Graph"
 require "classes/dh_Knob"
 require "classes/dh_Label"
 require "classes/dh_Listbox"

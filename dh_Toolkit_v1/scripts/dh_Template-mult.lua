@@ -1,7 +1,7 @@
 --dh_Template-mult.lua 
 -- version 1.0 
 -- Author: Dennis R. Horn
--- Date: 2026-03-15
+-- Date: 2026-03-30
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -160,8 +160,9 @@ require "common/GUI_overrides"
 --[[ DEV NOTE: !!! Necessary. ]]--
 DHTK = require "common/dh_Toolkit_core"
 ----------------------------------------
--- Set to true if script uses dh_Toolkit Prefs window.
--- Set to false if script handles Prefs in its own way (as with GUI Builder).)
+--[[ DEV NOTE: 
+     Set to true if script uses dh_Toolkit Prefs window.
+     Set to false if script handles Prefs in its own way (as with GUI Builder). ]]--
 DHTK.USE_DHTK_PREFS = true
 
 --[[ DEV NOTE: Replace with a name you choose. ]]--
@@ -201,7 +202,8 @@ require "classes/dh_Label"
 require "classes/dh_Menubox"  
 require "classes/dh_Options"   
 require "classes/dh_Panel"   
-  
+
+--require "classes/dh_Graph"     
 --require "classes/dh_Knob"  
 --require "classes/dh_Listbox"
 --require "classes/dh_Menubar"
