@@ -3,7 +3,7 @@
 -- data_Elements.lua
 
 --[[
-    Modified 20260330
+    Modified 20260506
 
     20251001 - added dh_ classes.
     20251001 - changed some property display orders.
@@ -12,7 +12,8 @@
     20260115 - Renamed dh_Slider to dh_Slider_multi.
                Added new single thumb dh_Slider.
                Added dh_Slider_H and dh_Slider_V
-    20260420 - Revised some properties.             
+    20260420 - Revised some properties.
+    20260506: All dh_Graph.             
 --]]
 
 --[===[
@@ -68,8 +69,8 @@ properties - list of properties that gets displayed in Sidebar.
 props is a convenience list of GB property objects.
     
 --]===]
-
---zzz  --zzsl
+  
+--zzsl
 ------------------------------------------------
 local classes = {}
 
@@ -353,6 +354,65 @@ classes.dh_Panel = {
         props.col_backdrop,        
     }
 }
+--zzz
+------------------------
+-- GUI.dh_Graph:new(name, z, x, y, w, h[, points]) 
+
+classes.dh_Graph = {
+    defaults = {320, 120},
+    creation = {"w", "h", "", 
+        "caption", "font_caption", "cap_pad_x", "cap_pad_y",
+        "cap_centered", "shadow_caption", "shadow",
+        "grid_x_divs", "grid_y_divs", "y_scale",
+        --"points", "x_labels", "y_labels", 
+        "font_text", "pad", 
+        "frame_use_outline", "frame_thk", "allow_sel_outline", 
+        --"col_bg", "col_text",
+        "col_frame", 
+        "col_cap_text", "col_backdrop",
+    },
+    properties = {
+        "1",
+        props.name,
+        "",
+        props.z,
+        props.x,
+        props.y,
+        props.w,
+        props.h,        
+        "",
+        {prop = "grid_x_divs",  caption = "X divs",       class = "Integer",  needs_init = true},
+        {prop = "grid_y_divs",  caption = "Y divs",       class = "Integer",  needs_init = true},        
+        {prop = "y_scale",      caption = "Y scale",      class = "Number",   needs_init = true},        
+        --{prop = "points",       caption = "Data points",  class = "Table",    needs_init = false},        
+        --{prop = "x_labels",     caption = "X labels",     class = "Editor",   needs_init = true},
+        --{prop = "y_labels",     caption = "Y labels",     class = "Editor",   needs_init = true},
+        
+        "2",                
+        props.caption,
+        props.font_caption,
+        props.cap_pad_x,
+        props.cap_pad_y,
+        props.cap_centered,
+        props.shadow_caption,
+        props.shadow,
+        "",
+        props.font_text,
+        props.pad,
+--zzcolors
+        "3",
+        --props.col_bg,
+        props.frame_use_outline,
+        props.frame_thk,
+        props.col_frame,
+        --props.col_text,
+        props.col_cap_text,
+        props.allow_sel_outline,
+        --props.col_active,
+        props.col_backdrop,        
+    }
+
+}
 
 ------------------------
 -- GUI.Knob:new(name, z, x, y, w, caption, min, max, default, inc, vals)
@@ -615,7 +675,7 @@ classes.dh_Listbox = {
         props.cap_centered,
         props.shadow_caption,
         props.shadow,
-
+--zzz
         "3",
         props.col_bg,
         props.frame_use_outline,
@@ -689,7 +749,7 @@ classes.dh_Menubar = {
         props.z, 
         props.x,
         props.y,
-        --props.w,
+        props.w,
         props.h,
         {prop = "fullwidth",    caption = "Full Width",     class = "Boolean",      needs_init = true},
         {prop = "limit_w",      caption = "Limit Width",    class = "Integer",      needs_init = true},
@@ -1406,7 +1466,6 @@ classes.dh_TextEditor = {
 
 }
 
---zzz
 ------------------------
 -- Store the element data with the element classes, keep a list of classes we can return
 local ret_classes = {}
