@@ -453,7 +453,7 @@ GUI.New("chkl_Options",	"dh_Checklist",	{
      
 function GUI.elms.chkl_Options:onmouseup()
 	-- Run the element's normal method --
-	GUI.Checklist.onmouseup(self)
+	GUI.dh_Checklist.onmouseup(self)
 		
 	-- Add our code --
     	

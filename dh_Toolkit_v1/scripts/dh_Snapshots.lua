@@ -1,7 +1,7 @@
 --dh_Snapshots.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20260330
+-- Date: 20260506
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -1285,7 +1285,7 @@ end
 function GUI.elms.chkl_Options:onmouseup()
 	
 	-- Run the element's normal method
-	GUI.Checklist.onmouseup(self)
+	GUI.dh_Checklist.onmouseup(self)
 
 	-- Add our code
     -- Update snapshot_options --
