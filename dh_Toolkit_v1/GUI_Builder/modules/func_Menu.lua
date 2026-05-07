@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- func_Menu.lua
--- Modified 20260330
+-- Modified 20260506
 
 ------------------------------------
 -------- Menu bar ------------------
@@ -136,23 +136,21 @@ Menu.menu = {
     {title = "File", options = {
         {"New Project", function() Menu.new_project() end},
         {""},
-           
+        {"Load Project", function() Export.load_project_file("project") end},
         {"Save Project", function() Menu.save_project("project") end},    
-        --{"Save Project - no defaults", function() Menu.save_project("skip_defaults") end},
-        
+        --{"Save Project - no defaults", function() Menu.save_project("skip_defaults") end},        
+
+        {""},           
+        {"Load Elements", function() Export.load_project_file("elements") end},        
         {"Save Elements", function() Menu.save_project("elements") end},
         --{"Save Elements - no defaults", function() Menu.save_project("elements_skip_defaults") end},        
-
+        {""},           
+        {"Import Template", function() Export.load_project_file("template") end},        
         {"Save Template", function() Menu.save_project("template") end},
-        {""}, 
                   
         --{"Load Project", function() Menu.load_project("project") end},
         --{"Load Elements", function() Menu.load_project("elements") end},        
         --{"Import Template", function() Menu.load_project("template") end},
-        
-        {"Load Project", function() Export.load_project_file("project") end},
-        {"Load Elements", function() Export.load_project_file("elements") end},        
-        {"Import Template", function() Export.load_project_file("template") end},
         
         --{"Test", test}  -- This works because function 'test' is declared earlier.
     }},
