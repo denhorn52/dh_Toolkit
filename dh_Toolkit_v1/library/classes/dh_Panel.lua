@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Panel.lua
--- Date: 20260330
+-- Date: 20260506
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Frame class
@@ -31,9 +31,6 @@ if not GUI then
 	missing_lib = true
 	return 0
 end
-
--- Requires dh_Toolkit_shared for modified roundrect function.
--- At least until I implement it in a different way.
 
 ---------------------------------------------------------------------
 --  Creation parameters:
