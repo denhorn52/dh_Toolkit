@@ -481,8 +481,8 @@ function GUI.dh_Menubox:onmouseup()
 -- MY CODE: Can probably leave in.   
     
     --if #self.optarray == 0 or self.optarray[1] == " " then
-    if #self.optarray == 0 or self.curr_opt == 0 then    
-        --GUI.Msg("> dh_Menubox:onmouseup optarray == 0\n")
+    if #self.optarray == 0 then
+        --GUI.Msg("> dh_Menubox:onmouseup #optarray : " .. #self.optarray)
         return
     end
     
@@ -611,7 +611,7 @@ function GUI.dh_Menubox:validateoption(val, dir)
     dir = dir or 1
 
     while true do
-
+        --GUI.Msg("  WHILE true ")
         -- Past the first option, look upward instead
         if val < 1 then
             val = 1
