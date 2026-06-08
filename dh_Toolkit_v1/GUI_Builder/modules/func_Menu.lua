@@ -34,99 +34,40 @@ for _, val in ipairs(dhth.DH_THEME_NAMES) do
 end
 
 
---#### TEST ####
+-- ##  TEST  ## --
 -- Used during development to test certain features, or gather data.
 local function test()
 
-    --[[
-    local test_elm = GUI.table_copy(GUI.Textbox)
-
-    for k,_ in pairs(test_elm) do
-        if k == "keys" then
-        GUI.Msg("test_elm prop : " .. k)
-    end
-    --]]
-    --[[
-    --GUI.Msg("test_elm GB_frm_bg.x  : " .. tostring(GUI.elms.GB_frm_bg.x))
+    --[[     
+    for elm_name, elm in pairs(GUI.elms) do
     
-    if GUI.elms.dh_Panel1 then
-        GUI.elms.dh_Panel1.text = "Text 1,Text 2,Text 3,Text 4"
-        GUI.elms.dh_Panel1: redraw()
-    end
-    --]]
-    --[[
-    if GUI.elms.dh_Tabs1 then
-        --GUI.Msg(">>> dh_Tabs1 z : " .. GUI.elms.dh_Tabs1.z)
-        --GUI.Msg(">>> dh_Tabs1 props_norm.z : " .. GUI.elms.dh_Tabs1.props_norm.z)
-        --GUI.Msg(">>> dh_Button1 z : " .. GUI.elms.dh_Button1.z)
-        --GUI.Msg(">>> dh_Button1 props_norm.z : " .. GUI.elms.dh_Button1.props_norm.z)
-        GUI.elms.dh_Tabs1:update_sets()        
-    end
-    
-    if Editor then
-        GUI.Msg("    #Editor.elms_to_delete: " .. (tostring(#Editor.elms_to_delete) or "nil")) 
-    end 
-    --]]
-    --[[   
-    if GUI.elms.dh_Knob1 then
-        --GUI.Msg("\ntest")
-        GUI.elms.dh_Knob1.output = {"Okay", "1", "2", "Good", "4", "5", "6", "Better", "8", "9", "Awesome"}
-        --GUI.Msg("    dh_Knob:drawvals : size of output is : " .. tostring(#GUI.elms.dh_Knob1.output))
-    end 
-    --]]
-    --[[   
-    for elm_name, _ in pairs(GUI.elms) do
-        if string.match(elm_name, "GB_") then
-            GUI.Msg("> " .. elm_name)
-        end
-    end
-    --]]
-    --[[  
-    for elm_name, _ in pairs(GUI.elms) do
         if not string.match(elm_name, "GB_") then
-            GUI.Msg("> " .. elm_name)
+            GUI.Msg("> " .. elm_name .. " : z : " .. elm.z)
         end
-    end  
-    --]] 
-    --[[    
-    GUI.Msg("func_Menu z-layers : ")
-    for k, elm in pairs(GUI.elms) do
-        GUI.Msg("  z:  " .. tostring(elm.z) .. " : " .. k)
+        
+        --if string.match(elm_name, "GB_") then
+        --    GUI.Msg("> " .. elm_name .. " : z : " .. elm.z)
+        --end
+        
     end
-    --]]
     
-    --GUI.Msg(GUI.table_list({{0,"0"}, {6,"6"}, {12,"12"}}, 3))
-    --[[
-    GUI.elms.dh_TextEditor1.retval = {
-        "This is a dh_TextEditor.",
-        "This is some text.",
-        "This is more text.",
-        "This is even more text.",
-        "This is a dh_TextEditor.",
-        "This is some text.",
-        "This is more text.",
-        "This is even more text.",
-        "This is a dh_TextEditor.",
-        "This is some text.",
-        "This is more text.",
-        "This is even more text.",
-        }
-    --]]
-    --[[    
-    GUI.elms.dh_Panel1.text = {
-        "This is some text.",
-        "This is some text.",
-        "This is some text.",
-        "This is some text.",
-        "This is some text.",
-        "This is some text.",
-        "This is some text.",
-        "This is some text.",
-        "This is some text.",
-        "This is some text.",
-        "This is some text."
-    }
-    --]]
+    for z, v in pairs(GUI.elms_hide) do
+      if z < 75 then
+          GUI.Msg("  GUI.elms_hide[ " .. z .. " ] : " .. tostring(v))
+      end
+    end
+    
+    for z, v in pairs(GB.HIDDEN_LAYERS) do
+      if z < 75 then
+          --if not GUI.elms_hide[v] then
+          --    GUI.Msg("  if not GUI.elms_hide[ " .. z .. " ] : " .. tostring(v))
+          --end
+          GUI.Msg("  GB.HIDDEN_LAYERS[ " .. z .. " ] : " .. tostring(v))
+      end
+    end        
+    --]]    
+    
+
     
 end    
 
@@ -147,11 +88,7 @@ Menu.menu = {
         {""},           
         {"Import Template", function() Export.load_project_file("template") end},        
         {"Save Template", function() Menu.save_project("template") end},
-                  
-        --{"Load Project", function() Menu.load_project("project") end},
-        --{"Load Elements", function() Menu.load_project("elements") end},        
-        --{"Import Template", function() Menu.load_project("template") end},
-        
+
         --{"Test", test}  -- This works because function 'test' is declared earlier.
     }},
 
@@ -168,6 +105,17 @@ Menu.menu = {
         {"Toggle Grid Show", function() Menu.toggle_grid() end},
     }},
     
+    {title = "LayerSets", options = {
+        {"Layer Set 1", function() Menu.change_layer_sets(1) end},
+        {"Layer Set 2", function() Menu.change_layer_sets(2) end},        
+        {"Layer Set 3", function() Menu.change_layer_sets(3) end},        
+        {"Layer Set 4", function() Menu.change_layer_sets(4) end},        
+        {"Layer Set 5", function() Menu.change_layer_sets(5) end},        
+        {"Layer Set 6", function() Menu.change_layer_sets(6) end},
+        {"Open Editor", function() Menu.change_layer_sets(7) end},                
+        {"Restore layers", function() Menu.change_layer_sets(8) end},                        
+    }},
+        
     {title = "Help", options = {
         --{"Instructions", function() Help.show_help_msg() end}
         {"Usage", function() GUI.elms.GB_wnd_help:open("usage_text") end},
@@ -176,25 +124,147 @@ Menu.menu = {
     
 }
 
---!!! Move to Export.load_project_file(load_type)
-function Menu.load_project(load_type)
+function Menu.change_layer_sets(idx)
 
-    if load_type == "import" then
+    --GUI.Msg(" #GB.LAYER_SETS : " .. #GB.LAYER_SETS)    
+    GUI.Msg(" Menu.change_layer_sets; idx : " .. idx)
+    --GUI.Msg(" #GB.LAYER_SETS[idx] : " .. #GB.LAYER_SETS[idx])
+     
+    -- Same item clicked - go no further.
+    if idx == GB.CURRENT_LAYER_SET_INDEX then return end
     
-        Export.load_type = "template"
-        Export.load_project_file(false)
+    -- Deselect elm if onow on hidden layer.
+    
+    Element.deselect_elm()
+    
+          
+ 
+    ---------------------    
+    -- # Open editor .--
+    ---------------------    
+    if idx == 7 then
+        Editor.open_editor("layer_sets")
+        return    
+    end
+
+    ------------------------
+    -- # Restore layers. --
+    ------------------------
+    if idx == 8 then
+    
+        -- # Already in restored state. Go no further.
         
-    elseif load_type == "project" then
+        if GB.CURRENT_LAYER_SET_INDEX == 0 then
+            return
+        end
         
-        Export.load_type = "project"
-        Export.load_project_file(false)
+        --GUI.Msg("\n## RESTORE layers." .. "\n")
+
+        -- # Set the layer visibility back to where it was.
         
-    elseif load_type == "elements" then
+        -- GB.LAYER_SETS has normal (design) z layers.
+        -- GB.HIDDEN_LAYERS has z's that have been shifted up by 10.
         
-        Export.load_type = "elements"
-        Export.load_project_file(true)
+        for i = 1, GUI.z_max do
+            GUI.elms_hide[i] = GB.HIDDEN_LAYERS[i]
+        end
+                
+        -- # Hide current layer set.
+                   
+        for _, z in ipairs(GB.LAYER_SETS[GB.CURRENT_LAYER_SET_INDEX]) do
+            --GUI.Msg("  Restore layer z : " .. z)                
+            GUI.elms_hide[z + 10] = true                       
+        end
+        
+        GB.CURRENT_LAYER_SET_INDEX = 0
+                         
+        return
         
     end
+    
+    -------------------------
+    -- # Apply layer set. --   
+    -------------------------  
+    
+     --GUI.Msg("\n## APPLY layer set." .. "\n")          
+       
+    -- # Do nothing if empty layer_set.
+    
+    --GUI.Msg("\n## APPLY  size of set : " .. #GB.LAYER_SETS[idx] .."\n")    
+    
+    if (not GB.LAYER_SETS[idx]) or (#GB.LAYER_SETS[idx] == 0) then
+        --GUI.Msg("    DO NOTHING.") 
+        return 
+    end
+        
+    -- GUI.elms_list is hash of elm_name = elm
+    -- GUI.elms_hide is a hash of z = {elm_name, elm_name, ...}
+    --   only used by GUI to signal if an elm 
+    --   should be updated: GUI.elms_hide[i] == true.
+    
+    -- # Store the actual hidden layers whether they're GB or not.
+    --   This will remain hidden on restore.
+    --   Don't really need to set it to true, 
+    --     but now I can access it by z.
+ 
+    -- NOTE: At this point will have selected a new layer set.    
+    -- Don't want to update GB.HIDDEN_LAYERS if coming from a different selection set.
+    
+    local hidden_layers    
+    
+    if GB.CURRENT_LAYER_SET_INDEX == 0 then
+            
+        hidden_layers = {}
+        
+        -- # Store layer visibility state.
+
+        for i = 1, GUI.z_max do        
+            if GUI.elms_hide[i] then
+              
+                hidden_layers[i] = true
+                --table.insert(hidden_layers, i)
+                --GUI.Msg("  hidden_layers z : " .. i)
+                 
+            end        
+        end
+        
+        -- # Then hide all non GB elements.
+        
+        for elm_name, elm in pairs(GUI.elms) do
+            if not string.match(elm_name, "GB_") then
+                GUI.elms_hide[elm.z] = true
+            end
+        end        
+        
+    else
+        -- #  Will save current state.
+        hidden_layers = GB.HIDDEN_LAYERS
+        
+        -- # Hide current layer set layers. Need to shift the z's.
+        
+        for _, z in ipairs(GB.LAYER_SETS[GB.CURRENT_LAYER_SET_INDEX]) do
+    
+            GUI.elms_hide[z + 10] = true
+            hidden_layers[z + 10] = true
+    
+        end
+            
+    end
+    
+    -- # Finally, show selected layer_set.
+    -- GB.LAYER_SETS has normal (design) z layers.
+    -- So shift up by 10.
+    
+    for _, z in ipairs(GB.LAYER_SETS[idx]) do
+
+        --GUI.Msg("\n  Apply GB.LAYER_SETS[idx] z : " .. z)        
+        GUI.elms_hide[z + 10] = false  
+                  
+    end     
+    
+    GB.HIDDEN_LAYERS = hidden_layers
+    GB.LAYERS_TO_RESTORE = layers_to_restore
+    GB.CURRENT_LAYER_SET_INDEX = idx
     
 end
 
