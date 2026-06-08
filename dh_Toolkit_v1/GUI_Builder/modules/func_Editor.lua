@@ -184,7 +184,7 @@ Editor.open_editor = function(editor_type)
             col_sel_text = "sel_txt",
             col_backdrop = "wnd_bg",        
         })
---zzz open        
+
         table.insert(Editor.elms_to_delete, "GB_editor_menu_titles_tbx")                
             
         -- Get titles. Convert to string for tbx display.
@@ -213,7 +213,7 @@ Editor.open_editor = function(editor_type)
         GUI.elms.GB_editor_info_lbl.y = (MENUBAR_HEIGHT + 140) * DHTK.APP_SCALE        
         GUI.elms.GB_editor_info_lbl.text = "step : step position <integer>\n" ..
                                            "value : alphanumeric <string>\n" ..
-                                           "Enter step value separated with comma\n" ..
+                                           "Enter step, value separated with comma\n" ..
                                            "Separate step value pairs with semicolons"
         GUI.elms.GB_editor_info_lbl:init()        
         
@@ -256,6 +256,95 @@ Editor.open_editor = function(editor_type)
         end
         
         GUI.elms.GB_editor_min_max_tbx.retval = valstr        
+    
+    end
+   -------------------------------
+   ---- # Graph Labels open ---- 
+   -------------------------------
+--zzmm
+    if editor_type == "graph_labels" then
+    
+        --GUI.Msg("\n# Editor.graph_labels_editor -> editor_type : " .. editor_type)    
+    
+        GUI.elms.GB_editor_type_lbl.text = "Graph Labels Editor"
+        GUI.elms.GB_editor_type_lbl:init()
+        GUI.elms.GB_editor_info_lbl.x = 28 * DHTK.APP_SCALE
+        GUI.elms.GB_editor_info_lbl.y = (MENUBAR_HEIGHT + 208) * DHTK.APP_SCALE        
+        GUI.elms.GB_editor_info_lbl.text = "step : step position <integer>\n" ..
+                                           "value : alphanumeric <string>\n" ..
+                                           "Enter step, value separated with comma\n" ..
+                                           "Separate step value pairs with semicolons"
+        GUI.elms.GB_editor_info_lbl:init()        
+        
+        -- # Get reference to selected element.
+        
+        local sel_elm = GUI.elms[GUI.elms.GB_frm_sel_elm.elm]
+        
+        GUI.New("GB_editor_graph_x_labels_tbx", "dh_Textbox", {
+            z = 1,
+            x = 24 * DHTK.APP_SCALE, 
+            y = (MENUBAR_HEIGHT + 88) * DHTK.APP_SCALE,  
+            w = (WORKSPACE_WIDTH - (24 + 24))  * DHTK.APP_SCALE, 
+            h = 36 * DHTK.APP_SCALE,
+            caption = "X Labels",
+            cap_pos = "top",
+            font_caption = "sans24",                 
+            font_text = "mono18",   --textbox needs mono font
+            col_text = "elm_txt",
+            col_sel_text = "sel_txt",
+            col_backdrop = "wnd_bg",        
+        })
+        table.insert(Editor.elms_to_delete, "GB_editor_graph_x_labels_tbx")                
+                
+        GUI.New("GB_editor_graph_y_labels_tbx", "dh_Textbox", {
+            z = 1,
+            x = 24 * DHTK.APP_SCALE, 
+            y = (MENUBAR_HEIGHT + 164) * DHTK.APP_SCALE,  
+            w = (WORKSPACE_WIDTH - (24 + 24))  * DHTK.APP_SCALE, 
+            h = 36 * DHTK.APP_SCALE,
+            caption = "Y Labels",
+            cap_pos = "top",
+            font_caption = "sans24",                 
+            font_text = "mono18",   --textbox needs mono font
+            col_text = "elm_txt",
+            col_sel_text = "sel_txt",
+            col_backdrop = "wnd_bg",        
+        })        
+        table.insert(Editor.elms_to_delete, "GB_editor_graph_y_labels_tbx")                
+               
+        -- Get min_max values. Convert to string for tbx display.
+        
+        local valstr = ""
+        
+        for i, item in ipairs(sel_elm.x_labels) do
+        
+            valstr = valstr .. tostring(item[1]) .. "," .. item[2] 
+        
+            if i < #sel_elm.x_labels then
+            
+                valstr = valstr .. ";"
+            
+            end
+        
+        end
+        
+        GUI.elms.GB_editor_graph_x_labels_tbx.retval = valstr 
+        
+        valstr = ""
+        
+        for i, item in ipairs(sel_elm.y_labels) do
+        
+            valstr = valstr .. tostring(item[1]) .. "," .. item[2] 
+        
+            if i < #sel_elm.y_labels then
+            
+                valstr = valstr .. ";"
+            
+            end
+        
+        end
+        
+        GUI.elms.GB_editor_graph_y_labels_tbx.retval = valstr         
     
     end
 
@@ -621,6 +710,83 @@ Editor.open_editor = function(editor_type)
         end  
         
     end
+
+    
+    --------------------------------   
+    ----   #  Layer_sets open   ----
+    --------------------------------   
+        
+    if editor_type == "layer_sets" then
+        
+        GUI.elms.GB_editor_type_lbl.text = "Layer Sets Editor"
+        GUI.elms.GB_editor_type_lbl:init()
+        GUI.elms.GB_editor_info_lbl.x = 148 * DHTK.APP_SCALE
+        GUI.elms.GB_editor_info_lbl.y = (MENUBAR_HEIGHT + 56) * DHTK.APP_SCALE        
+        GUI.elms.GB_editor_info_lbl.text = " Enter integers separated by commas."
+        GUI.elms.GB_editor_info_lbl:init()        
+        
+        -- # Get reference to selected element.
+        
+        --local sel_elm = GUI.elms[GUI.elms.GB_frm_sel_elm.elm]
+        
+            --GUI.Msg("\n# props_norm.z_sets : ")
+            --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))        
+
+        -- Iterate to create Property elms. How?
+
+        --GUI.Msg("\n>  #sel_elm.optarray: " .. (#sel_elm.optarray or "nil"))
+        --GUI.Msg(">  #sel_elm.z_sets  : " .. (#sel_elm.z_sets or "nil"))
+        --GUI.Msg(">  #sel_elm.z_sets[1]  : " .. (#sel_elm.z_sets[1] or "nil") .. "\n")
+        --GUI.Msg("    PROPS_NORM.Z_SETS : ")
+        --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))
+        --GUI.Msg("    ELEMENTS.Z_SETS : ")
+        --GUI.Msg(GUI.table_list(sel_elm.z_sets))         
+        
+        local y_init, y_off = 72, 48                            
+    
+        for idx = 1, 6 do
+
+            --GUI.Msg(">    #zset[" ..  idx .. "] : " .. (#zset or "nil"))
+            --GUI.Msg(">    type of z_set : " .. type(zset))
+            
+            local tab_name = "Layer set " .. tostring(idx)
+            local tbx_name = "GB_editor_tbx_" .. tostring(idx)
+            
+            --GUI.Msg(">    tbx_name : " .. tbx_name)
+
+            GUI.New(tbx_name, "dh_Textbox", {
+                z = 1,
+                x = 144 * DHTK.APP_SCALE, 
+                y = (y_init + (idx * y_off)) * DHTK.APP_SCALE, 
+                w = (WORKSPACE_WIDTH - (144 + 24)) * DHTK.APP_SCALE, 
+                h = 36 * DHTK.APP_SCALE,
+                caption = tab_name,
+                cap_pos = "left",
+                cap_pad_x = -12,
+                cap_pad_y = 0,
+	            font_caption = "sans24",                 
+                font_text = "mono18",   --textbox needs mono font
+                col_text = "elm_txt",
+                col_sel_text = "sel_txt",
+                col_backdrop = "wnd_bg",        
+            })
+            
+            table.insert(Editor.elms_to_delete, tbx_name)            
+
+            -- values are design values.
+            -- Say, Tabs.z design = 1, now is 11.
+            -- zset has 11, but now hides Tabs.
+            -- Need to get from props_norm.
+
+--zzz            
+            local zset = GB.LAYER_SETS[idx]            
+                        
+            -- Need to convert zset to string then put it in tbx.
+            GUI.elms[tbx_name].retval = table.concat(zset, ",")
+            
+        end  
+        
+    end
     
     --GUI.Msg("    #Editor.elms_to_delete: " .. (tostring(#Editor.elms_to_delete) or "nil")) 
  
@@ -654,7 +820,7 @@ Editor.save_editor = function()
     local sel_elm = GUI.elms[GUI.elms.GB_frm_sel_elm.elm]
     
     --GUI.Msg("    sel_elm : " .. GUI.elms.GB_frm_sel_elm.elm)
---zzz
+
     --------------------------------
     ---- #  Menu Titles  save   ---- 
     --------------------------------
@@ -721,9 +887,78 @@ Editor.save_editor = function()
             
         end
         
+        
+        
         sel_elm.min_max_values = new_min_max_values 
         sel_elm.props_norm.min_max_values = new_min_max_values
         
+        sel_elm:redraw()         
+    
+    end
+
+    -----------------------------------
+    ---- #  Graph Labels  save   ---- 
+    -----------------------------------
+--zzmm
+    if Editor.type == "graph_labels" then
+    
+        -- Convert retval to table.
+        
+        -- # Handle X labels.
+        
+        local valstr = GUI.elms["GB_editor_graph_x_labels_tbx"].retval        
+        
+        local graph_x_labels = {}       
+        
+        for gl_str in string.gmatch(valstr, "[^;]*") do
+        
+            -- gl_str is string <step,str_value>
+            
+            local gl_item = {}
+            
+            for v in string.gmatch(gl_str, "[^,]*") do  
+                table.insert(gl_item, v)
+            end
+            
+            -- Convert first value to integer.
+            gl_item[1] = math.tointeger(gl_item[1])
+            
+            
+            table.insert(graph_x_labels, gl_item)
+            
+        end
+        
+        sel_elm.x_labels = graph_x_labels 
+        sel_elm.props_norm.x_labels = graph_x_labels
+        
+        -- # Handle Y labels.
+        
+        valstr = GUI.elms["GB_editor_graph_y_labels_tbx"].retval        
+        
+        local graph_y_labels = {}       
+        
+        for gl_str in string.gmatch(valstr, "[^;]*") do
+        
+            -- gl_str is string <step,str_value>
+            
+            local gl_item = {}
+            
+            for v in string.gmatch(gl_str, "[^,]*") do  
+                table.insert(gl_item, v)
+            end
+            
+            -- Convert first value to integer.
+            gl_item[1] = math.tointeger(gl_item[1])
+            
+            
+            table.insert(graph_y_labels, gl_item)
+            
+        end
+        
+        sel_elm.y_labels = graph_y_labels 
+        sel_elm.props_norm.y_labels = graph_y_labels        
+        
+        sel_elm:init()
         sel_elm:redraw()         
     
     end
@@ -860,8 +1095,64 @@ Editor.save_editor = function()
         --GUI.Msg(GUI.table_list(sel_elm.z_sets))
          
     end
+        
+    --------------------------
+    -- #  Layer Sets save -- 
+    --------------------------
+     
+    if Editor.type == "layer_sets" then
+
+        -- Update selected element. Convert csv string to table.
+        -- Textbox will show design z.
+        
+        local elm_zsets = {}
+        local norm_zsets = {}
+        
+        for idx = 1, 6 do
+        
+            --GUI.Msg("    > idx : " .. idx)
+        
+            local elm_set = {}
+            local norm_set = {}
+            
+            local tbx_val = GUI.elms["GB_editor_tbx_" .. idx].retval
+            
+            --GUI.Msg("    tbx_val : " .. tbx_val)
+            
+            -- tbx_val contains csv string of design values.
+            -- Add 10 offset for elms.
+                    
+            for v in string.gmatch(tbx_val, "[^,]*") do
+                if math.tointeger(v) then
+                    v = math.tointeger(v)
+                    --GUI.Msg("        v : " .. v)
+                    table.insert(elm_set, v + 10)
+                    table.insert(norm_set, v)
+                end
+            end
+        
+            elm_zsets[idx] = elm_set 
+            norm_zsets[idx] = norm_set 
+            
+        end
+        
+--zzz        
+        -- Will have to compensate when loading a set?
+        -- If I use elm_zsets 
+        
+        GB.LAYER_SETS = norm_zsets
+        --GB.LAYER_SETS = elm_zsets        
+        
+        --??? Do I have to do anything here? Update sets? 
+        
+        --GUI.Msg("\n# PROPS_NORM.Z_SETS : ")
+        --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))
+        --GUI.Msg("\n# ELEMENTS.Z_SETS : ")
+        --GUI.Msg(GUI.table_list(sel_elm.z_sets))
+         
+    end
+        
     
---zzz    
     -- # Update GUI
     --Editor.close_editor()
     
