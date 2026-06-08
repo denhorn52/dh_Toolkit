@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>Class - dh_Graph</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+  
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_Graph</div>
+      </div>
+      <a href="classes.html" ><div class="backArrow"></div></a> 
+    </div>
+    
+    <div class="pageBody">
+    
+<div class="heading">dh_Graph:</div>
+    
+<div class="sectionDefault"><!-- Section #1 -->  
+A simple graph to display data. The graph will be drawn with a 
+dark background, and gray grid lines.
+
+<div class="subHeading">Properties:</div>
+
+<div class="sectionIndented">
+
+<div class="sectionListItem">
+<span class="textEmphasis110">data_points:</span>
+A table containing points to be displayed on the graph. 
+The points will be displayed with blue dots and will be 
+connected with straight blue lines.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">ref_points:</span>
+An optional table containing points to be displayed on the graph. 
+If not empty and not nil, the points will be displayed with 
+red dots and will be connected with straight red lines. 
+These will be drawn first and overlaid with data_points.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">grid_x_divs:</span>
+The number of horizontal divisions. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">grid_y_divs:</span>
+The number of vertical divisions. 
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">y_min:</span>
+The value at the bottom of the graph.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">y_max:</span>
+The value at the top of the graph.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">y_ref:</span>
+The vertical position where to draw a horizontal reference line. 
+The line will be drawn a light gray. If no reference line is 
+desired then set to nil.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">x_labels:</span>
+A table containing a list of position, value pairs for labels 
+to be displayed at the bottom of the graph. <br>
+Example:<br>
+<span class='inlineBlock'>{{1,"100"}, {5,"1Khz"}, {10,"10Khz"}}.</span> 
+Each item in the table contains the position and the value 
+to be displayed. The position is an integer corresponding to a 
+horizontal division. The value is a string so anything 
+alpha-numerical is valid. The position is counted from left to 
+right.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">y_labels:</span>
+A table containing a list of position, value pairs for labels 
+to be displayed at the left of the graph. <br>
+Example:<br>
+<span class='inlineBlock'>{{2,"+6"}, {4,"0"}, {6,"-6"}}.</span> 
+Each item in the table contains the position and the value 
+to be displayed. The position is an integer corresponding to a 
+vertical division. The value is a string so anything 
+alpha-numerical is valid. The position is counted from top to 
+bottom.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">font_text:</span>
+The font for the labels.
+</div>
+
+<div class="sectionListItem">
+<span class="textEmphasis110">pad:</span>
+Distance of label from edge of graph.
+</div>
+
+</div><!-- end Properties -->
+
+
+</div><!-- end Section #1 -->
+
+<div class="chartCont text110">
+<pre>
+--------------------------------------------------------
+attribute:           property_name       default value       
+--------------------------------------------------------
+data points:         data_points         {}
+reference points:    ref_points          {}
+vertical divisions:  grid_x_divs         10
+horiz. divisions:    grid_y_divs          8
+minimum value        y_min              -12
+maximum value        y_max               12
+horz. ref. line      y_ref                0
+horizontal labels:   x_labels            {}
+vertical labels:     y_labels            {}
+
+labels font:         font_text          "sans16"
+labels padding:      pad                 4
+
+caption:             caption             ""
+caption font:        font_caption       "sans22"
+caption position:    cap_pos            "top"
+caption offset x:    cap_pad_x           4
+caption offset y:    cap_pad_y           4
+caption centered:    cap_centered        false
+shadow caption:      shadow_caption      false
+
+shadow:              shadow              false
+
+frame outline:       frame_use_outline   false
+frame thickness:     frame_thk           2
+allow sel.outline:   allow_sel_outline   false
+
+-- colors --
+graph background:    col_bg             "black"   
+frame:               col_frame          "elm_frame" 
+labels text:         col_text           "silver"   
+caption text:        col_cap_text       "txt"     
+backdrop:            col_backdrop       "wnd_bg"
+            
+--------------------------------------------------------</pre>
+</div>  
+
+
+
+    <br><br>
+    </div>  <!-- end pageBody -->
+    
+  </body>
+
+</html>
