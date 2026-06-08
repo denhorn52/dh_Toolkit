@@ -1,14 +1,16 @@
 -- NoIndex: true
 
 -- dh_Knob.lua
--- Date: 20260330
+-- Date: 20260506a
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Knob class
 --   For documentation, see this class's page on the project wiki:
 --     https://github.com/jalovatt/Lokasenna_GUI/wiki/Knob
+
+-- Modified by Dennis Horn.
 ---------------------------------------------------------------------
---[[ Modified by Dennis Horn.
+--[[ CHANGELOG:.
 
      Draws a knob with optional caption. Caption and knob values use the same background and text colors. 
      Changed some property names. Otherwise same as Lokasenna Knob.
@@ -16,10 +18,13 @@
          if centered is false then x and y are to edges of knob.
          if centered is true then x and y are to center ob knob.
      Renamed property 'vals' to 'show_values'.
+     20251208 added new knob styles.
      20251219 added tick marks.
      20260106 added display box.
      20260204 display box defaults to highlighted frame.
      20260223 added properties for frame modification.
+     20260520 moved stepangle calculation to init to accommodate gui builder.
+     20260603 changed how value is assigned.
 ]]--
 
 ---------------------------------------------------------------------
@@ -72,23 +77,25 @@ function GUI.dh_Knob:new(name, z, x, y, w, caption, centered, min, max, default,
     Knob.steps = math.abs(Knob.max - Knob.min) / Knob.inc
     
 	function Knob:formatretval(val)
-	
-	local decimal = tonumber(string.match(val, "%.(.*)") or 0)
-	local places = decimal ~= 0 and string.len( decimal) or 0
-	return string.format("%." .. places .. "f", val)
-	
+	    local decimal = tonumber(string.match(val, "%.(.*)") or 0)
+    	local places = decimal ~= 0 and string.len( decimal) or 0
+    	return string.format("%." .. places .. "f", val)
 	end
 	
+	-- 2026-05-20: Moved to init to accommodate gui builder.
 	-- Determine the step angle.
 	-- Knob uses 2/3 of 360 deg.
-	Knob.stepangle = (3 / 2) / Knob.steps
-	
+	--Knob.stepangle = (3 / 2) / Knob.steps
+--zzz    	
+	-- curstep is integer position from 0 to steps.
 	Knob.curstep = Knob.default
+	--Knob.curstep = Knob.default + Knob.min	
 	
+	-- curval is fraction 
 	Knob.curval = Knob.curstep / Knob.steps
-	
-    Knob.retval = Knob:formatretval( ((Knob.max - Knob.min) / Knob.steps) * Knob.curstep + Knob.min )
-
+   
+    Knob.retval = Knob:formatretval((Knob.inc * Knob.curstep) + Knob.min)
+    
 -----------------------------------------
 
 	Knob.knob_style = Knob.knob_style or GUI.dh_Knob.defaults.knob_style -- pointer, flange, simple
@@ -141,7 +148,8 @@ function GUI.dh_Knob:new(name, z, x, y, w, caption, centered, min, max, default,
     -- Say, knob.steps is 100, tickmark_steps can be 10.
     Knob.tickmark_steps = Knob.tickmark_steps or GUI.dh_Knob.defaults.tickmark_steps
     
-    Knob.tickangle = (3 / 2) / Knob.tickmark_steps
+	-- 2026-05-20: Moved to init to accommodate gui builder.
+    --Knob.tickangle = (3 / 2) / Knob.tickmark_steps
     
     Knob.tickmark_size = Knob.tickmark_size or GUI.dh_Knob.defaults.tickmark_size
     
@@ -246,6 +254,11 @@ function GUI.dh_Knob:init()
     --GUI.Msg("    x : " .. tostring(self.x) .. "; y : " .. tostring(self.y))
 
     self.h = self.w
+    
+    -- 2026-05-20: Moved here from create to accommodate gui builder.
+	-- Determine the step angle.
+	-- Knob uses 2/3 of 360 deg.
+	self.stepangle = (3 / 2) / self.steps    
     
     ------------------------
     --##   zzbuffers   ##
@@ -433,7 +446,6 @@ function GUI.dh_Knob:init()
         -- # FLANGE STYLE -- 
 
         --GUI.Msg("    # FLANGE STYLE")
---zzz
         bfw = self.w + 4
         self.buff_w = bfw
         ctr = rad + 1
@@ -492,7 +504,7 @@ function GUI.dh_Knob:init()
         bfw = self.w + 4  --2 * (rad + 1)  -- self.w + 2
 
         self.buff_w = bfw
---zzz
+
         ctr = rad + 1
         sctr = rad + 1
         
@@ -631,6 +643,8 @@ function GUI.dh_Knob:init()
 	if self.show_tickmarks then
 	
         --GUI.Msg("  > show_tickmarks : " .. tostring(self.show_tickmarks))
+        
+        self.tickangle = (3 / 2) / self.tickmark_steps
   	
     	-- # Background
     	
@@ -874,6 +888,7 @@ function GUI.dh_Knob:draw()
     
 	-- Figure out where the knob is pointing
 	local curangle = (-5 / 4) + (self.curstep * self.stepangle)
+	--local curangle = (-5 / 4) + ((self.curstep + self.min ) * self.stepangle)	
 	
 	local blit_offset = (self.knob_style == "pointer") and ((self.buff_w - self.w) / 2 - 2) or 0
 	
@@ -989,6 +1004,10 @@ function GUI.dh_Knob:draw_min_max(o, r)
     
     for _, data in ipairs(self.min_max_values) do
     
+    	--GUI.Msg("\n## dh_Knob draw_min_max : " .. data[1])
+    	--GUI.Msg("\n## dh_Knob draw_min_max : " .. data[2])
+    	--GUI.Msg("\n## dh_Knob self.steps : " .. self.steps)    	    	              
+    
         local str_w, str_h = gfx.measurestr(data[2])
     
         local angle = (-5 / 4 ) + (data[1] * self.stepangle)        
@@ -1066,6 +1085,7 @@ function GUI.dh_Knob:draw_caption(o, r)
 	    GUI.shadow(str, self.col_cap_text, "shadow")
 	else
 	    GUI.color(self.col_cap_text)
+	    --GUI.Msg(" KNOB draw caption col_cap_text : " .. self.col_cap_text)	    
 	    gfx.drawstr(str)
 	end
 
@@ -1144,14 +1164,17 @@ end
 ------------------------------------
 -------- Mouse events -----------
 ------------------------------------
-
+--zzz
 -- Knob - Get/set value
 function GUI.dh_Knob:val(newval)
 
 	if newval then
 
-        self:setcurstep(newval)
-
+        --self:setcurstep(newval)
+        
+        --self:setcurval(self.curval + ((self.inc * newval) / self.steps))
+        self:setcurval( (newval - self.min) / (self.max - self.min) )
+        
 		self:redraw()
 
 	else
@@ -1181,7 +1204,7 @@ function GUI.dh_Knob:ondrag()
 	local adj = ctrl and 1200 or 150
 
     self:setcurval( GUI.clamp(self.curval + ((ly - y) / adj), 0, 1) )
-    
+    --GUI.Msg("\nondrag curval : " .. self.curval)
 	self:redraw()
 
 end
@@ -1208,7 +1231,7 @@ function GUI.dh_Knob:onwheel()
 	local adj = ctrl and fine or coarse
 
     self:setcurval( GUI.clamp( self.curval + (GUI.mouse.inc * adj / self.steps), 0, 1))
-
+    --GUI.Msg("\nonwheel curval : " .. self.curval)
 	self:redraw()
 
 end
@@ -1225,7 +1248,7 @@ end
 ------------------------------------
 -------- Value helpers -------------
 ------------------------------------
-
+--zzz
 function GUI.dh_Knob:setcurstep(step)
 
     self.curstep = step
@@ -1246,6 +1269,6 @@ end
 
 function GUI.dh_Knob:setretval()
 
-    self.retval = self:formatretval(self.inc * self.curstep + self.min)
+    self.retval = self:formatretval((self.inc * self.curstep) + self.min)
 
 end
