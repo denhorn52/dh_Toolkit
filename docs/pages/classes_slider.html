@@ -23,7 +23,7 @@
    
     <div class="pageBody">
     
-<div class="heading">6.09 dh_Slider:</div>
+<div class="heading">dh_Slider:</div>
 
 <div class="sectionIndented"><!-- section #1 -->
 
@@ -63,9 +63,10 @@ in the area defined by the box, but with no outline and using
 the background color of where it is placed.  
 </p>
 
-
+</div><!-- end Section #1 -->  
 
 <div class="subHeading">dh_Slider_H:</div>
+
 <div class="sectionIndented">
 A horizontal slider. It can have a border and its own background 
 color. That area, slider width and slider height, can be thought of as the bezel. 
@@ -204,13 +205,9 @@ with each item representing the track step postition in which to display them:
 If true then the minimum value, maximum value, and any other 
 specified value will be displayed along the track. It distance 
 from the track is determined by the 'pad_values' property. 
-</div>
-
-<div class="sectionListItem">
-<span class='textEmphasis'>min_max_values: </span>
-When 'show_min_max' is true the values are specified in a table with the format:<br>
-&nbsp;&nbsp;&nbsp;&nbsp; 
-<span class='inlineBlock '>{{0,"0"}, {5,"5"}, {10,"10"}}.</span><br> 
+The values are specified in a table with the format:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<span class='inlineBlock'>{{0,"0"}, {5,"5"}, {10,"10"}}.</span><br> 
 Each item contains the position (step) and the value to be displayed. 
 The value is a string so anything alpha-numerical is valid. 
 </div>
@@ -246,16 +243,9 @@ slider element.
 Number of pixels to offset the tickmarks.
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">Note:</span>
-The properties 'max', 'default_tickmarks', and 'min_max_values'
-have a relationship between them. When changing 'max' be sure 
-to adjust the latter two as necessary.
-</div>
-
 </div><!-- end Section #2 -->  
 
-</div><!-- end Section #1 -->  
+
 
 <div class="chartCont text110">
 <pre>------------------------------------------------------------

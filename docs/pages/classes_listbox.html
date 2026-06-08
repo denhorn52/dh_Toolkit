@@ -23,23 +23,21 @@
     
     <div class="pageBody">
     
-<div class="heading">6.04 dh_Listbox:</div>
+<div class="heading">dh_Listbox:</div>
 
-<div class="sectionIndented"><!-- sectiom #1 -->
-
-<div class="sectionDefault"><!-- sectiom #2 -->
+<div class="sectionDefault"><!-- sectiom #1 -->
 <span class="textEmphasis110">Same as Lokasenna Listbox except for: </span>    
  
 
-<div class="sectionListItemIndented"> 
+<div class="sectionIndented"> 
 Changed some property names and default values.</span><br>  
 </div>    
 
-<div class="sectionListItemIndented"> 
+<div class="sectionIndented"> 
 Added ability to change line height and scrollbar width.
 </div>
 
-<div class="sectionListItemIndented"> 
+<div class="sectionIndented"> 
 Frame color, by default, uses highlight/lowlight colors that 
 are automatically calculated from the 'col_backdrop' color. 
 However, the frame can be set to use a single color (specified 
@@ -48,7 +46,7 @@ by the 'col_frame' property) by setting
 single color outlines regardless of the 'frame_use_outline' setting.
 </div>
  
-<div class="sectionListItemIndented"> 
+<div class="sectionIndented"> 
 Added ability to change the selected text highlight color.
 The property 'col_sel_text' specifies the highlight color. 
 That color is ADDED to the list background color to produce 
@@ -59,24 +57,29 @@ its alpha and color. Otherwise it will use the
 specified color with a default alpha of 0.5.
 </div>
            
-<div class="sectionListItemIndented"> 
+<div class="sectionIndented"> 
 The scrollbar color is specified with the 'col_track' color. 
 Scrollbar thumb and outline are automatically calculated using it. 
 </div>
+              
+<div class="sectionIndented"> 
+Added property 'curr_sel' to hold index of last selected item. 
+May be useful when no 'multi-select'. Modified onmouseup to set 'curr_sel'.
+</div>
         
-<div class="sectionListItemIndented"> 
+<div class="sectionIndented"> 
 Modified GUI.dh_Listbox:val to return list item index and 
 list item value when no 'multi-select'.
 </div>
 
-</div><!-- sectiom #2 -->
+</div><!-- sectiom #1 -->
 
 
 <div class="sectionDefault top100">
 <span class="textEmphasis110">list Property: </span>    
 
 <div class="sectionIndented"> 
-The 'list' property is a table hold the values that will be displayed in the listbox.
+The 'list' property hold the values that will be displayed in the listbox.
 It accepts either a comma-separated string of options or a table. 
 (If you change the list at run-time using a comma-separated string,
 you'll need to call GUI.elms.my_list:init() afterward to have the
@@ -85,7 +88,6 @@ string parsed into a table.
 
 </div>                        
 
-</div><!-- end Section #1 -->
 
 <div class="chartCont text110">
 <pre>--------------------------------------------------------

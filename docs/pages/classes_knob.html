@@ -23,133 +23,178 @@
 
     <div class="pageBody">
 
-<div class="heading">6.02 dh_Knob:</div>
+<div class="heading">dh_Knob: </div>
     
-<div class="sectionIndented"><!-- sectiom #1 -->
-
-
-<div class="sectionListItem">                        
-<span class="textEmphasis110">Draws a knob with optional caption.</span><br>
-Built upon the Lokasenna Knob. Changed some property names, and 
-added features.
-
-<div class="sectionDefault">                        
-Property 'centered':<br>
-&nbsp;&nbsp;&nbsp;&nbsp;if 'centered' is false then x and y are the top-left of knob body.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;if 'centered' is true then x and y are to center of knob.
-</div>
-
-</div>
-
-
-
 <div class="sectionDefault"> 
-<span class="textEmphasis110">Knobs can have one of several styles:</span><br>
+Draws a knob with optional caption and optional display. 
+Built upon the Lokasenna Knob. Changed some property names, 
+and added many customizable features.
+</div>
+
+<div class="subHeading">Basic Properties: </div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis110">centered: </span>                       
+If false then knob is positioned with x and y as the top-left 
+of an imaginary square around knob body. 
+If true then knob is positioned with x and y as the center of knob.
+</div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis110">min: </span>                       
+The minimum range of the knob (fully counter-clockwise). 
+May be an integer or floating-point number.
+</div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis110">max: </span>                       
+The maximum range of the knob (fully clockwise). 
+May be an integer or floating-point number.
+</div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis110">inc: </span>                       
+This is the value that the Knob's output changes with each 
+step of the knob's rotation. May be an integer or 
+floating-point number. The increment determines the 
+number of steps in the knob's rotation: 
+<span class='inlineBlock'>(max - min) / inc</span>
+</div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis110">default: </span>                       
+This determines the initial value of the knob, and where it 
+returns to when double-clicked. 
+The default value must be an integer corresponding to a step 
+in the knob's range (0 to steps), with 0 being fully ccw.
+</div>
+
+<div class="chartCont text110 left100">
+<pre>
+  min   max   inc   steps   def  val
+   0     10    1     10      0    0
+   0     10    1     10      5    5
+-100    100    1    200    100    0
+-100    100   10     20     10    0
+   0      1    0.1   10      0    0
+   0      1    0.1   10      5    0.5
+  -1      1    0.1   20     10    0
+</pre>
+</div>
+
+<div class="sectionIndented"> 
+<span class="textEmphasis110">knob_style: </span>                       
 
 <div class="sectionListItemIndented">             
 <span class="textEmphasis">Pointer:</span>
 Displays a knob with a triangular pointer attached to the 
-knob body.<br>  
+knob body. 
 </div>
 
 <div class="sectionListItemIndented">             
 <span class="textEmphasis">Flange:</span>
 Displays a knob with a flange and a central body.
-The indicator is a white line on a black flange.<br>
+The indicator is a white line on a black flange.
 </div>
 
 <div class="sectionListItemIndented">             
 <span class="textEmphasis">Simple:</span>
-Displays a round knob with the indicator on top.<br>
+Displays a round knob with the indicator on top.
 </div> 
 
-</div>
+</div> <!-- end knob style -->
 
+<div class="subHeading">Display Properties: </div>
 
-<div class="sectionListItem"> 
-<span class="textEmphasis110">There are several ways to display</span> 
-the current value of the knob. 
+<div class="sectionIndented"> 
+There are several ways to display the current value of the knob. 
 You can use any or a combination of the various ways.
-
+</div>
 
 <div class="sectionListItemIndented"> 
-<span class="textEmphasis">Values:</span> 
-Values are displayed as numbers around the knob.<br>
-When increasing font_values size one needs to also increase 
-values padding, or else values may overlap.<br>
-The property 'output' can modify how or which values are displayed. 
-I haven't attempted to use this feature. See Lokasenna docs for details.        
+<span class="textEmphasis110">show_values: </span> 
+If true then values are displayed as numbers around the knob. 
+Note: when increasing 'font_values' size you may need to also 
+increase 'pad_values', or else values may overlap.
+</div>
+
+<div class="sectionListItemIndented"> 
+<span class="textEmphasis110">output: </span> 
+This property is used to modify how values are displayed. 
+It accepts a table or a function. See Lokasenna docs for details.        
 </div> 
 
 <div class="sectionListItemIndented"> 
-<span class="textEmphasis">Tickmarks:</span> 
-Use tickmarks instead of number values.<br>
-The tickmarks are those tiny lines along the track that are 
-usually set to the number of track steps or a fraction thereof. 
-You can set the size of the tickmarks. 
+<span class="textEmphasis110">show_tickmarks: </span> 
+If true then tickmarks will be drawn around the knob.
+</div>
+
+<div class="sectionListItemIndented"> 
+<span class="textEmphasis110">tickmark_size: </span> 
+Set the size of the tickmarks.<br>
+</div>
+
+<div class="sectionListItemIndented"> 
+<span class="textEmphasis110">tickmark_steps: </span> 
+Tickmark steps should have some correspondence to knob steps.
+Say, knob steps is 100, tickmark_steps can be 10.
+</div>
+ 
+<div class="sectionListItemIndented"> 
+<span class="textEmphasis110">hard_ticks: </span> 
 Hard ticks refers to a set of tickmarks which 
-can be enhanced with length and/or thickness. Hard ticks are 
-specified as a table, e.g., {0, 5, 10} which indicate at which 
-positions the hard ticks will be displayed.
-</div> 
+can be enhanced with length and/or thickness. 
+Hard ticks are specified in a table  e.g., {0, 5, 10} 
+which indicate at which positions (knob.steps) the hard ticks 
+will be drawn.
+If 'hard_ticks' is nil or an empty table, or 'show_tickmarks' 
+is false then no hard ticks will be drawn.
+</div>
+
 
 <div class="sectionListItemIndented">  
-<span class="textEmphasis">Min-max values:</span>
-Displays alpha-numerical values at specified steps. 
-Although the property is called 'min_max_values' it can also display 
-additional values. They are specified in a table, e.g., 
+<span class="textEmphasis110">show_min_max: </span>
+If true alpha-numerical values can be drawn at specified steps. 
+Although the property is called 'min_max_values' it can also 
+display values beside the minimum and maximum. 
+They are specified in the a table, e.g., 
 <span class='inlineBlock'>{{0,"0"}, {5,"5"}, {10,"10"}}.</span> 
-Each item contains the position (step) and the value to be displayed. 
-The value is a string so anything alpha-numerical is valid. 
-</div>
-
-<div class="sectionListItemIndented">  
-<span class="textEmphasis">Note:</span>
-The properties 'max', 'hard_ticks', and 'min_max_values'
-have a relationship between them. When changing 'max' be sure 
-to adjust the latter two as necessary.
+Each item in the table contains the position and the value 
+to be displayed. The position is an integer corresponding to a 
+knob step. The value is a string so anything alpha-numerical is valid. 
 </div> 
 
-</div>
 
-<div class="sectionListItem"> 
-<span class="textEmphasis110">Indicator: </span>            
-Indicator color depends on the knob style. 
-For 'pointer' style and 'simple' style it is automatically 
-derived from the body color (default "btn_txt"). 
-'flange' style uses "white"'. 
-</div>
-
-<div class="sectionDefault"> 
-
-<div class="sectionListItem"> 
-<span class="textEmphasis110">Display:</span> 	  
+<div class="sectionListItemIndented">  
+<span class="textEmphasis110">display_style: </span> 	  
 The current value can be displayed in a box above (or below) the knob. 
-If 'display_style' is "box" the box is similar to a textbox using 
-'display_bg' color. If 'display_style' is "plain"' the values are 
-displayed in the area defined by the display box, but with no 
-outline and using the background color of where the knob is placed. 
+If 'display_style' is "none" then a box will NOT be displayed. 
+If 'display_style' is "box" then the values are displayed 
+in a box similar to a textbox. If 'display_style' is "plain" 
+the values are displayed in the area defined by the display box, 
+but with no outline, and using the background color of where 
+the knob is placed. 
 'display_pad_x' and 'display_pad_y' are used to tweak the position of the box. 
 'display_align' is used to position the value text inside the box. 
 It can be "left", "center", or "right".
 </div> 
 
-<div class="sectionIndented"> 
-Frame color, by default, uses highlight/lowlight colors that 
-are automatically calculated from the 'col_backdrop' color. 
+<div class="sectionListItemIndented">  
+<span class="textEmphasis110">col_frame: </span> 	  
+The display box frame color, by default, uses highlight/lowlight 
+colors that are automatically calculated from the 'col_backdrop' color. 
 However, the frame can be set to use a single color (specified 
-by the 'col_frame' property) by setting 
-'frame_use_outline' property to true. Some themes can call for 
-single color outlines regardless of the 'frame_use_outline' setting.
+by the 'col_frame' property) by setting 'frame_use_outline' 
+property to true. Some themes can call for single color outlines 
+regardless of the 'frame_use_outline' setting.
 </div>
 
-</div>
 
 
-</div><!-- end Section #1 -->
 
 <div class="chartCont text110">
-<pre>---------------------------------------------------------
+<pre>
+---------------------------------------------------------
 attribute:            property_name       default value       
 ---------------------------------------------------------
 knob style:           knob_style         "pointer"
@@ -199,7 +244,7 @@ allow sel.outline:    allow_sel_outline   false
 background:           col_bg             "wnd_bg" 
 knob body:            col_body           "btn_face" 
 knob outline:         col_outline        "btn_outline"
-knob pointer:         col_indicator ***  "btn_txt"
+knob pointer: ***     col_indicator      "btn_txt"
 caption text:         col_cap_text       "txt"
 
 values text:          col_values         "txt"
@@ -213,8 +258,7 @@ elm sel.outline:      col_active         "elm_active"
        Accepts table or function.
        Refer to Lokasenna documentation for details.
 **   Display box frame. 
-***  As of 04-16-2026 col_indicator not used.
-       Indicator color is now automatically derived from body color 
+***  As of 04-16-2026 automatically derived from body color 
        except 'flange' style uses white.      
 ---------------------------------------------------------</pre>
 </div> 
