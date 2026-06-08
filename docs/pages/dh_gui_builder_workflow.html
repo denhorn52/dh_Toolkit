@@ -25,31 +25,31 @@
 <div class="heading">4.01 Example Workflow:</div>
 
 
-<div class="sectionIndented">  
+<div class="sectionIndented top100">  
 Say you are developing a script called "MyScript.lua" 
 Save your main script "MyScript.lua" in the "scripts" 
 directory. (You can use a copy of dh_Template.lua as a starting 
 point. More on this later.) 
 </div>
 
-<div class="sectionIndented">  
+<div class="sectionIndented top100">  
 In GUI Builder create a new project.
 In 'Project Settings' set the name of your project to "MyScript". 
 Insert elements in the workspace. They will created on layer 1. 
 You can then edit the 'z' property to place it on a different layer.
 </div>
 
-<div class="sectionIndented">  
+<div class="sectionIndented top100">  
 Many elements can appear on the same layer. Even so, any element 
-that has heavy usage, and needs to be redrawn frequently should 
-best be put on their own layer. How many layers are possible? 
+that has heavy usage, and needs to be redrawn frequently are probably  
+best to be on their own layer. How many layers are possible? 
 Good question. I believe somewhere in the Lokasenna documentation 
 it says 1024. But the real limitation might be how many drawing 
-buffers are availble. One reference states 128. Another says 1024. 
+buffers are available. One reference states 128. Another says 1024. 
 I wonder if anybody really knows.
 </div>
 
-<div class="sectionIndented">  
+<div class="sectionIndented top100">  
 All elements names must be unique. GUI Builder has 
 mechanisms to ensure names are unique. It is recommended to  
 decide on an element's name early on so that you 
@@ -59,7 +59,7 @@ I use the convention: element type, underscore, functionality.
 Hence 'btn_SetColor' signifies a button used to set a color.
 </div>
 
-<div class="sectionIndented">  
+<div class="sectionIndented top100">  
 dh_Toolkit classes are Lokasenna classes that have been 
 modified to be compatible with dh_Toolkit theming. They also 
 include other enhancements.
@@ -68,7 +68,7 @@ recommend using the dh_Toolkit classes due to the
 aforementioned reasons.
 </div>
 
-<div class="sectionIndented">  
+<div class="sectionIndented top100">  
 An element class refers to the definition of an element and is 
 contained in a class file, e.g., dh_Button.lua is the class 
 file that defines the class dh_Button. 
@@ -76,7 +76,7 @@ An element refers to a
 created instance of a class.
 </div>
 
-<div class="sectionIndented">  
+<div class="sectionIndented top100">  
 A dh_Tabs element can be used to groups elements for display. 
 The dh_Tabs class has a property 'z_sets' which is a table 
 that contains the layer (z) numbers of the layers which will 
@@ -88,17 +88,17 @@ remove, rename, and reposition tabs. The Tabs Z_sets editor
 is used to define what layers are to appear on a particular tab. 
 </div>
 
-<div class="sectionIndented">  
+<div class="sectionIndented top100">  
 Save the project with 'File -> Save Elements'. 
 The file will be saved to the "scripts" directory with the name 
 "MyScript_ELMS.lua". 
 </div>
 
-<div class="sectionIndented"> 
+<div class="sectionIndented top100">  
 In "MyScript.lua" insert the following code in the "Elements" 
 section:
 
-<div class="preCont text110">
+<div class="preCont text110"> 
 <pre>
 load(GUI.script_path .. "MyScript_ELMS.lua")()
 </pre>
@@ -106,13 +106,13 @@ load(GUI.script_path .. "MyScript_ELMS.lua")()
 
 </div>
 
-<div class="sectionIndented"> 
+<div class="sectionIndented top100">  
 All of the elements will now appear when you run "MyScript.lua".
 Any additional changes to your layout that you save to 
 "MyScript_ELMS".lua" will appear the next time you run "MyScript.lua".
 </div>
 
-<div class="subHeading">4.01.00 Additional assignments:</div>
+<div class="heading">4.01.01 Additional assignments:</div>
 
 <div class="sectionIndented">
 After the elements are loaded it is time to make additional 
@@ -148,13 +148,14 @@ so much easier.
 Note: There is an order to where these components are placed. 
 Say:
 </div>
+
 <div class="preCont text110">
 <pre>
-  button.func = MyButtonFunc,
+button.func = MyButtonFunc,
 </pre>
 </div>
 
-<div class="sectionDefault">
+<div class="sectionDefault top100">
 MyButtonFunc needs to be declared before this button 
 assignment is made, whether that assignment is in the element's 
 creation parameters, or a later assignment. The later 
@@ -186,7 +187,7 @@ GUI.elms["MyButtonName"].params = {...}
 
 </div>  <!--end button functions -->
 
-<div class="sectionIndented">
+<div class="sectionIndented top100">
 <span class="textEmphasis110">Element method overrides: </span>  
 An element's methods, esp., mouse events can be overridden 
 to provide additional functionality. These overrides need 
@@ -208,11 +209,11 @@ function GUI.elms.lbx_SnapshotsNames:onmouseup()
 	
 end
 </pre>
-</div>
+</div><!-- end Method overrides -->
 
 </div>
 
-<div class="sectionIndented">
+<div class="sectionIndented top100">
 <span class="textEmphasis110">Menu assignments: </span>  
 The Menubar.menus and Menubox.optarray properties reference 
 menus that can get fairly complicated. They can have sub-menus, 
@@ -240,6 +241,7 @@ GUI.elms["MyMenubar"].menus = {
 </pre>
 </div>
 
+<br>
 You can also define the menu earlier, and then assign it.
 
 <div class="preCont text110">
@@ -255,16 +257,103 @@ myMenus = {
 }
 
 -- Define or load your elements.
-   ...
+load(GUI.script_path .. "MyScript_ELMS.lua")()
 
 -- Make the assignment.
-
 GUI.elms["MyMenubar"].menus = myMenus
 </pre>
 </div>
 
+</div><!-- end Menu assignments -->
+
+<div class="sectionIndented top100">
+<span class="textEmphasis110">Layer sets: </span>  
+Layer sets are saved in the Elements file as GB_Project_Layer_Sets. 
+They then are loaded (imported) as the same. Layer set 1 will be 
+GB_Project_Layer_Sets[1]. You can use this imported vatiable 
+as is, assign it to another variable, or just create a new variable. 
+
+<div class="preCont text110">
+<pre>
+-- Assign the layer set.
+local my_layer_set = {45, 46, 47}
+</pre>
 </div>
 
+<br>
+Hide the layers in the layer set. This, obviously, has to 
+be after the elements are loaded.
+
+<div class="preCont text110">
+<pre>
+-- Hide the layers
+for _, lyr in ipairs(my_layer_set) do
+    GUI.elms_hide[lyr] = true
+end
+</pre>
+</div>
+
+<br>
+There needs to be a way to show the layer set. One way is to 
+override a button mouseup event. You can also use, perhaps, 
+a function assigned to a menu item. 
+
+<div class="preCont text110">
+<pre>
+function GUI.elms.btn_ShowLayerSet:onmouseup()
+
+    -- Call the class's native handler.
+    GUI.dh_Button.onmouseup(self)
+
+    -- Create or use a global variable to store the names 
+    -- of currently visible elements. 
+    -- These will be restored later.
+    layers_to_restore = {}	
+    
+    -- Store the names and hide them.
+    for z, _ in pairs(GUI.elms_list) do
+        if not GUI.elms_hide[z] then
+            table.insert(layers_to_restore, z)
+            GUI.elms_hide[z] = true
+        end
+    end 
+    
+    -- Show the layers in the layer set.
+    for _, lyr in ipairs(my_layer_set) do
+        GUI.elms_hide[lyr] = false
+    end    
+
+end
+</pre>
+</div>
+
+<br>
+You also need to be able to restore the previous state.
+
+<div class="preCont text110">
+<pre>
+function GUI.elms.btn_RestoreLayers:onmouseup()
+
+    GUI.dh_Button.onmouseup(self)
+	
+    -- Hide the layer set layers.
+    for _, lyr in ipairs(my_layer_set) do
+        GUI.elms_hide[lyr] = true
+    end	
+	
+    -- Restore saved layers.
+    for _, lyr in ipairs(layers_to_restore) do
+        GUI.elms_hide[lyr] = false
+        GUI.redraw_z[lyr] = true
+    end	
+
+end
+</pre>
+</div>
+
+</div><!-- end Layer sets -->
+
+<div class="heading">4.01.02 Using a template: </div>
 <div class="sectionIndented">
 <span class="textEmphasis110">Using a template: </span>  
 dh_Toolkit provide a couple of scripts can be used as templates 
