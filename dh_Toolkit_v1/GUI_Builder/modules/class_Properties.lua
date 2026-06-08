@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- class_Properties.lua
--- Modified 20260330
+-- Modified 20260506
 
 
 --[===[
@@ -103,11 +103,18 @@ local function apply_value(self)
 
                 if self.prop == "x" then  
                     -- Subtract rad.
-                    val = (val - (sel_elm.w / 2))
+                    val = (val - (sel_elm.w // 2))
 
-                elseif self.prop == "y" then  
+                elseif self.prop == "y" then
+                
+                    GUI.Msg("    APPLY val dh_Knob y : " .. val)
+                    GUI.Msg("    type of dh_Knob y : " .. type(val))                    
+                  
                     -- Subtract rad, add menu.h, then scale.
-                    val = (val + MENUBAR_HEIGHT - (sel_elm.w / 2)) 
+                    --val = (val + MENUBAR_HEIGHT - (sel_elm.w // 2))
+                    
+                    -- Subtract rad then scale.
+                    val = (val - (sel_elm.w // 2))                     
 
                 else --if self.prop == "w" then 
                     -- Force width to even so x,y not fractional. 
@@ -767,10 +774,15 @@ end
 --zzset
 function Property.Editor:init()
 
+    --GUI.Msg("\n## Property.Editor:init ")
+    --GUI.Msg("     Editor type : " .. self.subclass)    
+    
     if self.subclass == "menu_titles" then
         self.text = "Menu Titles" 
     elseif self.subclass == "min_max_values" then
         self.text = "Min-Max values" 
+    elseif self.subclass == "graph_labels" then
+        self.text = "Graph Labels"
     elseif self.subclass == "options" then
         self.text = "Options"
     elseif self.subclass == "tab_titles" then
