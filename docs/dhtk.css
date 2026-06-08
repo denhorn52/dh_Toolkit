@@ -189,7 +189,6 @@ p {
   margin-top: 0.5em;
   /*margin-left: calc(var(--left-pad) + var(--block-indent));*/
   margin-left: var(--block-indent);
-  /*padding-left: 1.0em;*/ /*var(--block-indent);*/  
   line-height: 1.4em;
 }
 
@@ -298,6 +297,14 @@ p {
   font-weight: 700;
 }
 
+.indent050 {
+  text-indent: 0.5em;
+}
+
+.indent100 {
+  text-indent: 1em;
+}
+
 .hanging050 {
   text-indent: 0.5em hanging;
 }
@@ -389,8 +396,6 @@ code {
 }
 
 /* ######## */
-
-
 
 
 
