@@ -17,6 +17,7 @@
                to accommodate when project size is less than min workspace size.
                Added WORKSPACE_MIN_W and WORKSPACE_MIN_H.
     2026-04-21 Added z_sets editor.
+    2026-05-23 Added Layer Sets.
 ]]--
 
 --====================================
@@ -201,6 +202,32 @@ GUI.elms.GB_wnd_help_lbx.w = DHTK.APP_WIDTH - 64
 GUI.elms.GB_wnd_help_lbx.h = WORKSPACE_MIN_H - 64
 --]=]
 
+-- For Layer sets.
+
+GB = {}
+--[=[
+GB.LAYER_SETS = {
+  [1] = {},
+  [2] = {},
+  [3] = {},
+  [4] = {},
+  [5] = {},
+  [6] = {},
+}
+--]=]
+
+GB.LAYER_SETS = {
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+}
+
+GB.HIDDEN_LAYERS = {}
+GB.CURRENT_LAYER_SET_INDEX = 0
+
 --======================================
 --    GUI ELEMENTS 
 --======================================
@@ -241,7 +268,7 @@ GB_frm_ws               491
 GB_frm_bg               490
 GB_side_bg                9
 GB_side_elm_type          5
-GB_mnu_bar                2
+GB_mnu_bar                3  --2
 
 -- exists only when called --
 GB_dlg_ws_overlay         2
@@ -257,7 +284,7 @@ GB_dlg_panel_cancel       1
 -- Initial metrics at 1.00x scale. Will scale at DHTK.setup_window().
 
 GUI.New("GB_mnu_bar", "dh_Menubar", {
-    z = 2,  -- was 1
+    z = 3,  -- was 1 then 2
     x = 0, 
     y = 0, 
     w = DHTK.APP_WIDTH, 
@@ -329,7 +356,6 @@ GUI.New("GB_side_elm_type", "dh_Label", {
 })
 
 -- Need to declare these here because it uses earlier parameters.
-
 Editor = GUI.req(GUI.script_path .. "modules/func_Editor.lua")()
 Editor.load_editor_elms()
 Help = GUI.req(GUI.script_path .. "modules/wnd_Help.lua")()
@@ -467,7 +493,18 @@ reaper.atexit(Exit)
 --      INITIALIZE     
 --====================================
 --zzinit
---GUI.Msg("ready to initialize")
+--GUI.Msg("ready to initialize script")
+
+
+-- Hide layer sets. NO! Only on project load.
+
+--GUI.Msg("script load GB.CURRENT_LAYER_SET_INDEX : " .. GB.CURRENT_LAYER_SET_INDEX)
+
+--if GB.CURRENT_LAYER_SET_INDEX > 0 then
+--    Menu.change_layer_sets(GB.CURRENT_LAYER_SET_INDEX)
+--end
+
+
 
 -- Scale window. 
 GUI.w = DHTK.APP_WIDTH * DHTK.APP_SCALE
