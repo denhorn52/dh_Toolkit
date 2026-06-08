@@ -39,6 +39,7 @@ function Dialog.open(params)
         w = WORKSPACE_WIDTH * DHTK.APP_SCALE,
         h = (WORKSPACE_HEIGHT + MENUBAR_HEIGHT) * DHTK.APP_SCALE,
         col_bg = {0, 0, 0, 0.6},
+        --col_bg = {0, 0, 0, 1},        
         border_width = 0, 
         radius = 0, 
     })
