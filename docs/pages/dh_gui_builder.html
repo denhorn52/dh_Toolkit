@@ -37,7 +37,7 @@ into a script.
 </div>
 
 <div class="sectionIndented"> 
-<span class="textEmphasis">Note: </span> 
+<!--<span class="textEmphasis">Note: </span> -->
 GUI Builder exposes almost all of an element's colors. 
 While that allows them to be set individually, it is best 
 to use the default color settings otherwise it 
@@ -49,6 +49,17 @@ background color of where the element is placed. See section
 <span class="textEmphasis">"3.04 Colors Tab" </span> for more about colors.
 </div>
 
+<div class="sectionIndented"> 
+<!--<span class="textEmphasis">Note: </span> -->
+GUI Builder uses layers 490-499 for its GUI. Do NOT place 
+any elements on these layers. GUI Builder also uses layers 
+1-10 for its GUI. However, it is okay to place elements on 
+these layers as they shifted internally. For example: If you 
+place any elements on layers 1-10 they will be shifted up ten. 
+The property display will show your chosen layer (layer 1), 
+and the elements will be saved the same. In other words, 
+you can disregard the internal shifting.
+</div>
 <!-- end sectiom #1 -->
 
 <div class="heading">4.00.1 The Workspace:</div>
@@ -182,17 +193,23 @@ You can change the project name in 'Settings -> Project Settings'.
 </div>
 
 <div class="sectionIndented">
+<span class="textEmphasis110">Load Project: </span> 
+Displays a list of any project files in the "projects" directory. 
+Select one to load it. You will be prompted before clearing 
+the workspace.
+</div>
+
+<div class="sectionIndented">
 <span class="textEmphasis110">Save Project: </span> 
 Saves the current workspace to a file in the "projects" directory. 
 The save dialog will appear in the sidebar. The 'name' box 
 will show the name of the current project. Edit it if you wish. 
 The file name will be the textbox name with "_PROJ.lua" 
 appended to it. This option is suggested for saving 
-projects during the development phase. 
+projects during the development phase, or experimenting with different layouts. 
 <br>
 Click 'Save'. If the project file already exists you will 
 be prompted to continue. 
-
 </div>
 
 <!--
@@ -202,6 +219,13 @@ Same as "Save Project" but doesn't save properties if they are
 the class's defaults.
 </div>
 -->
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Load Elements File: </span> 
+Displays a list of files in the "scripts" directory. 
+Select one to load it. You will be prompted before clearing 
+the workspace.
+</div>
 
 <div class="sectionIndented">
 <span class="textEmphasis110">Save Elements: </span> 
@@ -227,19 +251,26 @@ the class's defaults.
 -->
 
 <div class="sectionIndented">
-<span class="textEmphasis110">Save Template: </span> 
+<span class="textEmphasis110">Import Template: </span> 
+Displays a list of any template files in the "projects" directory. 
+Select one to load it. The element will be placed on layer 1. 
+You can move it to another layer by changing its 'z' value. 
+</div>
+
+<div class="sectionIndented">
+<span class="textEmphasis110">Save Template: </span>
 Say you have designed a slider with a configuration that you may 
 want to use in another project. Use this to save it as a template. 
+
 Saves the currently selected element to a file in the 
-"projects" directory. 
+"projects" directory.
 The save dialog will appear in the sidebar. The 'name' box 
 will show the name of the selected element. Edit it if you wish. 
 The file name will be the textbox name with "_TMPL.lua"  
-appended to it. 
+appended to it.
 <br>
 Click 'Save'. If the template file already exists you will 
 be prompted to continue. 
-
 </div>
 
 <!--
@@ -250,26 +281,8 @@ if they are the class's defaults.
 </div>
 -->
 
-<div class="sectionIndented">
-<span class="textEmphasis110">Load Project: </span> 
-Displays a list of project files in the "projects" directory. 
-Select one to load it. You will be prompted before clearing 
-the workspace.
-</div>
 
-<div class="sectionIndented">
-<span class="textEmphasis110">Load Elements File: </span> 
-Displays a list of files in the "scripts" directory. 
-Select one to load it. You will be prompted before clearing 
-the workspace.
-</div>
 
-<div class="sectionIndented">
-<span class="textEmphasis110">Load Template: </span> 
-Displays a list of template files in the "projects" directory. 
-Select one to load it. The element will be placed on layer 1. 
-You can move it to another layer by changing its 'z' value. 
-</div>
 
 </div>
 <!-- end File -->
@@ -314,28 +327,57 @@ Click 'Save' to save your settings.
 </div>
 <!-- end Settings -->
 
-<div class="sectionIndented"> 
+<div class="sectionIndented top100"> 
 <span class="textEmphasis125">GUI_Scale: </span> 
 Select a scale size from the drop-down menu to resize the 
 entire GUI_Builder, including the workspace.
 </div>
 <!-- end GUI_Scale -->
 
-<div class="sectionIndented"> 
+<div class="sectionIndented top100"> 
 <span class="textEmphasis125">Set_Theme: </span> 
 Change the theme by selecting one from the drop-down menu. 
 (As of 03-18-2026 user themes not supported.)
 </div>
 <!-- end Set Theme -->
 
-<div class="sectionIndented"> 
+<div class="sectionIndented top100"> 
 <span class="textEmphasis125">Grid: </span> 
 Click on the option to "Toggle Grid Show" to toggle the 
 visibility of the grid.
 </div>
 <!-- end Grid -->
 
+<div class="sectionIndented top100"> 
+<span class="textEmphasis125">Layer sets: </span> 
+Layers sets allow you to place elements on a set of layers 
+whose visibility can be toggled on or off. When a layer set 
+is selected only the element's on that layer will be displayed. 
+There are six layer sets available. You use the editor to 
+choose which layers are to be included in a particular set. 
+Clicking on the "LayerSets" menu item drops down a list 
+with the following options:
+
 <div class="sectionIndented"> 
+<span class="textEmphasis110">Sets: </span> 
+The first six items allow you to select a set. 
+</div>
+
+<div class="sectionIndented"> 
+<span class="textEmphasis110">Open Editor: </span> 
+The editor allows you to assign which layers are to be included 
+in a particular set. Enter layer numbers separated with commas.
+</div>
+
+<div class="sectionIndented"> 
+<span class="textEmphasis110">Restore layers: </span> 
+This option returns the layout to the default (no layer set 
+selected).
+</div>
+
+</div><!-- end Layer sets -->
+
+<div class="sectionIndented top100"> 
 <span class="textEmphasis125">Help: </span> 
 
 <div class="sectionIndented"> 
@@ -351,6 +393,8 @@ defaults for the dh_Toolkit classes.
 </div>
 
 </div><!-- end Help -->
+
+<!-- end menubar -->  
 
 <br><br>
 <!-- knobs -->
@@ -373,7 +417,7 @@ Various Slider configurations:
 
 <div class="imgContainer top100"><img src="https://denhorn.com/dh_Toolkit/docs/images/sliders.png" border="0" alt="Theme Designer"></div> 
 
-<!-- end menubar -->  
+
         
      <br><br><br>   
      </div>  <!-- end pageBody --> 
