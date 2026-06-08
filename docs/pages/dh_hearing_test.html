@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    
+    <title>dh_HearingTest</title>
+    
+    <link rel="stylesheet" href="../dhtk.css">
+  </head>
+
+  <body>
+
+    <div class="pageHeadingContainer">
+      <a href="../index.html" ><div class="logoPage"></div></a>
+      
+      <div class="centered-xy"> 
+        <div class="pageHeading">dh_HearingTest</div>
+      </div>
+    </div>
+    
+    <div class="pageBody">
+
+<div class="heading">2.04 dh_HearingTest:</div><br>
+        
+<div class="imgTitle">dh_HearingTest (showing Mocha theme)</div>
+<div class="imgContainer"><img src="../images/hearing_test.png" alt="dh_HearingTest"></div>  
+
+<div class="subHeading">Introduction: </div>
+<div class="sectionIndented"> 
+Say, an individual has a significant hearing loss at 3000Hz. 
+While mixing a song that person may tend to boost the gain at 
+that frequency so it sounds good to him or her. But for a 
+person with "normal" hearing that boost may not be so pleasing. 
+Another factor is, even a person with normal hearing perceives a 1 Khz tone 
+to be louder than a 200hz tone with the same sound pressure.
+</div>
+
+<div class="subHeading">Objective: </div>
+<div class="sectionIndented"> 
+To produce a dataset of an individual's perceived loudness 
+to a set of tones, using a Fletcher-Munson curve of equal loudness 
+(to what is considered normal hearing) as a reference. 
+The data can then be used to set up an equalizer to compensate 
+your mix for any hearing loss, so that you may hear it more as 
+someone with normal hearing while not actually boosting frequencies 
+where they shouldn't be boosted. 
+Note: The equalizer should be the last fx on your master track.  
+</div>
+
+<div class="subHeading">Notes: </div>
+<div class="sectionIndented"> 
+
+<div class="sectionDefault"> 
+The Fletcher-Munson curve of 60 phon is defined as 
+60db sound pressure level (at your ears) at 1Khz. 
+60db is considered the level of normal conversation.
+If calibrating to 60db SPL then you use the 60 phon curve 
+for the subsequent test. The starting loudness of the other 
+frequencies will be adjusted using the curves.
+</div>
+
+<div class="sectionDefault"> 
+I chose 1047Hz (note C6) as the reference frequency, as it is 
+close to the 1Khz frequency from which the Fletcher-Munson 
+equal loudness curves were derived. 
+</div>
+
+<div class="sectionDefault"> 
+I've read somewhere that headphones are better than speakers 
+for discriminating loudness differences at lower frequencies, 
+and poorer at high frequencies. 
+</div>
+
+<div class="sectionDefault"> 
+Perceived loudness difference is greater at soft listening 
+levels than at loud levels.
+</div>
+<div class="sectionDefault"> 
+An explanation of equal loudness can be found at:
+</div>
+
+<div class="sectionIndented"> 
+<a href="https://soundproofgeek.com/fletcher-munson-curves-equal-loudness-explained/" >
+https://soundproofgeek.com/fletcher-munson-curves-equal-loudness-explained/</a>
+<br><br>
+<a href="https://williamssoundstudio.com/tools/iso-226-equal-loudness-calculator-fletcher-munson.php" >
+https://williamssoundstudio.com/tools/iso-226-equal-loudness-calculator-fletcher-munson.php</a>
+</div>
+
+</div> <!-- end Notes -->
+
+<div class="subHeading">Set up: </div>
+<div class="sectionIndented"> 
+
+<div class="sectionDefault"> 
+Create a new project. Name it "Hearing Test", or whatever you wish.
+</div>
+<div class="sectionDefault"> 
+Insert a new track. <br>
+Insert a JS tone generator on that track.<br>
+Disable the tone generator so it isn't outputting a tone.<br>
+Leave tone generator gain at default -12db.
+</div>
+<div class="sectionDefault"> 
+Set track gain to -18db.
+</div>
+
+<div class="sectionDefault"> 
+The DAW settings level should now be -42db below max. peak. 
+This should leave plenty of headroom for running the tests. 
+These settings represent the level sent to your output device: 
+audio interface, speakers, headphones, etc.; not the sound 
+pressure at your ears.  
+</div>
+
+<div class="sectionDefault"> 
+The sound pressure level in decibels that you hear is 
+determined not only by the above DAW settings, but by any 
+hardware settings between your DAW, up to and including 
+your headphones / speakers. You will need to set your headphones /
+speakers to 60db sound pressure level. Do this by adjusting 
+an audio interface or your speaker output directly. If those 
+options are not available you will need to adjust the tone 
+generator gain to achieve the desired levels. Just be sure 
+to note that levels for repeatability.
+</div>
+
+</div> <!-- end Set up -->
+
+<div class="subHeading">Calibrate: </div>
+<div class="sectionIndented"> 
+
+<div class="sectionDefault"> 
+Set the tone generator to use note "C" and octave +1. 
+This is our reference frequency of 1047Hz. 
+</div>
+<div class="sectionDefault"> 
+Play the tone.
+</div>
+
+<div class="sectionDefault"> 
+<span class="textEmphasis110">Calibrate using an SPL 
+(sound pressure loudness) meter: </span>                       
+Adjust the speaker/headphone volume (or the tone generator 
+gain) until 60db sound pressure level is achieved at your ears. 
+If you don't have an SPL meter there are some 
+phone apps available. I cannot attest to their efficacy. 
+</div>
+
+<div class="sectionDefault"> 
+<span class="textEmphasis110">Subjective calibration: </span>
+The Fletcher-Munson curves all have basically the same shape, 
+except for their scale. So, if you're not exactly at the correct 
+phon level, the perceived gain differences will be in the 
+correct direction, and should be in an acceptable range.
+</div>
+<div class="sectionDefault"> 
+Assuming normal conversation is 60db, and assuming that your 
+mid-range hearing is okay (here comes the very subjective part):
+</div>
+<div class="sectionDefault"> 
+Adjust the speaker volume until you think it is at that of 
+normal conversation.
+</div>
+<div class="sectionDefault"> 
+Once you have your test calibrated this becomes the level 
+for which the entire test is based. This level must not be 
+changed or it invalidates all other test measurements. 
+</div>
+<div class="sectionDefault"> 
+Note the settings. I run my output through an audio interface, 
+then through a Big Knob to the speakers. If I want to 
+repeat or continue the test later, it will need those 
+settings. Perhaps save as a profile: 
+<span class='inlineBlock'>[ speaker level / headphones level; etc. ]</span>
+</div>
+<div class="sectionDefault"> 
+Proceed to the test now that 'calibration' is done.
+</div>
+
+</div> <!-- end Calibrate -->
+
+<div class="subHeading">Main Test: </div>
+<div class="sectionIndented"> 
+
+<div class="sectionDefault"> 
+Select the track that has the tone generator from the Track select box.
+</div>
+<div class="sectionDefault"> 
+Select a frequency (other than the 1047Hz reference) to test. 
+</div> 
+<div class="sectionDefault"> 
+In the Channel radio box select which channel is to be used for 
+the test: left, center, or right.
+</div>
+<div class="sectionDefault"> 
+Make sure the Locked checkbox is not checked. If checked that 
+frequency is considered locked and a test cannot be performed 
+on it.
+</div>
+<div class="sectionDefault"> 
+The Bypass checkbox does not affect any testing. If it is 
+checked then any resulting test data, although it will be 
+saved, will not be included in the resulting dataset. 
+</div>
+
+<div class="sectionDefault"> 
+Press the Start button to start the test. 
+The tone generator will produce bursts of tones alternating 
+between the selected frequency and the test frequency.
+Use the "Inc Vol" or "Dec Vol" buttons to adjust the test 
+frequency's loudness until it appears equal to the 
+reference tone. 
+</div>
+<div class="sectionDefault"> 
+When satified press the Stop button to end that frequency test. 
+The test results will be saved internally. 
+</div>
+<div class="sectionDefault"> 
+Repeat for each desired frequency and/or channel.
+</div>
+
+</div> <!-- end Main test -->
+
+<div class="subHeading">LR Test: </div>
+<div class="sectionIndented"> 
+
+<div class="sectionDefault"> 
+I discovered that I also have hearing differences between my 
+left ear and my right ear; not just with perceived volume, but 
+with perceived pitch. Although this is mostly prevalent at 
+very low frequencies, I still found it unsettling. 
+Nevertheless, I developed a simple test to measure the differences.
+</div>
+
+<div class="sectionDefault"> 
+Prepare the app as for the Main Test. The channel setting 
+doesn't matter. Press the Start button to start the test. 
+The tone generator will produce bursts of the test frequency 
+tone alternating between the left channel at the predetermined 
+volume and the right channel. 
+Use the "Gain" knob to adjust the volume of the right channel 
+until it appears the same as the left.
+Use the "Cents" knob to adjust the pitch of the right channel 
+until it appears the same as the left. 
+The gain adjustment is limited to +-9db, and the cents adjustment 
+is limited to +-100 cents (a full semitone).
+</div>
+<div class="sectionDefault"> 
+Press the Stop button to end the test. 
+The test results will be saved internally. 
+</div>
+
+</div> <!-- end LR test -->
+
+<div class="subHeading">Profiles: </div>
+<div class="sectionIndented"> 
+<div class="sectionDefault"> 
+A set up can be saved as a profile. This is useful if you use 
+different configurations for your tests. You may have one 
+profile for using a particular set of headphones, and another 
+for using a pair of monitors. Click the "Edit" button below 
+the "Profiles" select box to open the profiles editor. There 
+you can add, rename, or delete profiles. Profiles are saved in 
+reaper-extstate.ini file.
+
+Select a saved profile from the "Profiles" select box to load it.
+</div>
+
+</div> <!-- end Profiles -->
+
+<div class="subHeading">Using the Test data: </div>
+<div class="sectionIndented"> 
+<div class="sectionDefault"> 
+Click the "Print" button to write the data of the currently 
+selected profile to the console window. You can use this data 
+to set up an equalizer to compensate for any hearing deficiencies 
+you may have. If the data shows that you have a hearing 
+deficiency (as compared to "normal" hearing) then you can 
+insert a band at that frequency, boosting its gain to compensate. 
+You would probably want to adjust it's Q for a smooth transition.
+</div>
+<div class="sectionDefault"> 
+Use the equalizer as the last fx on your master track. 
+Enable the equalizer to hear your music closer to how someone 
+with normal hearing hears your music. Disable the equalizer to remove 
+your adjusted bias from the mix. Personally, I will probable 
+use an equalizer for each channel as I have significant 
+differences in my hearing perception between my left and right ear.
+</div>
+
+</div> <!-- end Test data -->
+
+<div class="subHeading">Graph: </div>
+<div class="sectionIndented"> 
+<div class="sectionDefault"> 
+The graph plots a point for each frequency of the currently 
+selected channel of the currently selected profile. The graph 
+has two modes: "C" and "F". "C" displays the Fletcher-Munson 
+curve overlaid with the profile's data points and their 
+deviation from it. "F" is a flat graph displaying each frequency's 
+gain deviation from "normal". 
+</div>
+
+</div> <!-- end Graph -->
+
+<div class="subHeading">Prefs: </div>
+<div class="sectionIndented"> 
+<div class="sectionDefault"> 
+Click the "Prefs" button to open the Preferences window. Here 
+you can change the script window scale and / or theme.
+</div>
+
+</div> <!-- end Profiles -->
+
+
+<div class="subHeading">Caveat: </div>
+<div class="sectionIndented"> 
+dh_HearingTest is not to be a substitute for a 
+professional hearing test. It is only an approximation using 
+the Fletcher-Munson curves as a reference. Perceived 
+loudness can be skewed by differences in sound hardware amongst 
+other factors.
+</div>
+
+<div class="subHeading">CAUTION: </div>
+<div class="sectionIndented"> 
+Always use caution when adjusting volume levels 
+to protect your hearing.
+</div>
+
+        
+     <br><br><br>   
+     </div>  <!-- end pageBody --> 
+
+  </body>
+
+</html>
