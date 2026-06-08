@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 --func_Export.lua
--- Modified 20260330
+-- Modified 20260506
 ----------------------------------------------
 -------- File import / export functions -----
 --------    for GUI Builder -----------------
@@ -79,8 +79,6 @@ function Export.save_file()
         settings = Export.build_project_settings_str()
         heading = "-- # GUI Builder Project file v1\n\n"         
     end
-    
---zzz 
 
     local elements, elms_names_str = Export.build_elements_str()
     
@@ -94,15 +92,42 @@ function Export.save_file()
         elements_str = elements_str .. "GB_TEMPLATE_load_elm = function()\n\n"
     end
     
-    -- template will have only one element.
+    -- Note: template will have only one element.
     
     elements_str = elements_str .. table.concat(elements, "\n")
     
     if saving_template then
         elements_str = elements_str .. "end\n"
+    end
+    
+    local layer_sets_str = ""
+
+    
+    if not saving_template then
+    
+        str = 'GB_Project_Layer_Sets = {'
+        
+        for i, zset in ipairs(GB.LAYER_SETS) do
+            --str = str .. '\n        [' .. tostring(i) .. '] = {'
+            str = str .. '\n        {'                             
+            for _, z in ipairs(zset) do   
+                str = str .. tostring(z) .. ','
+            end
+            str = str .. '},'                             
+            
+        end
+             
+        str = str .. '\n    }\n'   
+--zzz
+        -- Always start with no selected sets.         
+        --str = str .. 'GB_Project_Current_Layer_Set = ' .. tostring(GB.CURRENT_LAYER_SET_INDEX)
+        str = str .. 'GB_Project_Current_Layer_Set = ' .. tostring(GB.CURRENT_LAYER_SET_INDEX)         
+
+        layer_sets_str = str
+    
     end    
     
-    local content = heading .. settings .. elms_names_str .. elements_str
+    local content = heading .. settings .. elms_names_str .. elements_str .. layer_sets_str
     
     --GUI.Msg(content)
     
@@ -176,8 +201,7 @@ function Export.build_elements_str()
         -- Get selected elm. func_Menu should have checked if an element is selected.
         -- Menus set params.input_text = GUI.elms.GB_frm_sel_elm.elm
         -- Here I'm only concerned with the textbox value.
-
---zzz        
+    
         local elm = GUI.elms[GUI.elms.GB_frm_sel_elm.elm]
         --GUI.Msg(" sel_elm : " .. (elm and elm_name or "none"))
         
@@ -225,10 +249,13 @@ function Export.build_elements_str()
 
     end
     
+    
+    
+    
     ::finish_up::
     
     if (Dialog.params.save_state ~= "template") then
-        elms_names_str = elms_names_str .. '}\n'
+        elms_names_str = elms_names_str .. '}\n\n'
     end     
     
    return Export.sort_elm_strs(elms_strs), elms_names_str
@@ -433,7 +460,6 @@ function Export.load_project_file(load_type)
 
     --GUI.Msg("# Export.load_project_file\n")
     
---zzz
     Export.load_type = load_type
 
     local use_script_dir
@@ -535,12 +561,11 @@ function Export.load_project(content)
 
   xpcall(function()
   
-    --GUI.Msg("\n# Export.load_project")
+    --GUI.Msg("\n## Export.load_project")
     --GUI.Msg("< loaded content: > \n" .. content .. "\n")
     
     Element.deselect_elm()
     
---zzz
     -- Loading template. Check for unique name. 
   
     if Export.load_type == "template" then
@@ -645,7 +670,7 @@ function Export.load_project(content)
     
         end
         
-        -- Need to draw even hidden elms in case using tabs,
+        -- Need to draw even hidden elms in case using tabs or layer sets.
     	for key, __ in pairs(GUI.elms) do
             --GUI.elms[key]:init()
             GUI.elms[key]:redraw()
@@ -656,10 +681,69 @@ function Export.load_project(content)
     -- Select element if imported template.
     if Export.load_type == "template" then
         Element.select_elm(GUI.elms[GB_TEMPLATE_element_name])
-    end    
+    end
+
     
+    -- # Get the layer sets.
+    
+    if GB_Project_Layer_Sets then
+
+        GB.LAYER_SETS = GB_Project_Layer_Sets
+        
+        --GUI.Msg("    GB.LAYER_SETS = GB_Project_Layer_Sets ")
+        --GUI.Msg("    #GB.LAYER_SETS : " ..  #GB.LAYER_SETS)
+        
+        -- Hide all layer set layers.
+        -- Remember to shift z's.
+        
+        --GUI.Msg("    ITERATE GB.LAYER_SETS ")
+    
+        for i, zset in ipairs(GB.LAYER_SETS) do
+        
+            --GUI.Msg("    INDEX of zset : " .. i)
+            --GUI.Msg("    SIZE of zset  : " .. #zset) 
+        
+            if #zset > 0 then
+            
+                --GUI.Msg("     zset value : " .. )
+            
+                for j, z in ipairs(zset) do
+                
+                    --GUI.Msg("      zset value : " .. z)                
+                
+                    GUI.elms_hide[z + 10] = true
+                    
+                end
+            end
+        end
+        
+    else
+        --GUI.Msg("    GB.LAYER_SETS = empty ")        
+        GB.LAYER_SETS = {{},{},{},{},{},{},{},}
+    end
+    
+    -- # Get current layer set index,
+--zzz
+    --[=[    
+    if GB_Project_Current_Layer_Set then
+    
+        -- Always start with default: no selected sets.
+        GB.CURRENT_LAYER_SET_INDEX = GB_Project_Current_Layer_Set
+        
+        --GUI.Msg("    GB.CURRENT_LAYER_SET_INDEX : " ..  GB.CURRENT_LAYER_SET_INDEX)
+    end
+    --]=]
+    
+    -- # Then update if necessary.
+    
+    if GB.CURRENT_LAYER_SET_INDEX > 0 then        
+        Menu.change_layer_sets(GB.CURRENT_LAYER_SET_INDEX)
+    end
+        
     -- No longer need these.
     GB_Project_Elements_Names = nil
+    GB_Project_Layer_Sets = nil
+    GB_Project_Current_Layer_Set = nil
     GB_TEMPLATE_element_name = nil
     GB_TEMPLATE_load_elm = nil
     
