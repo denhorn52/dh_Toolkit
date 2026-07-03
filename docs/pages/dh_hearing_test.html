@@ -97,14 +97,24 @@ https://williamssoundstudio.com/tools/iso-226-equal-loudness-calculator-fletcher
 <div class="sectionDefault"> 
 Create a new project. Name it "Hearing Test", or whatever you wish.
 </div>
+
 <div class="sectionDefault"> 
-Insert a new track. <br>
-Insert a JS tone generator on that track.<br>
-Disable the tone generator so it isn't outputting a tone.<br>
-Leave tone generator gain at default -12db.
-</div>
-<div class="sectionDefault"> 
-Set track gain to -18db.
+Insert a new track.<br><br>
+Insert a JS tone generator on that track.<br><br>
+Disable the tone generator so it isn't outputting a tone.<br><br>
+Leave tone generator wet mix gain at default -12db.<br><br> 
+Set track gain to -18db.<br><br>
+<span class="textEmphasis110">IMPORTANT! </span> 
+The tone generator gain settings and the track gain must not 
+be changed throughout testing, or it will invalidate the test 
+results. Tests may be set up with the wet mix gain and/or the 
+track gain at a different level than the default. Do this by 
+making the adjustments in the "Calibration" section, accessed 
+by clicking the "Edit" button. That way the settings will be 
+saved in the "profile". I originally added this section for 
+experimentation, but decided to keep it in the event anyone 
+finds it necessary. 
+
 </div>
 
 <div class="sectionDefault"> 
@@ -119,12 +129,14 @@ pressure at your ears.
 The sound pressure level in decibels that you hear is 
 determined not only by the above DAW settings, but by any 
 hardware settings between your DAW, up to and including 
-your headphones / speakers. You will need to set your headphones /
-speakers to 60db sound pressure level. Do this by adjusting 
-an audio interface or your speaker output directly. If those 
-options are not available you will need to adjust the tone 
-generator gain to achieve the desired levels. Just be sure 
-to note that levels for repeatability.
+your headphones/speakers. You will need to set your headphones /
+speakers to 60db sound pressure level at listening position. 
+Do this by adjusting an audio interface or your speaker output 
+directly. If those options are not available you will need to 
+adjust the tone generator gain to achieve the desired levels, 
+as noted above. 
+At higher sound pressure levels it takes less gain to perceive 
+equal loudness. My preliminary testing bears this out.
 </div>
 
 </div> <!-- end Set up -->
@@ -134,7 +146,10 @@ to note that levels for repeatability.
 
 <div class="sectionDefault"> 
 Set the tone generator to use note "C" and octave +1. 
-This is our reference frequency of 1047Hz. 
+This is our reference frequency of 1047Hz. If desiring to 
+change the tone generator wet mix gain do so in the 
+"Profiles" editon by clicking the "Edit" button. Enable the 
+tone generator, then set the gain.
 </div>
 <div class="sectionDefault"> 
 Play the tone.
@@ -270,6 +285,15 @@ Select a saved profile from the "Profiles" select box to load it.
 </div>
 
 </div> <!-- end Profiles -->
+<br>
+
+<div class="imgTitle">dh_HearingTest Profiles (showing Mocha theme)</div>
+<div class="imgContainer"><img src="../images/hearing_test_profiles.png" alt="dh_HearingTest Profiles"></div>  
+
+<div class="sectionIndented"> 
+The 'Reset' button will set the test data of current profile 
+with the default (pre-test) data. You will be prompted to confirm.
+</div>
 
 <div class="subHeading">Using the Test data: </div>
 <div class="sectionIndented"> 
@@ -328,7 +352,9 @@ other factors.
 <div class="subHeading">CAUTION: </div>
 <div class="sectionIndented"> 
 Always use caution when adjusting volume levels 
-to protect your hearing.
+to protect your hearing, especially when using headphones. 
+Start with headphone / speaker volume to minimum output then 
+adjust up as necessary.
 </div>
 
         
