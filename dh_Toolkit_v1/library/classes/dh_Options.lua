@@ -530,7 +530,7 @@ function dh_Option:drawvalue(opt_x, opt_y, opt_size, str)
     if self.dir == "h" then
         gfx.x = opt_x + (opt_size - str_w) / 2
         --gfx.y = opt_y + (self.swap and (opt_size + 4) or -opt_size)  -- swap is good
-        gfx.y = opt_y + (self.swap and (opt_size + 4) or -(opt_size + 8))       
+        gfx.y = opt_y + (self.swap and (opt_size + 4) or -(opt_size + 8)) 
     else
         gfx.x = opt_x + (self.swap and -(str_w + 8) or 1.5 * opt_size)
         gfx.y = opt_y + (opt_size - str_h) / 2
@@ -812,6 +812,9 @@ function GUI.dh_Checklist:val(newval)
 		end
 	else
         if #self.optarray == 1 then
+        
+            --GUI.Msg("#self.optarray == 1 : " .. tostring(self.optsel[1]))
+        
             return self.optsel[1]
         else
             local tmp = {}
@@ -845,7 +848,6 @@ function GUI.dh_Checklist:onmouseup()
        Now return should be boolean, index 
        These are both available for use in override.
     --]]
-    
  
     local mouseopt = self:getmouseopt()
     
@@ -866,7 +868,8 @@ function GUI.dh_Checklist:onmouseup()
     --GUI.Msg("dho self.optsel[mouseopt] value is: " .. tostring(self.optsel[mouseopt]) .. "\n")
     --GUI.Msg("dho self.optsel[mouseopt] type is: " .. type(self.optsel[mouseopt]) .. "\n")
     --GUI.Msg("dho optindex type is: " .. type(optindex) .. "\n") 
-	--GUI.Msg("dho optindex is: " .. tostring(optindex) .. "\n")	
+	--GUI.Msg("dho optindex is: " .. tostring(optindex) .. "\n")
+    --GUI.Msg("dho self.optsel[1] value is: " .. tostring(self.optsel[1]) .. "\n")		
 
     -- Why was this being set to false?
     --self.focus = false
