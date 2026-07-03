@@ -245,7 +245,7 @@ classes.dh_Checklist = {
         props.h,
         {prop = "swap",         caption = "Swap",           class = "Boolean",    needs_init = false},        
         {prop = "dir",          caption = "Direction",      class = "Direction",  needs_init = true},
-        {prop = "opt_size",     caption = "Option Size",    class = "Integer",    needs_init = false}, 
+        {prop = "opt_size",     caption = "Option Size",    class = "Integer",    needs_init = true}, 
         {prop = "border_width", caption = "Border Width",   class = "Integer",    needs_init = true},
         {prop = "radius",       caption = "Radius",         class = "Integer",    needs_init = true},
         {prop = "optarray",     caption = "Options",        class = "Editor",     needs_init = false,  subclass = "options"},                 
@@ -463,7 +463,7 @@ classes.Knob = {
 classes.dh_Knob = {
     defaults = {40, "dh_Knob", true, 0, 10, 5, 1, false},
     creation = {"w", "caption", "centered", "min", "max", "default", "inc", "show_values", "", 
-                "knob_style", "pad_values",
+                "knob_style", "pad_values", "travel",
                 "font_caption", "cap_pos", "font_values", --"output",
                 "cap_pad", --"cap_pad_x", "cap_pad_y", 
                 "shadow_caption", "shadow",
@@ -485,11 +485,12 @@ classes.dh_Knob = {
         props.y,
         props.w,
         {prop = "centered",       caption = "Centered",     class = "Boolean",  needs_init = false},
-        {prop = "knob_style",     caption = "Knob Style",   class = "List"},
+        {prop = "knob_style",     caption = "Knob Style",   class = "List"},  -- List calls init 
         {prop = "min",            caption = "Min.",         class = "Number",   recreate = true,   noscale = true},
         {prop = "max",            caption = "Max.",         class = "Number",   recreate = true,   noscale = true},
         {prop = "default",        caption = "Default",      class = "Number",   recreate = true,   noscale = true},
         {prop = "inc",            caption = "Increment",    class = "Number",   recreate = true,   noscale = true},
+        {prop = "travel",         caption = "Travel",       class = "List"},  -- List calls init                    
         props.shadow,
 --zzcaption        
         "2",
@@ -925,7 +926,7 @@ classes.dh_Radio = {
         props.h,
         {prop = "swap",         caption = "Swap",           class = "Boolean",    needs_init = false},        
         {prop = "dir",          caption = "Direction",      class = "Direction",  needs_init = true},
-        {prop = "opt_size",     caption = "Option Size",    class = "Integer",    needs_init = false}, 
+        {prop = "opt_size",     caption = "Option Size",    class = "Integer",    needs_init = true}, 
         {prop = "border_width", caption = "Border Width",   class = "Integer",    needs_init = true},
         {prop = "radius",       caption = "Radius",         class = "Integer",    needs_init = true},
         {prop = "optarray",     caption = "Options",        class = "Editor",     needs_init = false,  subclass = "options"},                 
