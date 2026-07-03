@@ -1,6 +1,6 @@
 -- dh_HearingTest_data.lua
 
--- Modified 20260506
+-- Modified 20260606
 
 -----------------------------------
 dh_HearingTest_data = {}
@@ -230,6 +230,7 @@ dh_HearingTest_data.zones = {
   lr_cents = 0,
 }, 
 
+-- Datum frequency, has additional items.
 ['1047'] = {
   frequency = 1047,  -- 1046.5,
   note = "C",        -- C6,
@@ -238,6 +239,8 @@ dh_HearingTest_data.zones = {
   threshhold = 2.6,    
   -- equal loud 60.41 at 60, 50.4 at 50 phon,40.3 at 40
   max_gain = 9,
+  tg_gain = -12,
+  datum_gain = -18,
   locked = true, 
   bypass = false,
   gain_l = 0,
@@ -369,8 +372,8 @@ dh_HearingTest_data.zones = {
 ['4699'] = {
   frequency = 4699,  -- 4698.64,
   note = "D",        -- D8,
-  note_idx = 3,
-  octave = 5,
+  note_idx = 5,
+  octave = 3,
   threshhold = -2.7,   
   -- equal loud 59.89 at 60, 49.48 at 50 phon, 39 at 40  
   max_gain = 9,
