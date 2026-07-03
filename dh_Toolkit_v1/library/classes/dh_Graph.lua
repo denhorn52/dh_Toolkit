@@ -300,9 +300,6 @@ function GUI.dh_Graph:init()
     
     if self.ref_points then
         GUI.color({1,0.2,0.2,1})
-        
-        --GUI.Msg("\n== dh_Graph:init : call draw_graph  with red")
-        
         self:draw_graph(self.ref_points, grid_x, grid_y, y_ref, false)
     end
     
@@ -343,18 +340,19 @@ function GUI.dh_Graph:draw_graph(dataset, grid_x, grid_y, y_ref, draw_nodes)
     
     gfx.y = y_ref
     
-    --GUI.Msg("\n## draw_graph self.y_ref : " .. y_ref)
-    --GUI.Msg("\n## draw_graph #dataset : " .. #dataset)
-
     -- !!! Ensure no division by zero!    
     local range = (self.y_max - self.y_min)
     if range < 1 then range = 1 end        
 
-
     for i, val in ipairs(dataset) do
     
-        --GUI.Msg("  draw_graph val : " .. val)
+        -- Just to be safe.
+        val = tonumber(val)
     
+        --GUI.Msg("# draw_graph i : " .. i)    
+        --GUI.Msg("   val : " .. val)
+        --GUI.Msg("   type  val : " .. type(val))
+                    
         local x_off = gfx.x + self.grid.x_step    
             
         -- Ensure val is in box. data_points are knob gain settings.
@@ -365,12 +363,12 @@ function GUI.dh_Graph:draw_graph(dataset, grid_x, grid_y, y_ref, draw_nodes)
                                     
         local y_off = grid_y + ((self.y_max - val) / range) * self.grid.h 
         
-        --GUI.Msg("draw_graph val : " .. val)
-        --GUI.Msg("draw_graph y_off < self.y_max - val > : " .. self.y_max - val)
-        --GUI.Msg("draw_graph y_off < self.y_max - self.y_min > : " .. self.y_max - self.y_min)        
-        
         -- Draw a line to new position.
         gfx.lineto(x_off, y_off, 1)
+        
+        --GUI.Msg("data point : " .. tostring(i))             
+        --GUI.Msg("gfx.x : " .. tostring(gfx.x))            
+        --GUI.Msg("gfx.y : " .. tostring(gfx.y))     
         
         -- Draw a circle at node.
         
@@ -382,7 +380,7 @@ function GUI.dh_Graph:draw_graph(dataset, grid_x, grid_y, y_ref, draw_nodes)
     
     -- gfx.x and gfx.y is at last data point position.
     -- Draw a line to right / ref.
-    gfx.lineto(gfx.x + self.grid.x_step, self.grid.y_ref, 1)
+    gfx.lineto(gfx.x + self.grid.x_step, y_ref, 1)
 
 end
 
