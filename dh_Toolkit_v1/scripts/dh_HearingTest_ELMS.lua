@@ -11,37 +11,49 @@ GB_Project_Settings = {
 }
 
 GB_Project_Elements_Names = {
+    "lbl_Calibrate",
+    "btn_LR_Start",
+    "pnl_LR_Test",
+    "knob_TG_Gain",
     "btn_ProfileRename",
-    "btn_Print",
-    "tbx_ProfileName",
-    "btn_Gain_Dec",
-    "btn_CloseProfileEditor",
-    "knob_LR_Cents",
     "dh_MainTest",
+    "knob_MainTest_Gain",
+    "radio_Channel",
+    "btn_Print",
+    "chkl_Bypass",
+    "btn_CloseProfileEditor",
+    "btn_Prefs",
+    "btn_ProfileSave",
+    "radio_GraphType",
     "pnl_MainTest",
+    "mbx_Freqs",
+    "lbl_CurrentProfileName",
+    "chkl_TG_Enable",
+    "btn_OpenProfileEditor",
+    "mbx_Profiles",
+    "dh_Panel2",
+    "lbl_CurrentProfile",
     "btn_ProfileDelete",
     "mbx_Tracks",
-    "mbx_Profiles",
-    "lbl_LR_Test",
-    "btn_ProfileSave",
+    "knob_LR_Cents",
+    "knob_Datum_Gain",
+    "lbl_ProfileEditor",
+    "btn_Gain_Dec",
     "btn_LR_Stop",
-    "btn_Prefs",
+    "tbx_ProfileName",
+    "pnl_ProfileEditor",
+    "pnl_Profile",
+    "lbl_Reset",
+    "btn_Gain_Inc",
+    "graph_Freq",
+    "chkl_Locked",
+    "btn_Reset",
     "btn_Start",
     "knob_LR_Gain",
-    "graph_Freq",
-    "radio_GraphType",
-    "radio_Channel",
-    "chkl_Locked",
-    "mbx_Freqs",
-    "lbl_ProfileEditor",
+    "lbl_LR_Test",
     "btn_Stop",
-    "btn_LR_Start",
-    "pnl_ProfileEditor",
-    "btn_OpenProfileEditor",
-    "btn_Gain_Inc",
-    "pnl_LR_Test",
-    "chkl_Bypass",
 }
+
 GUI.New("mbx_Freqs", "dh_Menubox", {
     z = 10,
     x = 16,
@@ -77,9 +89,9 @@ GUI.New("mbx_Freqs", "dh_Menubox", {
 
 
 
-GUI.New("mbx_Tracks", "dh_Menubox", {
+GUI.New("mbx_Profiles", "dh_Menubox", {
     z = 11,
-    x = 160,
+    x = 352,
     y = 32,
     w = 172,
     h = 28,
@@ -89,7 +101,7 @@ GUI.New("mbx_Tracks", "dh_Menubox", {
     font_text = "sans22",
     pad = 4,
     align_text = "left",
-    caption = "Track",
+    caption = "Profiles",
     font_caption = "sans22",
     cap_pos = "top",
     cap_pad_x = 4,
@@ -109,9 +121,9 @@ GUI.New("mbx_Tracks", "dh_Menubox", {
     col_backdrop = "wnd_bg",
 })
 
-GUI.New("mbx_Profiles", "dh_Menubox", {
+GUI.New("mbx_Tracks", "dh_Menubox", {
     z = 11,
-    x = 352,
+    x = 160,
     y = 32,
     w = 172,
     h = 28,
@@ -121,7 +133,7 @@ GUI.New("mbx_Profiles", "dh_Menubox", {
     font_text = "sans22",
     pad = 4,
     align_text = "left",
-    caption = "Profiles",
+    caption = "Track",
     font_caption = "sans22",
     cap_pos = "top",
     cap_pad_x = 4,
@@ -390,8 +402,8 @@ GUI.New("graph_Freq", "dh_Graph", {
 
 GUI.New("btn_Stop", "dh_Button", {
     z = 25,
-    x = 280,
-    y = 240,
+    x = 184,
+    y = 160,
     w = 64,
     h = 28,
     text = "STOP",
@@ -410,7 +422,7 @@ GUI.New("btn_Stop", "dh_Button", {
 GUI.New("btn_Start", "dh_Button", {
     z = 26,
     x = 280,
-    y = 168,
+    y = 160,
     w = 64,
     h = 28,
     text = "START",
@@ -426,39 +438,60 @@ GUI.New("btn_Start", "dh_Button", {
 
 
 
-GUI.New("btn_Gain_Dec", "dh_Button", {
+GUI.New("knob_MainTest_Gain", "dh_Knob", {
     z = 27,
-    x = 184,
-    y = 240,
-    w = 64,
-    h = 28,
-    text = "Dec Vol",
-    font = "sans22",
-    shadow_text = false,
-    col_bg = "btn_face",
+    x = 264,
+    y = 248,
+    w = 40,
+    centered = true,
+    knob_style = "simple",
+    min = -12,
+    max = 12,
+    default = 12,
+    inc = 1,
+    travel = 270,
+    shadow = true,
+    caption = "Gain",
+    font_caption = "sans22",
+    cap_pos = "bottom",
+    cap_pad = 8,
+    shadow_caption = false,
+    show_values = false,
+    font_values = "sans22",
+    pad_values = 2,
+    col_bg = "panel_bg",
     col_outline = "btn_outline",
-    col_text = "btn_txt",
-    col_active = "elm_active",
+    col_body = "btn_face",
+    col_values = "panel_txt",
+    col_cap_text = "panel_txt",
     allow_sel_outline = false,
-})
-
-
-
-
-GUI.New("btn_Gain_Inc", "dh_Button", {
-    z = 28,
-    x = 184,
-    y = 168,
-    w = 64,
-    h = 28,
-    text = "Inc Vol",
-    font = "sans22",
-    shadow_text = false,
-    col_bg = "btn_face",
-    col_outline = "btn_outline",
-    col_text = "btn_txt",
     col_active = "elm_active",
-    allow_sel_outline = false,
+    show_tickmarks = true,
+    tickmark_steps = 12,
+    tickmark_size = 4,
+    pad_ticks = 4,
+    hard_ticks = {0, 6, 12, },
+    hard_tick_size = 8,
+    hard_tick_thk = true,
+    show_min_max = true,
+    min_max_values = {
+        {0,"-12"},
+        {12,"0"},
+        {24,"+12"},
+    },
+    display_style = "none",
+    display_w = 48,
+    display_h = 24,
+    display_pos = "top",
+    display_pad_x = 0,
+    display_pad_y = 8,
+    font_display = "sans24",
+    display_align = "center",
+    col_display_bg = "elm_bg",
+    col_display_text = "elm_txt",
+    frame_use_outline = false,
+    frame_thk = 2,
+    col_frame = "elm_frame",
 })
 
 
@@ -523,6 +556,7 @@ GUI.New("knob_LR_Cents", "dh_Knob", {
     max = 100,
     default = 10,
     inc = 10,
+    travel = 270,
     shadow = true,
     caption = "Fine Tune",
     font_caption = "sans22",
@@ -577,10 +611,11 @@ GUI.New("knob_LR_Gain", "dh_Knob", {
     w = 40,
     centered = true,
     knob_style = "simple",
-    min = -9,
-    max = 9,
-    default = 9,
+    min = -12,
+    max = 12,
+    default = 12,
     inc = 1,
+    travel = 270,
     shadow = true,
     caption = "Gain",
     font_caption = "sans22",
@@ -598,17 +633,17 @@ GUI.New("knob_LR_Gain", "dh_Knob", {
     allow_sel_outline = false,
     col_active = "elm_active",
     show_tickmarks = true,
-    tickmark_steps = 16,
+    tickmark_steps = 12,
     tickmark_size = 4,
     pad_ticks = 4,
-    hard_ticks = {0, 8, 16, },
+    hard_ticks = {0, 6, 12, },
     hard_tick_size = 8,
     hard_tick_thk = true,
     show_min_max = true,
     min_max_values = {
-        {0,"-9"},
-        {9,"0"},
-        {18,"+9"},
+        {0,"-12"},
+        {12,"0"},
+        {24,"+12"},
     },
     display_style = "none",
     display_w = 48,
@@ -647,18 +682,6 @@ GUI.New("btn_LR_Stop", "dh_Button", {
 
 
 
-GUI.New("lbl_LR_Test", "dh_Label", {
-    z = 39,
-    x = 472,
-    y = 116,
-    text = "L-R Test",
-    font = "sans24",
-    text_pos = "left",
-    col_bg = "panel_bg",
-    col_text = "panel_txt",
-    shadow_text = false,
-})
-
 GUI.New("btn_LR_Start", "dh_Button", {
     z = 39,
     x = 528,
@@ -673,6 +696,18 @@ GUI.New("btn_LR_Start", "dh_Button", {
     col_text = "btn_txt",
     col_active = "elm_active",
     allow_sel_outline = false,
+})
+
+GUI.New("lbl_LR_Test", "dh_Label", {
+    z = 39,
+    x = 472,
+    y = 116,
+    text = "L-R Test",
+    font = "sans24",
+    text_pos = "left",
+    col_bg = "panel_bg",
+    col_text = "panel_txt",
+    shadow_text = false,
 })
 
 
@@ -711,14 +746,30 @@ GUI.New("pnl_LR_Test", "dh_Panel", {
 
 
 
-GUI.New("btn_ProfileSave", "dh_Button", {
-    z = 55,
+GUI.New("btn_Gain_Dec", "dh_Button", {
+    z = 50,
     x = 184,
-    y = 176,
-    w = 78,
-    h = 32,
-    text = "Save",
-    font = "sans24",
+    y = 240,
+    w = 64,
+    h = 28,
+    text = "Dec Vol",
+    font = "sans22",
+    shadow_text = false,
+    col_bg = "btn_face",
+    col_outline = "btn_outline",
+    col_text = "btn_txt",
+    col_active = "elm_active",
+    allow_sel_outline = false,
+})
+
+GUI.New("btn_Gain_Inc", "dh_Button", {
+    z = 50,
+    x = 184,
+    y = 168,
+    w = 64,
+    h = 28,
+    text = "Inc Vol",
+    font = "sans22",
     shadow_text = false,
     col_bg = "btn_face",
     col_outline = "btn_outline",
@@ -730,26 +781,167 @@ GUI.New("btn_ProfileSave", "dh_Button", {
 
 
 
-GUI.New("btn_ProfileRename", "dh_Button", {
-    z = 56,
-    x = 304,
-    y = 176,
-    w = 78,
-    h = 32,
-    text = "Rename",
-    font = "sans24",
-    shadow_text = false,
-    col_bg = "btn_face",
+GUI.New("knob_Datum_Gain", "dh_Knob", {
+    z = 52,
+    x = 456,
+    y = 332,
+    w = 48,
+    centered = true,
+    knob_style = "pointer",
+    min = -18,
+    max = 0,
+    default = -18,
+    inc = 6,
+    travel = 180,
+    shadow = true,
+    caption = "Datum Gain (dB)",
+    font_caption = "sans24",
+    cap_pos = "bottom",
+    cap_pad = 16,
+    shadow_caption = false,
+    show_values = false,
+    font_values = "sans24",
+    pad_values = 4,
+    col_bg = "wnd_bg",
     col_outline = "btn_outline",
-    col_text = "btn_txt",
-    col_active = "elm_active",
+    col_body = "btn_face",
+    col_values = "txt",
+    col_cap_text = "txt",
     allow_sel_outline = false,
+    col_active = "elm_active",
+    show_tickmarks = false,
+    tickmark_steps = 3,
+    tickmark_size = 4,
+    pad_ticks = 4,
+    hard_ticks = {0, 1, 2, 3, },
+    hard_tick_size = 6,
+    hard_tick_thk = false,
+    show_min_max = true,
+    min_max_values = {
+        {0,"-18"},
+        {1," -12"},
+        {2,"-6 "},
+        {3,"0"},
+    },
+    display_style = "none",
+    display_w = 48,
+    display_h = 24,
+    display_pos = "top",
+    display_pad_x = 0,
+    display_pad_y = 8,
+    font_display = "sans24",
+    display_align = "center",
+    col_display_bg = "elm_bg",
+    col_display_text = "elm_txt",
+    frame_use_outline = false,
+    frame_thk = 2,
+    col_frame = "elm_frame",
 })
+
+
+
+
+GUI.New("knob_TG_Gain", "dh_Knob", {
+    z = 53,
+    x = 264,
+    y = 332,
+    w = 48,
+    centered = true,
+    knob_style = "pointer",
+    min = -12,
+    max = 0,
+    default = 0,
+    inc = 6,
+    travel = 90,
+    shadow = true,
+    caption = "Wet Mix Gain (dB)",
+    font_caption = "sans24",
+    cap_pos = "bottom",
+    cap_pad = 16,
+    shadow_caption = false,
+    show_values = false,
+    font_values = "sans24",
+    pad_values = 4,
+    col_bg = "wnd_bg",
+    col_outline = "btn_outline",
+    col_body = "btn_face",
+    col_values = "txt",
+    col_cap_text = "txt",
+    allow_sel_outline = false,
+    col_active = "elm_active",
+    show_tickmarks = false,
+    tickmark_steps = 10,
+    tickmark_size = 4,
+    pad_ticks = 4,
+    hard_ticks = {0, 5, 10, },
+    hard_tick_size = 6,
+    hard_tick_thk = false,
+    show_min_max = true,
+    min_max_values = {
+        {0,"-12"},
+        {1,"-6 "},
+        {2,"0"},
+    },
+    display_style = "none",
+    display_w = 48,
+    display_h = 24,
+    display_pos = "top",
+    display_pad_x = 0,
+    display_pad_y = 8,
+    font_display = "sans24",
+    display_align = "center",
+    col_display_bg = "elm_bg",
+    col_display_text = "elm_txt",
+    frame_use_outline = false,
+    frame_thk = 2,
+    col_frame = "elm_frame",
+})
+
+
+
+
+GUI.New("chkl_TG_Enable", "dh_Checklist", {
+    z = 54,
+    x = 32,
+    y = 288,
+    w = 128,
+    h = 32,
+    swap = false,
+    dir = "v",
+    opt_size = 16,
+    border_width = 0,
+    radius = 0,
+    optarray = {
+        "Enable",
+    },
+    caption = "",
+    font_caption = "sans22",
+    cap_pos = "top",
+    cap_pad_x = 4,
+    cap_pad_y = 4,
+    cap_centered = false,
+    shadow_caption = false,
+    font_text = "sans28",
+    pad_x = 20,
+    pad_y = 0,
+    shadow_text = false,
+    shadow = false,
+    col_bg = "wnd_bg",
+    col_border = "panel_border",
+    col_text = "txt",
+    col_cap_text = "txt",
+    allow_sel_outline = false,
+    col_active = "elm_active",
+    col_backdrop = "wnd_bg",
+})
+
+
+
 
 GUI.New("btn_ProfileDelete", "dh_Button", {
-    z = 56,
+    z = 55,
     x = 424,
-    y = 176,
+    y = 160,
     w = 78,
     h = 32,
     text = "Delete",
@@ -765,8 +957,126 @@ GUI.New("btn_ProfileDelete", "dh_Button", {
 
 
 
-GUI.New("tbx_ProfileName", "dh_Textbox", {
+GUI.New("btn_ProfileRename", "dh_Button", {
+    z = 56,
+    x = 304,
+    y = 160,
+    w = 78,
+    h = 32,
+    text = "Rename",
+    font = "sans24",
+    shadow_text = false,
+    col_bg = "btn_face",
+    col_outline = "btn_outline",
+    col_text = "btn_txt",
+    col_active = "elm_active",
+    allow_sel_outline = false,
+})
+
+GUI.New("btn_Reset", "dh_Button", {
+    z = 56,
+    x = 328,
+    y = 428,
+    w = 78,
+    h = 32,
+    text = "Reset",
+    font = "sans24",
+    shadow_text = false,
+    col_bg = "btn_face",
+    col_outline = "btn_outline",
+    col_text = "btn_txt",
+    col_active = "elm_active",
+    allow_sel_outline = false,
+})
+
+
+
+
+GUI.New("btn_ProfileSave", "dh_Button", {
     z = 57,
+    x = 184,
+    y = 160,
+    w = 78,
+    h = 32,
+    text = "Save",
+    font = "sans24",
+    shadow_text = false,
+    col_bg = "btn_face",
+    col_outline = "btn_outline",
+    col_text = "btn_txt",
+    col_active = "elm_active",
+    allow_sel_outline = false,
+})
+
+
+
+
+GUI.New("lbl_Calibrate", "dh_Label", {
+    z = 58,
+    x = 32,
+    y = 232,
+    text = "Calibrate Tone Generator:",
+    font = "sans28",
+    text_pos = "left",
+    col_bg = "wnd_bg",
+    col_text = "txt",
+    shadow_text = false,
+})
+
+GUI.New("btn_CloseProfileEditor", "dh_Button", {
+    z = 58,
+    x = 536,
+    y = 40,
+    w = 72,
+    h = 32,
+    text = "Close",
+    font = "sans24",
+    shadow_text = false,
+    col_bg = "btn_face",
+    col_outline = "btn_outline",
+    col_text = "btn_txt",
+    col_active = "elm_active",
+    allow_sel_outline = false,
+})
+
+GUI.New("lbl_CurrentProfileName", "dh_Label", {
+    z = 58,
+    x = 192,
+    y = 72,
+    text = "Current Profile:",
+    font = "sans24",
+    text_pos = "left",
+    col_bg = "wnd_bg",
+    col_text = "txt",
+    shadow_text = false,
+})
+
+GUI.New("lbl_CurrentProfile", "dh_Label", {
+    z = 58,
+    x = 48,
+    y = 72,
+    text = "Current Profile:",
+    font = "sans24",
+    text_pos = "left",
+    col_bg = "wnd_bg",
+    col_text = "txt",
+    shadow_text = false,
+})
+
+GUI.New("lbl_ProfileEditor", "dh_Label", {
+    z = 58,
+    x = 32,
+    y = 28,
+    text = "Profile Editor:",
+    font = "sans28",
+    text_pos = "left",
+    col_bg = "wnd_bg",
+    col_text = "txt",
+    shadow_text = false,
+})
+
+GUI.New("tbx_ProfileName", "dh_Textbox", {
+    z = 58,
     x = 184,
     y = 112,
     w = 324,
@@ -798,35 +1108,75 @@ GUI.New("tbx_ProfileName", "dh_Textbox", {
     retval = "Hello",
 })
 
-
-
-
-GUI.New("btn_CloseProfileEditor", "dh_Button", {
-    z = 59,
-    x = 552,
-    y = 24,
-    w = 72,
-    h = 32,
-    text = "Close",
+GUI.New("lbl_Reset", "dh_Label", {
+    z = 58,
+    x = 36,
+    y = 428,
+    text = "Reset Current Profile to Defaults",
     font = "sans24",
-    shadow_text = false,
-    col_bg = "btn_face",
-    col_outline = "btn_outline",
-    col_text = "btn_txt",
-    col_active = "elm_active",
-    allow_sel_outline = false,
-})
-
-GUI.New("lbl_ProfileEditor", "dh_Label", {
-    z = 59,
-    x = 24,
-    y = 24,
-    text = "Profile Editor:",
-    font = "sans28",
     text_pos = "left",
     col_bg = "wnd_bg",
     col_text = "txt",
     shadow_text = false,
+})
+
+
+
+
+GUI.New("dh_Panel2", "dh_Panel", {
+    z = 59,
+    x = 20,
+    y = 224,
+    w = 600,
+    h = 192,
+    border_width = 4,
+    radius = 2,
+    shadow = false,
+    caption = "",
+    font_caption = "sans22",
+    cap_pad_x = 4,
+    cap_pad_y = 4,
+    cap_centered = false,
+    shadow_caption = false,
+    text = nil,
+    font_text = "mono16",
+    pad = 4,
+    line_height = 1.25,
+    use_pixels = false,
+    line_height_pixels = 24,
+    col_bg = "wnd_bg",
+    col_border = "panel_border",
+    col_text = "txt",
+    col_cap_text = "txt",
+    col_backdrop = "wnd_bg",
+})
+
+GUI.New("pnl_Profile", "dh_Panel", {
+    z = 59,
+    x = 20,
+    y = 20,
+    w = 600,
+    h = 192,
+    border_width = 4,
+    radius = 2,
+    shadow = false,
+    caption = "",
+    font_caption = "sans22",
+    cap_pad_x = 4,
+    cap_pad_y = 4,
+    cap_centered = false,
+    shadow_caption = false,
+    text = nil,
+    font_text = "mono16",
+    pad = 4,
+    line_height = 1.25,
+    use_pixels = false,
+    line_height_pixels = 24,
+    col_bg = "wnd_bg",
+    col_border = "panel_border",
+    col_text = "txt",
+    col_cap_text = "txt",
+    col_backdrop = "wnd_bg",
 })
 
 
@@ -863,8 +1213,8 @@ GUI.New("pnl_ProfileEditor", "dh_Panel", {
 
 
 GB_Project_Layer_Sets = {
-        {55,56,57,58,59,60,},
-        {},
+        {52,53,54,55,56,57,58,59,60,},
+        {50,51,},
         {},
         {},
         {},
