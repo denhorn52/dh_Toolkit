@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Knob.lua
--- Date: 20260506a
+-- Date: 20260606
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Knob class
@@ -82,20 +82,22 @@ function GUI.dh_Knob:new(name, z, x, y, w, caption, centered, min, max, default,
     	return string.format("%." .. places .. "f", val)
 	end
 	
-	-- 2026-05-20: Moved to init to accommodate gui builder.
-	-- Determine the step angle.
-	-- Knob uses 2/3 of 360 deg.
-	--Knob.stepangle = (3 / 2) / Knob.steps
---zzz    	
+--zzz 
+	Knob.travel = Knob.travel or GUI.dh_Knob.defaults.travel
+	
 	-- curstep is integer position from 0 to steps.
 	Knob.curstep = Knob.default
 	--Knob.curstep = Knob.default + Knob.min	
 	
-	-- curval is fraction 
+	-- curval is fraction of knob travel.
 	Knob.curval = Knob.curstep / Knob.steps
-   
+	
+    -- retval is a formatted string.
     Knob.retval = Knob:formatretval((Knob.inc * Knob.curstep) + Knob.min)
-    
+
+    -- cur_num_val is numerical value.
+    Knob.cur_num_val = (Knob.inc * Knob.curstep) + Knob.min
+
 -----------------------------------------
 
 	Knob.knob_style = Knob.knob_style or GUI.dh_Knob.defaults.knob_style -- pointer, flange, simple
@@ -193,6 +195,7 @@ GUI.dh_Knob.defaults = {
 	max = 10,
 	default = 5,
 	inc = 1,
+	travel = 270,
 	
 	caption = "",
 	font_caption = "sans22",
@@ -254,11 +257,15 @@ function GUI.dh_Knob:init()
     --GUI.Msg("    x : " .. tostring(self.x) .. "; y : " .. tostring(self.y))
 
     self.h = self.w
-    
+--zzz
     -- 2026-05-20: Moved here from create to accommodate gui builder.
 	-- Determine the step angle.
-	-- Knob uses 2/3 of 360 deg.
-	self.stepangle = (3 / 2) / self.steps    
+	-- Knob uses 3/4 of 360 deg.
+	-- 2 pi * fraction
+	--self.stepangle = (3 / 2) / self.steps 
+	self.stepangle = (2 * (self.travel / 360)) / self.steps 
+	
+	self.start_pos = -(self.travel / 360) - 0.5
     
     ------------------------
     --##   zzbuffers   ##
@@ -643,8 +650,8 @@ function GUI.dh_Knob:init()
 	if self.show_tickmarks then
 	
         --GUI.Msg("  > show_tickmarks : " .. tostring(self.show_tickmarks))
-        
-        self.tickangle = (3 / 2) / self.tickmark_steps
+--zzz
+        self.tickangle = (2 * (self.travel / 360)) / self.tickmark_steps
   	
     	-- # Background
     	
@@ -667,7 +674,8 @@ function GUI.dh_Knob:init()
         
         for i = 0, self.tickmark_steps do
         
-            local angle = (-5 / 4 ) + (i * self.tickangle)
+            --local angle = (-5 / 4 ) + (i * self.tickangle)
+            local angle = self.start_pos + (i * self.tickangle)
     
             local cx, cy = GUI.polar2cart(angle, rad, ctr.x, ctr.y)
             local cx2, cy2 = GUI.polar2cart(angle, rad + ts, ctr.x, ctr.y)
@@ -677,7 +685,7 @@ function GUI.dh_Knob:init()
             gfx.line(cx, cy, cx2, cy2, 1) 
         
         end
---zztick        
+--zzz       
         -- # Draw Hard ticks.
         
         --GUI.Msg("\n    #hard_ticks : " .. tostring(#self.hard_ticks))
@@ -689,7 +697,8 @@ function GUI.dh_Knob:init()
             --GUI.Msg("    hard_ticks type : " .. type(ht))
             --GUI.Msg("    hard_ticks val  : " .. tostring(ht))
             
-            local angle = (-5 / 4 ) + (ht * self.tickangle)
+            --local angle = (-5 / 4 ) + (ht * self.tickangle)
+            local angle = self.start_pos + (ht * self.tickangle)
             
             -- This will lengthen lines. OK.
             local cx, cy = GUI.polar2cart(angle, rad, ctr.x, ctr.y)
@@ -885,10 +894,10 @@ function GUI.dh_Knob:draw()
 	end
 
     -- Blit knob
-    
+--zzz
 	-- Figure out where the knob is pointing
-	local curangle = (-5 / 4) + (self.curstep * self.stepangle)
-	--local curangle = (-5 / 4) + ((self.curstep + self.min ) * self.stepangle)	
+	--local curangle = (-5 / 4) + (self.curstep * self.stepangle)
+	local curangle = self.start_pos + (self.curstep * self.stepangle)
 	
 	local blit_offset = (self.knob_style == "pointer") and ((self.buff_w - self.w) / 2 - 2) or 0
 	
@@ -998,35 +1007,66 @@ function GUI.dh_Knob:draw_min_max(o, r)
 
     GUI.font(self.font_values)
     GUI.color(self.col_values)
-    
 
-    -- {{0,"0"}, {6,"6"}, {12,"12"}}
+    -- Format: {{0,"0"}, {6,"6"}, {12,"12"}}
     
     for _, data in ipairs(self.min_max_values) do
     
     	--GUI.Msg("\n## dh_Knob draw_min_max : " .. data[1])
-    	--GUI.Msg("\n## dh_Knob draw_min_max : " .. data[2])
-    	--GUI.Msg("\n## dh_Knob self.steps : " .. self.steps)    	    	              
-    
+    	--GUI.Msg("\n## dh_Knob draw_min_max : [" .. data[2] .. "]")
+    	--GUI.Msg("\n## dh_Knob self.steps : " .. self.steps)
+    	
         local str_w, str_h = gfx.measurestr(data[2])
-    
-        local angle = (-5 / 4 ) + (data[1] * self.stepangle)        
+
+        --local angle = (-5 / 4 ) + (data[1] * self.stepangle) 
+        local angle = self.start_pos + (data[1] * self.stepangle) 
         
         local ts = ((#self.hard_ticks > 0) and self.hard_tick_size or self.tickmark_size) + self.pad_values
         
-        local cx, cy = GUI.polar2cart(angle, r + ts + 2, o.x, o.y)       
+        local cx, cy = GUI.polar2cart(angle, r + ts + 2, o.x, o.y)
         
         -- Shift angle 0 to top for calcs.       		        
         local adj = math.cos((angle + 0.5) * GUI.pi)       		        
         gfx.y = cy - str_h/2 - (str_h * adj)/2 
         
+--zzzmm        
+        local char_w = gfx.measurechar(77) -- "M"
+        --local cnt_spaces, adj_w
+        
         if angle < -0.51 then
-            gfx.x = cx - (str_w + 2)
+        
+            -- Adjust gfx.x by leading spaces.
+            local _, cnt = string.gsub(data[2], "^(%s+)", " ")              
+                    
+            --local adj_w = cnt * char_w
+            local adj_w = (cnt * char_w) // 2              
+                  
+            gfx.x = cx - (str_w + 2) + adj_w
+
+            --GUI.Msg("    cnt: " .. cnt)                        
+            --GUI.Msg("    adj_w : " .. adj_w)            
+            --GUI.Msg("    angle < -0.51 : " .. gfx.x)            
             
         elseif angle > -0.49 then
-            gfx.x = cx + 2
-        else
+        
+            -- Adjust gfx.x by trailing spaces.        
+            local _, cnt = string.gsub(data[2], "(%s+)$", " ")              
+                    
+            --local adj_w = cnt * char_w
+            local adj_w = (cnt * char_w) // 2                            
+
+            gfx.x = cx + 2 - adj_w
+
+            --GUI.Msg("    cnt: " .. cnt)                         
+            --GUI.Msg("    adj_w : " .. adj_w)            
+            --GUI.Msg("    angle > -0.49 : " .. gfx.x)        
+            
+        else  -- top
+            
             gfx.x = cx - (str_w / 2)
+        
+            --GUI.Msg("    other angle : " .. gfx.x)        
+            
         end	 
 
         --GUI.text_bg(str, self.col_bg)
@@ -1035,7 +1075,11 @@ function GUI.dh_Knob:draw_min_max(o, r)
         gfx.rect(gfx.x, gfx.y, str_w, str_h, 1)    
  
         GUI.color(self.col_values)
-        gfx.drawstr(tostring(data[2]), 256)
+        gfx.drawstr(data[2])
+        
+        --<<< For testing:
+        --GUI.color("red")
+        --gfx.circle(cx, cy, 4, 1)        
     
     end
 
@@ -1110,10 +1154,11 @@ function GUI.dh_Knob:draw_values(o, r)
     end
     --GUI.Msg("    dist is : " .. tostring(dist))    
     
-
+--zzz
     for i = 0, self.steps do
 
-        local angle = (-5 / 4 ) + (i * self.stepangle)
+        --local angle = (-5 / 4 ) + (i * self.stepangle)
+        local angle = self.start_pos + (i * self.stepangle)        
 
         -- Highlight the current value
         if i == self.curstep then
@@ -1164,17 +1209,23 @@ end
 ------------------------------------
 -------- Mouse events -----------
 ------------------------------------
---zzz
+--zzzv
 -- Knob - Get/set value
+-- newval is a numerical value.
+
 function GUI.dh_Knob:val(newval)
 
 	if newval then
 
         --self:setcurstep(newval)
-        
         --self:setcurval(self.curval + ((self.inc * newval) / self.steps))
-        self:setcurval( (newval - self.min) / (self.max - self.min) )
+        --self:setcurval( newval / (self.max + self.min) )
         
+        -- rounds toward 0
+        local numval = GUI.clamp( (GUI.round(newval / self.inc) * self.inc), self.min, self.max)
+        
+        self:setcurval( (numval - self.min) / (self.max - self.min) )
+
 		self:redraw()
 
 	else
@@ -1189,18 +1240,16 @@ function GUI.dh_Knob:onmousedown()
     self:redraw()
 end 
 
-
 -- Knob - Dragging.
 function GUI.dh_Knob:ondrag()
 
 	local y = GUI.mouse.y
 	local ly = GUI.mouse.ly
 
-	-- Ctrl?
 	local ctrl = GUI.mouse.cap&4==4
 
 	-- Multiplier for how fast the knob turns. Higher = slower
-	--					Ctrl	Normal
+	--				     Ctrl	Normal
 	local adj = ctrl and 1200 or 150
 
     self:setcurval( GUI.clamp(self.curval + ((ly - y) / adj), 0, 1) )
@@ -1208,7 +1257,6 @@ function GUI.dh_Knob:ondrag()
 	self:redraw()
 
 end
-
 
 -- Knob - Doubleclick
 function GUI.dh_Knob:ondoubleclick()
@@ -1248,7 +1296,15 @@ end
 ------------------------------------
 -------- Value helpers -------------
 ------------------------------------
---zzz
+--zzzv
+
+-- curstep used for positioning during drawing ops.
+-- curval is current position as a fraction of full travel.
+-- cur_num_val is current numerical value of knob.
+-- retval is current value as a formatted string.
+
+-- Called from ondoubleclick with default.
+
 function GUI.dh_Knob:setcurstep(step)
 
     self.curstep = step
@@ -1257,6 +1313,8 @@ function GUI.dh_Knob:setcurstep(step)
 
 end
 
+--zzzv
+-- Called from val(), ondrag and onwheel.
 
 function GUI.dh_Knob:setcurval(val)
 
@@ -1266,9 +1324,42 @@ function GUI.dh_Knob:setcurval(val)
 
 end
 
-
 function GUI.dh_Knob:setretval()
 
-    self.retval = self:formatretval((self.inc * self.curstep) + self.min)
+    local val = (self.inc * self.curstep) + self.min
+    --GUI.Msg("GUI.dh_Knob:setretval val : " .. val
+    self.cur_num_val = val
+    self.retval = self:formatretval(val)
 
 end
+
+--zzend
+-- say, 0 to 100, inc = 10, steps = 10, set to 49
+-- steps = (round(49 / inc) = 5
+-- numval = (round(49 / inc) * inc) = 50
+-- curval = (50 - 0) / 100 = 0.5
+
+-- say, -100 to +100, inc = 10, steps = 20, set to 49
+-- steps = (round(49 / inc) = 5
+-- numval = (round(49 / inc) * inc) = 50
+-- curval = (50 - -100) / 200 == 0.75
+
+-- say, -100 to +100, inc = 10, steps = 20, set to -63
+-- steps = (round(-63 / inc) = -6
+-- numval = (round(-63 / inc) * inc) = -60
+-- curval = (-60 - -100) / 200 == 0.20
+
+-- say, -18 to 0, inc = 6, set to -6
+-- steps = (round(-6 / inc) = -1
+-- numval = (round(-6 / inc) * inc) = -6
+-- curval = (-6 - -18) / 18 == 0.67
+
+-- say, -18 to 0, inc = 6, set to -6
+-- steps = (round(-6 / inc) = -1
+-- numval = (round(-6 / inc) * inc) = -6
+-- curval = (-6 - -18) / 18 == 0.67
+
+-- say, -1 to +1, inc = 0.1, set to -0.4
+-- steps = (round(-0.4 / inc) = 4
+-- numval = (round(-0.4 / inc) * inc) = -0.4
+-- curval = (-0.4 - -1) / 18 == -0.6
