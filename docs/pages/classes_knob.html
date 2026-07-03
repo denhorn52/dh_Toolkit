@@ -104,6 +104,28 @@ Displays a round knob with the indicator on top.
 
 </div> <!-- end knob style -->
 
+<div class="sectionListItemIndented">             
+<span class="textEmphasis110">travel: </span>                       
+Accepts one of three values: 90,180, 270.<br>
+The default is 270 degrees (135 left and 135 right from top). 
+90 will travel 45 left and 45 right. 180 will travel 90 left 
+and 90 right.
+</div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis110">retval: </span>                       
+It is calculated internally and should not be set directly. 
+It can be accessed directly.
+It holds the current value as a formatted string. 
+</div>
+
+<div class="sectionListItemIndented">             
+<span class="textEmphasis110">cur_num_val: </span>                       
+It is calculated internally and should not be set directly. 
+It can be accessed directly.
+It holds the current numerical value. 
+</div>
+
 <div class="subHeading">Display Properties: </div>
 
 <div class="sectionIndented"> 
@@ -198,12 +220,16 @@ regardless of the 'frame_use_outline' setting.
 attribute:            property_name       default value       
 ---------------------------------------------------------
 knob style:           knob_style         "pointer"
+knob travel:          travel              270
 centered:             centered            true
 min value(number):    min                 0
 max value(number):    max                 10
 increment size:       inc                 1
 default setting:      default             5
 shadow element:       shadow              false
+
+formatted value:      retval             [read only]
+numerical value:      cur_num_val        [read only]
 
 caption (string):     caption             ""
 caption position:     cap_pos            "top" 
