@@ -453,12 +453,12 @@ end
 -----------------------------------
 ---------    IMPORT   ----------
 -----------------------------------
-
+--zzsave
 -- Called from main menu.
 
 function Export.load_project_file(load_type)
 
-    --GUI.Msg("# Export.load_project_file\n")
+    --GUI.Msg("# Export.load_project_file load type : " .. load_type .. "\n")
     
     Export.load_type = load_type
 
