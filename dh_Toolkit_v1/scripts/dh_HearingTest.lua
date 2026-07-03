@@ -1,29 +1,33 @@
 -- dh_HearingTest.lua 
 -- version 1.0 
 -- Author: Dennis R. Horn
--- Date: 2026-05-06
+-- Date: 2026-06-06
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
 -- License: GNU General Public License version 3
 
--- Uses Lokasenna_GUI v2 for widgets and interactivity:
+-- Uses Lokasenna_GUI v2 for interactivity:
 -- https://github.com/jalovatt/Lokasenna_GUI
+
+-- Uses dhToolkit for widget classes and theming.
 
 -- Uses json.lua for encoding/decoding data to/from ext state:
 -- https://github.com/rxi/json.lua
 
 ---------------------------------------------
 -- DISCLAIMER: This script has been tested on Reaper 6.23 
---   running on Windows 10-x64 with no issues. 
---   The author is not responsible for any loss of data that
---   may result in the event that the script crashes Reaper.
+--   running on Windows 11-x64 with no issues. 
+--   Although thoroughly tested the author is not responsible 
+--   for any loss of data that may result in the event 
+--   that the script crashes Reaper.
 
 ---------------------------------------------
 -- DESCRIPTION:
 
 -- Script for use with Reaper DAW.
--- Test one's hearing against ISO Standards.
+-- Test one's hearing against for perceived equal loudness
+--   according to established ISO Standards.
 
 ---------------------------------------------
 -- CONVENTIONS USED:
@@ -40,15 +44,7 @@
 --   Block comments --[==[ denote info or notes.
 --   Block comments --[===[ denote documentaion.
 
-
 --zztop
----------------------------------------
-  ------      SCRIPT FLOW      ------
----------------------------------------
---zzflow
-
-
-
 ---------------------------------------
 -- dh_log (used during development)
 ---------------------------------------
@@ -113,7 +109,6 @@ DHTK.USE_DHTK_PREFS = true
 DHTK.EXT_STATE_NAME = "dh_HearingTest"
 
 DHTK.APP_WIDTH = 640
--- Preferences display needs 300 min. height.
 DHTK.APP_HEIGHT = 480
 
 ----------------------------------------
@@ -150,23 +145,6 @@ local json = require "common/json"
   --------      TODO      --------
 --======================================
 --zztodo
---[==[
-
-x Rename HT.test_gain to HT.eq_loud_offset.
-
-HT.eq_loud_offset is 60db at 1Khz for a 60 phon curve.
-  I am using 1047hz as datum freq which is 0.4db higher 
-  than 1Khz than phon curves.
-  Should I adjust test gain to compensate? YES
-
-enable selecting a phon curve? Maybe stick with 60?
-
-data_elms: add additional properties to graph.
-
-z layers - reassign in gui builder?
-
-
---]==]
 
 ---------------------------------------
   --------      NOTES      --------
@@ -187,7 +165,7 @@ it takes about 10 times the intensity to sound twice as loud.
 The Fletcher-Munson curves for equal loudness are defined as 
 60db sound pressure at 1Khz for a 60 phon curve. 
 
-!!! THIS SHOULD NOT BE CHANGED!
+!!! THIS SHOULD NOT BE CHANGED DURING SCRIPT RUN!
 HT.datum_gain is the reference track volume for datum frequency.
 This is to be set to a value (maybe -18db) to leave plenty of 
 headroom for adjustments to equal loudness. 
@@ -239,7 +217,7 @@ Make sure all tests respect this.
 --======================================
   --------      My Data      --------
 --======================================
---zzdata   
+--zzdata  --zzzc --zzzz
 
 HT = {}
 
@@ -255,12 +233,13 @@ HT.tgen_octave_idx = nil  -- index of octave parameter
 HT.tgen_cents_idx = nil   -- index of cents parameter
 
 -- Test parameters.
-HT.datum_freq_id = 12     -- lookup value for reference frequency
-HT.datum_gain = -18       -- track gain of datum frequecy (fixed)
+HT.datum_freq_id  = '1047'-- lookup value for selected datum frequency (fixed)
+HT.datum_freq_idx = 12    -- lookup value for reference frequency
+HT.datum_gain = -18       -- track gain of datum frequecy (per profile)
 -- 1 is 0 on slider (test reference). Should not change.
-HT.track_ref_vol = 10^(HT.datum_gain / 20)
+HT.track_ref_vol = 10^(HT.datum_gain / 20)  -- initial value
 
-HT.test_freq_id  = '1047' -- lookup value for selected test frequency
+HT.test_freq_id  = '1047' -- lookup value for selected frequency
 HT.test_freq_idx = 12     -- index in HT.freqs
 HT.eq_loud_offset = 0     -- gain of test frequency relative to datum gain
 HT.test_gain_adj = 0      -- adjustment to eq_loud_offset to achieve equal loudness
@@ -269,27 +248,30 @@ HT.gain_adj_step = 1      -- step amount to adjust gain with buttons
 -- This contains default settings.
 HT.defaults = require "dh_HearingTest_data"
 
--- Container for test parameters and data. 
-HT.zones = GUI.table_copy(HT.defaults.zones)
-
--- For menubox and indexing.  
---HT.freqs = {}
---for freq, _ in pairs(HT.zones) do
---    table.insert(HT.freqs, freq)
---end
-
 -- Need freqs in order for displaying data.
 HT.freqs = HT.defaults.frequencies
+
+-- Container for test parameters and data. 
+-- Copy so as to leave defaults intact.
+HT.zones = GUI.table_copy(HT.defaults.zones)
+
+-- Need a default.
+HT.profiles = {
+  ['Working Copy'] = HT.zones,
+}
+
+-- This will be used by menubox.
+HT.profile_names = {"Working Copy"}
+
+HT.current_profile = 'Working Copy'
+
+HT.profile_layers = {52,53,54,55,56,57,58,59,60,}  -- set as built in GUI Builder
 
 HT.phon_curve = 60
 HT.phon_points = HT.defaults.phon_60
 
 -- True when a test is running.
 HT.is_running = false
-
---??? Do I need these? Maybe for timer?
-HT.tgen_datum_gain = -12  -- tone generator default wet mix gain
-HT.tgen_test_gain = -12   -- tone generator test wet mix gain
 
 HT.channel = 2            -- 1: left, 2: center, 3: right   
 HT.gain_lcr = "gain_c"    -- "gain_l", "gain_c", "gain_r"
@@ -357,17 +339,6 @@ TIMER.test_note_idx = 3
 TIMER.test_octave = -4
 -- used for test (timer 2 and/or 3)
 TIMER.cents = 0
-
---zzext
--- Need a default.
-HT.profiles = {
-  ['Working Copy'] = HT.zones,
-}
-HT.current_profile = 'Working Copy'
-HT.profile_layers = {55,56,57,58,59,60,}  -- set as built in GUI Builder
-
--- This will be used by menubox.
-HT.profile_names = {"Working Copy"}
 
 --======================================
   ------     My Functions    --------
@@ -446,7 +417,55 @@ local function loadPrefs()
     
 end  --<loadPrefs>
 
+--!!! If I do this in script init for all profiles then
+--    I don't need to do it every load profile.
+-- profiles exist in HT.profiles which are loaded on script start.
+-- There is possibility that profile lacks certain data.
+-- This ensures at least a default value exists for each item.
 
+local function load_profile(profile)
+
+    --GUI.Msg("\n## load_profile ## ")
+    
+    --Profile should exist. Notify if not?
+    if not HT.profiles[profile] then return end
+    
+    --GUI.Msg("    profile : " .. profile)
+
+    local tmp = GUI.table_copy(HT.defaults.zones)
+
+    for _, freq in ipairs(HT.freqs) do
+    
+        local pdata = HT.profiles[profile][freq]
+
+        if pdata.locked then tmp[freq].locked = pdata.locked end 
+        if pdata.bypass then tmp[freq].bypass = pdata.bypass end
+        if pdata.gain_l then tmp[freq].gain_l = pdata.gain_l end 
+        if pdata.gain_c then tmp[freq].gain_c = pdata.gain_c end 
+        if pdata.gain_r then tmp[freq].gain_r = pdata.gain_r end 
+        if pdata.lr_gain then tmp[freq].lr_gain = pdata.lr_gain end 
+        if pdata.lr_cents then tmp[freq].lr_cents = pdata.lr_cents end 
+
+    end
+    
+    if not HT.profiles[profile][HT.datum_freq_id].tg_gain then
+        tmp[HT.datum_freq_id].tg_gain = -12
+    end
+    
+    if not HT.profiles[profile][HT.datum_freq_id].datum_gain then
+        tmp[HT.datum_freq_id].datum_gain = -18
+    end
+    
+    HT.datum_gain = HT.profiles[profile][HT.datum_freq_id].datum_gain
+    
+    --GUI.Msg("    HT.datum_gain : " .. HT.datum_gain)
+    
+    HT.profiles[profile] = tmp 
+    HT.zones = HT.profiles[profile]
+        
+end
+
+--zzzprofile
 -- Adds/updates profile in HT.profiles, and saves it to extstate.
 
 local function save_profile()  
@@ -476,6 +495,7 @@ local function save_profile()
     end
     
     HT.current_profile = profile_name
+    GUI.Val("lbl_CurrentProfileName", HT.current_profile)   
     
     -- # Add profile to profiles.
     --   HT.zones has the current profile to be saved.
@@ -484,13 +504,10 @@ local function save_profile()
 
     table.insert(HT.profile_names, profile_name)    
 
---zzx    
     -- # Update menubox.
     
     --??? Sort profile names
     
-    --GUI.elms.mbx_ProfileNames.optarray = HT.profile_names
-
     GUI.elms.mbx_Profiles.curr_opt = #HT.profile_names -- the newly created profile            
     
     -- # Save to extstate.
@@ -534,6 +551,7 @@ local function rename_profile()
     HT.zones = HT.profiles[new_profile_name]    
 
     HT.current_profile = new_profile_name
+    GUI.Val("lbl_CurrentProfileName", HT.current_profile)   
     
     -- # Update menubox.
     
@@ -558,10 +576,10 @@ local function delete_profile()
         reaper.MB("Cannot delete 'Working Copy'!", "Whoops!", 0)    
         return    
     end
-     
+
     local msg = "Do you want to delete profile : " .. profile_name .. " ?"
 
-    local retval = reaper.MB(msg, "Error", 4)
+    local retval = reaper.MB(msg, "Warning", 4)
     
 	if retval == 6 then
 	
@@ -573,11 +591,11 @@ local function delete_profile()
         
         HT.zones = HT.profiles['Working Copy']
         HT.current_profile = 'Working Copy'
+        GUI.Val("lbl_CurrentProfileName", HT.current_profile)   
         
         -- # Update menubox.
          
         -- It thinks the deleted profile is still there. So the curr_opt is still legit.
-        
         local mbx = GUI.elms.mbx_Profiles
         local idx, val = mbx:val()
         -- If I change HT.profile_names that should be changing optarray.
@@ -589,7 +607,7 @@ local function delete_profile()
 
 end
 
---zzzmbx  --zzzdata
+--zzzdata 
 -- data_points are deviations from phon curve.
 
 local function update_data_points()
@@ -607,8 +625,11 @@ local function update_data_points()
         
         if HT.graph_type == 1 then
             val = val + HT.phon_points[i] or 0
-            --GUI.Msg("     build_data_points ref val : " .. val)
-        end        
+            --GUI.Msg("     update_data_points ref val : " .. val)
+        end
+        
+        --GUI.Msg("     update_data_points ref val : " .. val)
+        --GUI.Msg("        type  ref val : " .. type(val) )               
 
         table.insert(HT.data_points, val)        
         
@@ -656,9 +677,8 @@ local function get_track_names()
 
 end
 
---zzz
 -- Called from mbx_Tracks:onmouseup and during script init.
--- ? Rework to get track/fx on script init?
+--??? Rework to get track/fx on script init?
 
 local function select_track()
 
@@ -710,7 +730,7 @@ local function select_track()
         --!!! May need this someday.
         HT.tgen_guid = reaper.TrackFX_GetFXGUID(r_track, retval)
         
-        -- Get params --
+        -- # Get params indices --
         
         -- Iterate effect params.
         
@@ -720,7 +740,7 @@ local function select_track()
 	               
             -- Get param name. Just the name, please!
             
-            local succ, param_name = reaper.TrackFX_GetParamName(r_track, HT.tgen_idx, p_idx) --, param_name)
+            local succ, param_name = reaper.TrackFX_GetParamName(r_track, HT.tgen_idx, p_idx) 
         
             if param_name == "Wet Mix (dB)" then
                 HT.tgen_wm_idx = p_idx
@@ -734,14 +754,17 @@ local function select_track()
         
         end
 
+        -- # Set up tone generator.
+        
         -- Frequency is selected on script init.
---zzzones        
+
         reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_note_idx, HT.zones[HT.test_freq_id].note_idx)
         reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_octave_idx, HT.zones[HT.test_freq_id].octave)
         
-        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_note_idx, HT.zones[HT.test_freq_id].note_idx)
-        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_octave_idx, HT.zones[HT.test_freq_id].octave)
-        
+        local wm_gain = HT.zones[HT.datum_freq_id].tg_gain or -12
+        --reaper.TrackFX_SetNamedConfigParm(HT.r_track, HT.tgen_idx, "Wet Mix (dB)", wm_gain)
+        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_wm_idx, wm_gain)
+
         HT.eq_loud_offset = HT.phon_points[HT.test_freq_idx] - HT.phon_curve - 0.4         
 
         local adj = HT.zones[HT.test_freq_id][HT.gain_lcr]
@@ -749,11 +772,7 @@ local function select_track()
         --GUI.Msg("          HT.datum_gain : " .. HT.datum_gain)                
         --GUI.Msg("      HT.eq_loud_offset : " .. HT.eq_loud_offset)        
         --GUI.Msg("                    adj : " .. adj)
-        
-        local total_g = HT.datum_gain + HT.eq_loud_offset + adj
-        
-        --GUI.Msg("                  TOTAL : " .. total_g)                
-        
+
         -- # Set track volume.  
                  
         local g = 10^((HT.datum_gain + HT.eq_loud_offset + adj) / 20)
@@ -767,12 +786,17 @@ end  --<select_track>
 
 --zzzdata
 local function show_dataset_in_console()
+
+    local wm_gain = tostring(HT.zones[HT.datum_freq_id].tg_gain)
+    local datum_gain = tostring(HT.zones[HT.datum_freq_id].datum_gain)
     
     local msg = "\n---------------------------------------------------------------------\n"
 
     msg = msg .. "                    -- dh_HearingTest  --\n\n"
     
     msg = msg .. "Profile name: " .. HT.current_profile .. "\n\n"
+    
+    msg = msg .. "Wet Mix gain : " .. wm_gain .. " ; Datum gain : " .. datum_gain .. "\n\n"
     
     msg = msg .. "    Freq :        Left     Center    Right    LR Gain   LR Cents\n"
     
@@ -797,7 +821,7 @@ local function show_dataset_in_console()
         
         fstr = string.format("%10.2f", zone.gain_r)
         zmsg = zmsg .. fstr
---zzzlr        
+
         fstr = string.format("%10.2f", zone.lr_gain)
         zmsg = zmsg .. fstr
         
@@ -831,7 +855,7 @@ HT.datum_gain (datum_freq gain) is set during calibration.
   
 --]===]
 
---zzzt1  --zzztt  
+--zzzt1  
 local function update_timer_1()
      
     -- # PLAYING: Started at state 1: datum_freq, track_ref_vol.
@@ -844,7 +868,7 @@ local function update_timer_1()
         
         TIMER.state = 2 
         TIMER.interval = 0.5 
-                
+        
         -- # Silence track.
         reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", 0)
 	    
@@ -903,7 +927,7 @@ local function update_timer_1()
 
 end  --<update_timer_1>
 
---zzzt2  --zzztest
+--zzzt2
 local function update_timer_2()
 
     --GUI.Msg("\n## update_timer_2  ")
@@ -940,8 +964,7 @@ local function update_timer_2()
         TIMER.interval = 0.75
         
         -- # Set track volume to include knob gain.
-        local retval = GUI.elms.knob_LR_Gain.retval 
-        retval = retval + HT.datum_gain + HT.eq_loud_offset + HT.test_gain_adj         
+        local retval = GUI.elms.knob_LR_Gain.cur_num_val + HT.datum_gain + HT.eq_loud_offset + HT.zones[HT.test_freq_id].gain_l
         local g = 10^(retval / 20)
         reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g)         
         
@@ -973,9 +996,10 @@ local function update_timer_2()
         
         TIMER.interval = 0.75
         
-        -- # Un-silence.
-        reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", HT.track_ref_vol)         
-    
+        -- # Set track volume to left.
+        local g = 10^((HT.datum_gain + HT.eq_loud_offset + HT.zones[HT.test_freq_id].gain_l) / 20)  
+        reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g)                 
+           
     end
     
     -- Reset timer for next interval.
@@ -1029,7 +1053,7 @@ GUI.elms.btn_Prefs.func = DHTK.showPrefsWindow
 --zzx
 -- GUI Builder doesn't save menubox options as they can get quite complex.
 -- Therefore it exports with the default {"Option 1", "Option 2", "Option 3", "Option 4'}
--- That will get reassigned later in script init.
+-- The correct menu will get assigned later in script init.
 
 --  # Hide the profile layers.
 
@@ -1037,6 +1061,10 @@ for _, lyr in ipairs(HT.profile_layers) do
     --GUI.Msg("> hide lyr : " .. tostring(lyr))         
     GUI.elms_hide[lyr] = true
 end
+
+-- These layers may contain some unused elements.
+GUI.elms_hide[50] = true
+GUI.elms_hide[51] = true
 
 --======================================
   ------   Method Overrides  ------
@@ -1048,7 +1076,7 @@ function GUI.elms.mbx_Tracks:onmouseup()
 	select_track()
 end
 
-
+--zzzfreq
 function GUI.elms.mbx_Freqs:onmouseup()
 
     -- Ignore if test is running.
@@ -1071,22 +1099,28 @@ function GUI.elms.mbx_Freqs:onmouseup()
     -- # Set bypass checkbox.
     GUI.elms.chkl_Bypass:val(zone.bypass)  
     GUI.elms.chkl_Bypass:redraw()   
---zzzlr     
+
     -- # Init LR knobs.
     GUI.elms.knob_LR_Gain:val(zone.lr_gain)  
     GUI.elms.knob_LR_Cents:val(zone.lr_cents)  
+    
+    --!!! Not really necessary.
+    GUI.elms.knob_MainTest_Gain:val(HT.zones[HT.test_freq_id][HT.gain_lcr])
 
     -- # No tone generator found.
     if not HT.tgen_idx then
         --reaper.MB("No tone generator found!", "Whoops!", 0)
         return
     end
+
+	--GUI.Msg("\n#mbx_Freqs:onmouseup ")
+	--GUI.Msg("   note_idx : " .. HT.zones[HT.test_freq_id].note_idx)
+	--GUI.Msg("   octave : " .. HT.zones[HT.test_freq_id].octave)	
             
     -- # Set tone generator frequency.
     reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_note_idx, HT.zones[HT.test_freq_id].note_idx)
     reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_octave_idx, HT.zones[HT.test_freq_id].octave)    
 
---zzzfreq
     -- # Set test gain and track volume.        
 
     HT.eq_loud_offset = (HT.phon_points[HT.test_freq_idx] - 0.4) - HT.phon_curve    
@@ -1094,51 +1128,153 @@ function GUI.elms.mbx_Freqs:onmouseup()
     HT.test_gain_adj = HT.zones[HT.test_freq_id][HT.gain_lcr]
     
     --??? Should I adjust test_gain quieter to start test?  
-    
+    --??? Not really necessary here? Will be set at test start.
     local g = 10^((HT.datum_gain + HT.eq_loud_offset + HT.test_gain_adj) / 20)
     reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g) 
 
 end  --<mbx_Freqs:onmouseup>
 
---zzmbx  
+-- Loads a profile from selection box.
+
 function GUI.elms.mbx_Profiles:onmouseup()
 
 	GUI.dh_Menubox.onmouseup(self)
 	
 	HT.current_profile = self.optarray[self.curr_opt]
 	
+    --GUI.Msg("\n## mbx_Profiles:onmouseup : " .. HT.current_profile)	
+	
+	load_profile(HT.current_profile)
+	
     --GUI.Msg("\n## mbx_Profiles:onmouseup : " .. HT.current_profile)
     --GUI.Msg("     HT.gain_lcr : " .. HT.gain_lcr)        
 
     HT.zones = HT.profiles[HT.current_profile]
     
-    --[=[ In case zones format changed - copy data.     --]=]   
+    --GUI.Msg("    HT.zones[HT.test_freq_id].lr_gain : " .. HT.zones[HT.test_freq_id].lr_gain)       
     
-    for freq, zone in pairs(HT.zones) do
-        --GUI.Msg("          freq : " .. freq)                                    
-        local pdata = HT.profiles[HT.current_profile][freq]
-    
-        if pdata.locked then zone.locked = pdata.locked end
-        if pdata.bypass then zone.bypass = pdata.bypass end 
-        if pdata.gain_l then zone.gain_l = pdata.gain_l end
-        if pdata.gain_c then zone.gain_c = pdata.gain_c end 
-        if pdata.gain_r then zone.gain_r = pdata.gain_r end
-        if pdata.lr_gain then zone.lr_gain = pdata.lr_gain end 
-        if pdata.lr_cents then zone.lr_cents = pdata.lr_cents end             
-    end
-                
---zzzlr
-    -- # Init LR knobs.
-    GUI.elms.knob_LR_Gain:val(HT.zones[HT.test_freq_id].lr_gain)  
-    GUI.elms.knob_LR_Cents:val(HT.zones[HT.test_freq_id].lr_cents)  
-    
-    -- # track volume
-    -- Probably better to leave track volume at datum gain
-    -- even after tests.
- 
     -- # Update graph.
     update_graph(false)
+    
+--zzzprofile
+                
+    -- # Init LR knobs.
+    GUI.elms.knob_LR_Gain:val(HT.zones[HT.test_freq_id].lr_gain)
+    GUI.elms.knob_LR_Cents:val(HT.zones[HT.test_freq_id].lr_cents)  
+
+    --!!! Not really necessary.
+    GUI.elms.knob_MainTest_Gain:val(HT.zones[HT.test_freq_id][HT.gain_lcr])
+    
+    --!!! These are getting set in load_profile. 
+    local wm_gain = HT.zones[HT.datum_freq_id].tg_gain or -12     
+    HT.datum_gain = HT.zones[HT.datum_freq_id].datum_gain or -18
+        
+    --GUI.Msg("    HT.datum_gain : " .. HT.datum_gain) 
+    
+    -- # Update tone generator wet mix gain.
+    if HT.r_track and HT.tgen_idx then
+        --reaper.TrackFX_SetNamedConfigParm(HT.r_track, HT.tgen_idx, "Wet Mix (dB)", wm_gain)
+        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_wm_idx, wm_gain)
+	end
+
+    -- # track volume
+    --??? Not really necessary?
+	if HT.r_track then    
+        reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", HT.track_ref_vol)  
+	end
 	
+end  --<mbx_Profiles>
+
+
+function GUI.elms.chkl_TG_Enable:onmouseup()
+
+	GUI.dh_Checklist.onmouseup(self)
+
+	-- # No tone generator found. Abort!
+	if not HT.tgen_idx then
+	    reaper.MB("No tone generator found!", "Whoops!", 0)
+    	return
+	end
+	
+    reaper.TrackFX_SetEnabled(HT.r_track, HT.tgen_idx, self.optsel[1] )
+    	
+end
+
+
+-- HT.test_gain_adj used in timer to set gain. 
+-- HT.test_gain_adj = HT.zones[HT.test_freq_id][HT.gain_lcr]
+-- Knob self.retval is a formatted string,
+--  but it works for changing track gain.
+-- Added property cur_num_val to knob.
+
+function GUI.elms.knob_MainTest_Gain:ondrag()
+	GUI.dh_Knob.ondrag(self)
+    --HT.test_gain_adj = self.retval 
+    HT.test_gain_adj = self.cur_num_val 
+end
+
+--zzzknob
+function GUI.elms.knob_MainTest_Gain:onwheel()
+	GUI.dh_Knob.onwheel(self)
+    --HT.test_gain_adj = self.retval 
+    HT.test_gain_adj = self.cur_num_val 
+end
+
+
+function GUI.elms.knob_TG_Gain:ondrag()
+
+	GUI.dh_Knob.ondrag(self)
+	
+	-- # Set tone generator wet mix gain.
+	if HT.r_track and HT.tgen_idx then
+        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_wm_idx, self.cur_num_val)
+        HT.zones[HT.datum_freq_id].tg_gain = self.cur_num_val
+    end
+    
+end
+
+
+function GUI.elms.knob_TG_Gain:onwheel()
+
+	GUI.dh_Knob.onwheel(self)
+	
+	-- # Set tone generator wet mix gain.
+	if HT.r_track and HT.tgen_idx then
+	    reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_wm_idx, self.cur_num_val)
+	    HT.zones[HT.datum_freq_id].tg_gain = self.cur_numval
+	    --GUI.Msg("    onwheel self.retval : " .. self.retval)                       
+	end
+
+end
+
+
+function GUI.elms.knob_Datum_Gain:ondrag()
+
+	GUI.dh_Knob.ondrag(self)
+	
+	-- # Set track volume.
+	if HT.r_track then
+        HT.datum_gain = self.cur_num_val
+        HT.zones[HT.datum_freq_id].datum_gain = self.cur_num_val
+        local g = 10^(HT.datum_gain / 20)
+        reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g)  
+    end
+    
+end
+
+
+function GUI.elms.knob_Datum_Gain:onwheel()
+
+	GUI.dh_Knob.onwheel(self)
+	
+	-- # Set track volume.
+	if HT.r_track then
+        HT.datum_gain = self.cur_num_val
+        HT.zones[HT.datum_freq_id].datum_gain = self.cur_num_val
+        local g = 10^(HT.datum_gain / 20)
+        reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g)  
+    end
+    
 end
 
 
@@ -1150,9 +1286,8 @@ function GUI.elms.chkl_Locked:onmouseup()
 	
 	local idx, val = GUI.elms.mbx_Freqs:val()
 	
-    if idx == HT.datum_freq_id then
+    if idx == HT.datum_freq_idx then
         reaper.MB("Cannot unlock datum frequency!", "Whoops!", 0)
-        --self.optsel[1] = prev
         self:val(prev)
         return
     end
@@ -1198,6 +1333,10 @@ function GUI.elms.radio_Channel:onmouseup()
         reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g) 
     
     end
+    
+--zzzknob         
+    --!!! Not really necessary.
+    GUI.elms.knob_MainTest_Gain:val(HT.zones[HT.test_freq_id][HT.gain_lcr])
     
     -- Changing channels require datapoints to be updated.
     update_graph(false)
@@ -1251,7 +1390,6 @@ end  --<radio_GraphType:onmouseup>
 --   Buttons
 ----------------------------------------
 
---zzzm
 function GUI.elms.btn_Gain_Inc:onmouseup()
 
 	GUI.dh_Button.onmouseup(self)
@@ -1260,10 +1398,9 @@ function GUI.elms.btn_Gain_Inc:onmouseup()
     if not HT.is_running then return end
     
     -- Ignore if test freq.
-    if HT.test_freq_id == HT.datum_freq_id then return end
+    if HT.test_freq_idx == HT.datum_freq_idx then return end
     
     -- # Increment track volume by factor.
-    
     HT.test_gain_adj = HT.test_gain_adj + HT.gain_adj_step
 
 end
@@ -1277,10 +1414,9 @@ function GUI.elms.btn_Gain_Dec:onmouseup()
     if not HT.is_running then return end
     
     -- Ignore if test freq.
-    if HT.test_freq_id == HT.datum_freq_id then return end
+    if HT.test_freq_idx == HT.datum_freq_idx then return end
     
     -- # Decrement track volume by factor.
-    
     HT.test_gain_adj = HT.test_gain_adj - HT.gain_adj_step
 
 end
@@ -1294,8 +1430,8 @@ function GUI.elms.btn_Start:onmouseup()
     -- Ignore if test is running.
     if HT.is_running then return end
     
-    -- Ignore if test freq.
-    if HT.test_freq_id == HT.datum_freq_id then return end
+    -- Ignore if datum freq.
+    if HT.test_freq_idx == HT.datum_freq_idx then return end
     
     -- Ignore if test_freq is locked..    
     if HT.zones[HT.test_freq_id].locked then return end
@@ -1306,14 +1442,12 @@ function GUI.elms.btn_Start:onmouseup()
     --GUI.Msg("      HT.datum_freq_id type : " .. type(HT.datum_freq_id))    
             
     -- # No tone generator found. Abort!
-    
     if not HT.tgen_idx then
         reaper.MB("No tone generator found!", "Whoops!", 0)
         return
     end
 
     -- # Initialize frequency test. (Tone generator exists.)
-    
     reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_note_idx, TIMER.datum_note_idx)  
     reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_octave_idx, TIMER.datum_octave)    
 
@@ -1329,10 +1463,18 @@ function GUI.elms.btn_Start:onmouseup()
 	-- # Start at datum track ref volume.
 	reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", HT.track_ref_vol) 
 
---zzzt1	
     -- # Set initial test freq gain -6db.
-	HT.test_gain_adj = -6.0
+    --!!! IMPORTANT: Set it to knob min.
+    HT.test_gain_adj = GUI.elms.knob_MainTest_Gain.min
+
+--zzzknob btn_start
+    -- # Set knob_MainTest_Gain.
+    --   Set it min for test start.
     
+    GUI.elms.knob_MainTest_Gain:val(HT.test_gain_adj)
+    --GUI.elms.knob_MainTest_Gain:setcurstep(0)
+    --GUI.elms.knob_MainTest_Gain:redraw()
+
     --[=[  TIMER 1	--]=]
     
     -- # Setup timer.
@@ -1355,8 +1497,6 @@ function GUI.elms.btn_Start:onmouseup()
 	
 end  --<btn_Start:onmouseup>
 
---??? Should I return track volume to test volume?
--- Nothing should be playing and it should be set on other action.
 
 function GUI.elms.btn_Stop:onmouseup()
 
@@ -1367,32 +1507,41 @@ function GUI.elms.btn_Stop:onmouseup()
 	if not HT.is_running then return end
 
 	-- Ignore if test freq.
-    if HT.test_freq_id == HT.datum_freq_id then return end
+    if HT.test_freq_idx == HT.datum_freq_idx then return end
 
 	HT.is_running = false
 
 	-- # Set tone generator to not enabled.
     reaper.TrackFX_SetEnabled(HT.r_track, HT.tgen_idx, false)
 
-	-- # Unmute track (it may have been muted during test).
-	--reaper.SetMediaTrackInfo_Value(HT.r_track, "B_MUTE", 0)    
---zzzmu
+--zzzknob btn-stop
 	-- # Save gain. 
-	--GUI.Msg("   HT.test_gain_adj : " .. HT.test_gain_adj)	
-	--GUI.Msg(">   HT.gain_lcr : " .. HT.gain_lcr)	
+	--GUI.Msg("\n>>> HT.test_gain_adj : " .. HT.test_gain_adj)
+	--GUI.Msg("      type HT.test_gain_adj : " .. type(HT.test_gain_adj)) -- string		
+	--GUI.Msg(">   HT.gain_lcr : " .. HT.gain_lcr)
+
+    --!!! Knob retval is a formatted string. Convert it to a number.
+	HT.test_gain_adj = tonumber(HT.test_gain_adj)	
 	
 	HT.zones[HT.test_freq_id][HT.gain_lcr] = HT.test_gain_adj
+	
+	-- # Make sure tone generator params are returned to test freq.
+    reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_note_idx, HT.zones[HT.test_freq_id].note_idx)
+    reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_octave_idx, HT.zones[HT.test_freq_id].octave) 
 
 	-- # Update graph.	
 
 	-- data_points has data from selected freq gain/channel.
     -- Only update curr point.
-    
+--zzzdp    
 	HT.data_points[HT.test_freq_idx] = HT.test_gain_adj
 	
 	--GUI.Msg(">>   HT.data_points[HT.test_freq_idx] : " .. HT.data_points[HT.test_freq_idx])	
 	
 	GUI.elms.graph_Freq:redraw()
+	
+	--??? Reset gain to test gain of selected freq.
+	
 	
 end  --<btn_Stop:onmouseup>
 
@@ -1404,7 +1553,6 @@ function GUI.elms.btn_LR_Start:onmouseup()
 	--GUI.Msg("\n## btn_LR_Start:onmouseup  ")
 	
 	-- # No tone generator found. Abort!
-	
 	if not HT.tgen_idx then
 	    reaper.MB("No tone generator found!", "Whoops!", 0)
 	    return
@@ -1426,7 +1574,6 @@ function GUI.elms.btn_LR_Start:onmouseup()
  	local g = 10^((HT.datum_gain + HT.eq_loud_offset + HT.zones[HT.test_freq_id].gain_l) / 20)
  	reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g)
  	
---zzzlr 	
  	-- # Init knobs.
  	local val = HT.zones[HT.test_freq_id].lr_gain or 0 
  	
@@ -1493,14 +1640,16 @@ function GUI.elms.btn_LR_Stop:onmouseup()
     local g = 10^((HT.datum_gain + HT.eq_loud_offset + HT.test_gain_adj) / 20)	
 	reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g)
 
---zzzlr	 	
+--zzzlr		
 	--# Store data.
-
-    local retval = GUI.elms.knob_LR_Gain:val()
+	
+    --!!! Knob retval is a formatted string. Convert it to a number.
+    local retval = tonumber(GUI.elms.knob_LR_Gain:val())
+    
 	--GUI.Msg("    STOP  retval gain : " .. retval) 	     	 
 	HT.zones[HT.test_freq_id].lr_gain = retval
 	
-    retval = GUI.elms.knob_LR_Cents:val()
+    retval = tonumber(GUI.elms.knob_LR_Cents:val())
 	--GUI.Msg("    STOP  retval cents : " .. retval) 	     	      
 	HT.zones[HT.test_freq_id].lr_cents = retval
 
@@ -1522,10 +1671,11 @@ function GUI.elms.btn_OpenProfileEditor:onmouseup()
 	
 	GUI.dh_Button.onmouseup(self)
 	
+    GUI.Val("lbl_CurrentProfileName", HT.current_profile)   
+	
 	GUI.elms.tbx_ProfileName:val(HT.current_profile)
 	
-    -- Store any visible layers, and then hide them.
-    	
+    -- # Store any visible layers, and then hide them.
     HT.layers_to_restore = {}	
     
     for z, _ in pairs(GUI.elms_list) do
@@ -1536,12 +1686,34 @@ function GUI.elms.btn_OpenProfileEditor:onmouseup()
         end
     end 
     
-    -- Show Profile layers.
-
+    -- # Show Profile layers.
     for _, lyr in ipairs(HT.profile_layers) do
         GUI.elms_hide[lyr] = false
-    end    
-       
+    end
+    
+    GUI.elms.chkl_TG_Enable:val(false)
+    
+--zzzlr    
+    -- # Set knob to tone generator wet mix gain. 
+    local wm_gain = HT.zones[HT.datum_freq_id].tg_gain
+    GUI.Val("knob_TG_Gain", wm_gain)
+    
+    -- # Set knob to datum gain.  
+    GUI.Val("knob_Datum_Gain", HT.datum_gain)
+    
+--zzzc  
+    -- # Set track volume to datum gain.
+    if HT.r_track then   
+        local g = 10^(HT.datum_gain / 20)
+        reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g)
+    end
+
+    -- # Set tone generator to datum freq params.
+    if HT.tgen_idx then
+        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_note_idx, HT.zones[HT.datum_freq_id].note_idx)
+        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_octave_idx, HT.zones[HT.datum_freq_id].octave) 
+    end
+
 end
 
 function GUI.elms.btn_CloseProfileEditor:onmouseup()
@@ -1550,20 +1722,38 @@ function GUI.elms.btn_CloseProfileEditor:onmouseup()
 	
 	GUI.dh_Button.onmouseup(self)
 	
-	-- Hide the profile layers.
-	
+	-- # Hide the profile layers.
     for _, lyr in ipairs(HT.profile_layers) do
         --GUI.Msg("> hide lyr : " .. tostring(lyr))         
         GUI.elms_hide[lyr] = true
     end	
 	
-    -- Restore saved.
+    -- # Restore saved layers.
     for _, lyr in ipairs(HT.layers_to_restore) do
         --GUI.Msg("> show lyr : " .. tostring(lyr))             
         GUI.elms_hide[lyr] = false
         GUI.redraw_z[lyr] = true
-    end	
+    end
 
+--zzzlr
+    --??? Not really necessary? In case any changes?
+    GUI.elms.knob_MainTest_Gain:val(HT.zones[HT.test_freq_id][HT.gain_lcr])
+    GUI.elms.knob_LR_Gain:val(HT.zones[HT.test_freq_id].lr_gain) 
+    GUI.elms.knob_LR_Cents:val(HT.zones[HT.test_freq_id].lr_cents) 
+
+--zzzc         
+    -- # Set tone generator params back to test freq params.    
+    if HT.tgen_idx then
+        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_note_idx, HT.zones[HT.test_freq_id].note_idx)
+        reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_octave_idx, HT.zones[HT.test_freq_id].octave) 
+    end
+    
+    -- # Set track volume to back to test freq gain.
+    if HT.r_track then   
+        local g = 10^((HT.datum_gain + HT.eq_loud_offset + HT.test_gain_adj) / 20)	
+        reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", g)
+    end
+    
 end
 
 --zzzprofile
@@ -1594,6 +1784,51 @@ function GUI.elms.btn_ProfileDelete:onmouseup()
 
 end
 
+--zzzreset
+function GUI.elms.btn_Reset:onmouseup()
+
+	GUI.dh_Button.onmouseup(self)
+	
+    local msg = "Do you want to reset the current profile to defaults? /n    " .. HT.current_profile
+        
+    local retval = reaper.MB(msg, "Warning", 4)
+    
+--zzzprofile 
+
+	if retval == 6 then
+    
+        HT.profiles[HT.current_profile] = GUI.table_copy(HT.defaults.zones)
+
+        HT.zones = HT.profiles[HT.current_profile]
+
+        -- # Update graph.
+        update_graph(false)
+        
+        local wm_gain = HT.zones[HT.datum_freq_id].tg_gain or -12     
+        HT.datum_gain = HT.zones[HT.datum_freq_id].datum_gain or -18
+    
+        --GUI.Msg("    HT.datum_gain : " .. HT.datum_gain)           
+--zzzknob
+        -- # Reset LR knobs.
+    
+        GUI.elms.knob_LR_Gain:val(wm_gain)
+        GUI.elms.knob_LR_Cents:val(HT.datum_gain)  
+
+        -- # Update tone generator wet mix gain.
+        if HT.r_track and HT.tgen_idx then
+            --reaper.TrackFX_SetNamedConfigParm(HT.r_track, HT.tgen_idx, "Wet Mix (dB)", wm_gain)
+            reaper.TrackFX_SetParam(HT.r_track, HT.tgen_idx, HT.tgen_wm_idx, wm_gain)
+    	end
+--zzzz
+        -- # track volume
+    	if HT.r_track then    
+            reaper.SetMediaTrackInfo_Value(HT.r_track, "D_VOL", HT.track_ref_vol)  
+    	end
+
+    end
+
+end
+
 --======================================
   ------  Script Initialize  ------
 --======================================
@@ -1605,39 +1840,44 @@ end
 --zzext
 
 -- Load Prefs first; gets current profile which is needed later.
+
 if reaper.HasExtState(DHTK.EXT_STATE_NAME, "prefs") then
     loadPrefs()
 end
- 
+
+-- Get's any saved profiles.
+-- If I don't have extstate then be sure to have defaults.
+-- They were set earlier. Let's keep them there.
+
 if reaper.HasExtState(DHTK.EXT_STATE_NAME, "profiles") then
 
+    -- Get saved profiles.
     loadExtState()
     
     --GUI.Msg("\n## SCRIPT INIT ext state loaded  ")
     
+--zzzprofile   
+     
     -- # Update HT.zones. It already has default.
-        
-    if HT.profiles[HT.current_profile] then
-    
-        --HT.zones = HT.profiles[HT.current_profile]
-        --GUI.Msg("      HT.current_Profile : " .. HT.current_profile)
-        
-        --[=[ In case zones format changed - copy data. --]=]
-        for freq, zone in pairs(HT.zones) do
 
-            local pzone = HT.profiles[HT.current_profile][freq]
+    --!!! This would be where to update profiles.
+    
+    if HT.profiles[HT.current_profile] then 
+    
+        -- This will ensure at least default data.
+        load_profile(HT.current_profile)
         
-            if pzone.locked then zone.locked = pzone.locked end
-            if pzone.bypass then zone.bypass = pzone.bypass end 
-            if pzone.gain_l then zone.gain_l = pzone.gain_l end
-            if pzone.gain_c then zone.gain_c = pzone.gain_c end 
-            if pzone.gain_r then zone.gain_r = pzone.gain_r end
-            if pzone.lr_gain then zone.lr_gain = pzone.lr_gain end 
-            if pzone.lr_cents then zone.lr_cents = pzone.lr_cents end             
-        end 
+        -- This should be good.
+        HT.zones = HT.profiles[HT.current_profile]
+        
+        --!!! Can't do tone gen gain.
+        -- Set it in select_track.
+
+        -- # Get track_gain.
+        HT.datum_gain = HT.zones[HT.test_freq_id].datum_gain or -18     
               
-    end
-   
+    end  --<if HT.profiles>
+
     --  # Build profile names for menubox.
 
     local profile_names = {}
@@ -1673,10 +1913,13 @@ if reaper.HasExtState(DHTK.EXT_STATE_NAME, "profiles") then
         
     GUI.elms.mbx_Profiles.curr_opt = idx
         
-end
+end  --<HasExtState>
 
+--GUI.Msg("  SCRIPT INIT  HT.zones[HT.test_freq_id].tg_gain : " .. HT.zones[HT.test_freq_id].tg_gain ) 
+--GUI.Msg("  SCRIPT INIT  HT.zones[HT.test_freq_id].datum_gain : " .. HT.zones[HT.test_freq_id].datum_gain ) 
 
 HT.test_gain_adj = HT.zones[HT.test_freq_id][HT.gain_lcr]
+
 
 ----------------------------------------
 --  GUI Elements Initialization
@@ -1738,6 +1981,11 @@ GUI.elms.chkl_Locked:val(HT.zones[HT.test_freq_id].locked)
 
 GUI.elms.chkl_Bypass:val(HT.zones[HT.test_freq_id].bypass)
 
+--zzzknob
+--??? Not really necessary.
+GUI.elms.knob_MainTest_Gain:val( HT.zones[HT.test_freq_id][HT.gain_lcr])
+GUI.elms.knob_LR_Gain:val(HT.zones[HT.test_freq_id].lr_gain) 
+GUI.elms.knob_LR_Cents:val(HT.zones[HT.test_freq_id].lr_cents) 
 
 ----------------------------------------
 --!!! DO NOT REMOVE.
