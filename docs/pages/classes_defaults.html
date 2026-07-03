@@ -29,9 +29,9 @@
 <div class="classesChart">
 <pre>---------------------------------------------------------------------------------------
                        Class defaults:
-  [color_name] brackets indicate that the color is hardcoded. 
-   Notes: This chart last updated 03-15-2026. 
-          Later changes may not be reflected.    
+ [color_name] brackets indicate that the color is hardcoded. 
+ Notes: This chart last updated 06-15-2026. 
+        Later changes may not be reflected.    
 ----------------------------------------------------------------------------------------
 Class:            |         Lokasenna             |        dh_Toolkit      
 attribute:        | property_name   value         | property_name       value       
@@ -97,12 +97,16 @@ Knob:   When increasing the font size for values, one needs to also increase
           knob w and h, or else text overlaps.
 ----------------------------------------------------------------------------------------
 knob style:         n/a             n/a             knob_style         "pointer"
+knob travel:        n/a             n/a             travel              270
 centered: *         n/a             n/a             centered            true
 min value(number):  min             nil             min                 0
 max value(number):  max             nil             max                 10
 increment size:     inc             1               inc                 1
 default setting:    default         nil             default             5
 shadow element:    [auto drawn for knob body]       shadow              false
+
+formatted value:    retval         [read only]      retval             [read only]
+numerical value:    n/a             n/a             cur_num_val        [read only]
 
 caption (string):   caption         nil             caption             ""
 caption position:   n/a             n/a             cap_pos            "top" 
@@ -161,7 +165,7 @@ elm sel.outline:    n/a             n/a             col_active         "elm_acti
          Refer to Lokasenna documentation for details.
 ****   Should correspond in some way to knob steps.
          (Knob.max - Knob.min) / Knob.inc
-*****  If show_values then is also the highlighted text color. 
+*****  Depends on knob style. If show_values then is also the highlighted text color. 
 ****** If display_style is "box".
 
 ----------------------------------------------------------------------------------------
