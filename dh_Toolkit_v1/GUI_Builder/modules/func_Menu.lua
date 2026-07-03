@@ -127,7 +127,7 @@ Menu.menu = {
 function Menu.change_layer_sets(idx)
 
     --GUI.Msg(" #GB.LAYER_SETS : " .. #GB.LAYER_SETS)    
-    GUI.Msg(" Menu.change_layer_sets; idx : " .. idx)
+    --GUI.Msg(" Menu.change_layer_sets; idx : " .. idx)
     --GUI.Msg(" #GB.LAYER_SETS[idx] : " .. #GB.LAYER_SETS[idx])
      
     -- Same item clicked - go no further.
