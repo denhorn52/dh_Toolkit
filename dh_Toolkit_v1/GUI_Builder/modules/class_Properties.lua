@@ -73,19 +73,25 @@ local function apply_value(self)
     --GUI.Msg("\n****   APPLY VALUE   ****\n")
     --GUI.Msg("  self.name is : " .. self.name)    
     --GUI.Msg("  self.class is : " .. self.class)    
+    --GUI.Msg("  self.elm name is : " .. self.elm)    
 
     -- Get reference to selected elm.
-    -- self.elm is selected element name.
-    
     local sel_elm = GUI.elms[self.elm]
-    --GUI.Msg("  self.elm name is : " .. sel_elm.name)    
     
+    --!!! val is the data from the property entry.
+    -- This will always represent normalized values.
+    -- sel_elm may be scaled.
+
     -- Make sure the value is valid, otherwise revert.
     local val = self:validate()
 
     --GUI.Msg("  self.value is : " .. tostring(val))
 
     if val then
+    
+        --local elm_val = val
+        
+        sel_elm.props_norm[self.prop] = val
     
         --GUI.Msg("    if val prop  : " .. self.prop)
         --GUI.Msg("    if val value : " .. tostring(val))
@@ -98,49 +104,103 @@ local function apply_value(self)
             --GUI.Msg("    if Number : type val  : " .. type(val))
 --zzknob
             -- !!! Special cases.
+            --[==[
             if sel_elm.type == "dh_Knob" and sel_elm.centered 
-                and (self.prop == "x" or self.prop == "y" or self.prop == "w") then
+                and ((self.prop == "x") or (self.prop == "y") or (self.prop == "w")) then
 
-                if self.prop == "x" then  
-                    -- Subtract rad.
-                    val = (val - (sel_elm.w // 2))
-
-                elseif self.prop == "y" then
+                -- After a knob is created its x, y is top-left
+                --   of imaginary box containing the knob body.
+                
+                if (self.prop == "x") or (self.prop == "y") then  
                 
                     GUI.Msg("    APPLY val dh_Knob y : " .. val)
                     GUI.Msg("    type of dh_Knob y : " .. type(val))                    
                   
-                    -- Subtract rad, add menu.h, then scale.
-                    --val = (val + MENUBAR_HEIGHT - (sel_elm.w // 2))
+                    -- Subtract rad to get norm x or y.
+                    --val = (val - (sel_elm.w // 2)) 
+                    elm_val = (val - (sel_elm.props_norm.w // 2)) 
                     
-                    -- Subtract rad then scale.
-                    val = (val - (sel_elm.w // 2))                     
+                    -- elm_val now has norm top or left.
+                    -- It will get scaled latrr.
 
-                else --if self.prop == "w" then 
+                elseif (self.prop == "w") then 
+                
                     -- Force width to even so x,y not fractional. 
                     if val % 2 == 1 then 
                         val = val + 1 
                         self:val(val)
                     end
-
+                    
+                    -- This gets new norm rad.
                     local rad = math.floor((val / 2) + 0.5)
                     
+                    -- c will be norm x, y center of knob.
+                    -- Need to find new top-left.
+                    
+                    -- Get existing norm center x.
+                    local c = GUI.Val("GB_prop_x") -- center x
+                    sel_elm.props_norm.x = math.floor((c - rad) + 0.5)
+                    
+                    
+                    --[=[      
                     -- Store new norm x value.
+                    -- Get existing center x.
                     local c = GUI.Val("GB_prop_x") -- center x
                     sel_elm.props_norm.x = math.floor((c - rad) + 0.5)
                     -- Set elm x coord to center for init.
                     sel_elm.x = sel_elm.props_norm.x * DHTK.APP_SCALE
     
                     -- Store new norm y value.
-                    c = GUI.Val("GB_prop_y") -- center
+                    -- Get existing center y.
+                      c = GUI.Val("GB_prop_y") -- center
                     sel_elm.props_norm.y = math.floor((c - rad) + 0.5)
                     -- Set elm y coord to center for init.
                     sel_elm.y = (sel_elm.props_norm.y + MENUBAR_HEIGHT) * DHTK.APP_SCALE
+                    --]=]
+
                 end
 
             end  -- <if knob>
+            --]==]
             
-            -- Can do these here or in validate integer.
+            -- Since knob already created its x,y is top-left.
+            -- Adjust centered x,y to sel_elm x or y.
+            
+            if ((self.prop == "x") or (self.prop == "y")) and
+               (sel_elm.type == "dh_Knob") and (sel_elm.centered == true) then
+                
+                val = (val - (sel_elm.props_norm.w // 2)) 
+                
+            end 
+               
+            if (self.prop == "w") and
+               (sel_elm.type == "dh_Knob") and (sel_elm.centered == true) then
+               
+                -- Force width to even for better drawing. 
+                if val % 2 == 1 then 
+                    val = val + 1 
+                    self:val(val)
+                end
+                
+                -- This gets new norm rad.
+                local rad = math.floor((val / 2) + 0.5)
+                
+                -- Get norm center x.
+                local c = sel_elm.props_norm.x -- 200
+
+                -- props_norm.x doesn't change, but elm x does.
+                sel_elm.x = math.floor(((c - rad) * DHTK.APP_SCALE) + 0.5)
+                
+                -- Get norm center y.
+                local c = sel_elm.props_norm.x -- 200
+                
+                -- props_norm.y doesn't change, but elm y does.
+                sel_elm.y = math.floor(((c - rad) * DHTK.APP_SCALE) + 0.5)
+                
+            end 
+            
+            -- Ensure minimum thicknesses.
+            
             if self.prop == "track_thk" then
                 if val < 4 then val = 4 end
             end
@@ -150,7 +210,9 @@ local function apply_value(self)
             end
             
             -- Store normalized adjusted value.
-            sel_elm.props_norm[self.prop] = val
+            
+            --sel_elm.props_norm[self.prop] = val
+            
             --GUI.Msg("    sel_elm.props_norm : " .. tostring(sel_elm.props_norm[self.prop]))
             
             if self.prop == "y" then
@@ -158,6 +220,7 @@ local function apply_value(self)
             end            
 
             -- Scale it to current app scale.
+            -- Only some integer properties need to be scaled.
             
             if not self.noscale then
                 if self.class == "Integer" then
@@ -169,9 +232,10 @@ local function apply_value(self)
                        
             --GUI.Msg("    scaled value is : " .. tostring(val)) 
 
-        else
-            -- Store non-number value (Could be table).
-            sel_elm.props_norm[self.prop] = val
+        --else
+        
+            -- Store non-number value (could be table).
+        --    sel_elm.props_norm[self.prop] = val
         
         end  -- if number
 
@@ -183,7 +247,7 @@ local function apply_value(self)
         --end        
         
         sel_elm[self.prop] = val
-        
+--------        
         -- INIT, RECREATE, OR REDRAW?
         -- Will recreate init? Yes
         
@@ -200,10 +264,11 @@ local function apply_value(self)
         
         sel_elm:redraw()
         
-        -- Only really necessary for x,y,w,h ?
+        -- Selection outline. Only really necessary for x,y,w,h ?
         GUI.elms.GB_frm_sel_elm:redraw()
 
     else
+    
         -- val is nil.
         
         -- Don't want to revert value.
@@ -1349,6 +1414,10 @@ function Property.List:init()
     elseif self.prop == "frame_thk" then 
         self.optarray = {"1", "2"}
         val = GUI.elms[self.elm].frame_thk
+        
+    elseif self.prop == "travel" then 
+        self.optarray = {"90", "180", "270"}
+        val = GUI.elms[self.elm].frame_thk        
          
     elseif self.prop == "col_backdrop" then      
         self.optarray = {"wnd_bg", "panel_bg"}
@@ -1400,6 +1469,13 @@ function Property.List:apply_value()
     
     if val then
         --GUI.Msg("    # Inside IF val  ")
+        
+        if self.prop == "travel" then
+        
+           GUI.Msg("    # LIST tonumber : " .. val)     
+        
+            val = tonumber(val)
+        end
         
         sel_elm[self.prop] = val
         sel_elm.props_norm[self.prop] = val
