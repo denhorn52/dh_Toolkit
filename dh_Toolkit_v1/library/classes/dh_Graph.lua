@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Graph.lua
--- Date: 20260506
+-- Modified Date: 20260920
 
 ---------------------------------------------------------------------
 --[[ Draws a simple graph. ]] --
@@ -34,8 +34,9 @@ function GUI.dh_Graph:new(name, z, x, y, w, h, bw, rad)
     graph.w = graph.w or GUI.dh_Graph.defaults.w
     graph.h = graph.h or GUI.dh_Graph.defaults.h
     
-    graph.data_points = graph.data_points or GUI.dh_Graph.defaults.data_points
     graph.ref_points = graph.ref_points or GUI.dh_Graph.defaults.ref_points
+    graph.data_points = graph.data_points or GUI.dh_Graph.defaults.data_points
+    graph.data_points2 = graph.data_points2 or GUI.dh_Graph.defaults.data_points2
 
     graph.grid_x_divs = graph.grid_x_divs or GUI.dh_Graph.defaults.grid_x_divs
     graph.grid_y_divs = graph.grid_y_divs or GUI.dh_Graph.defaults.grid_y_divs
@@ -92,9 +93,10 @@ GUI.dh_Graph.defaults = {
     h = 120,
     
 --zzz
+    ref_points = nil,
     --data_points = {0,0,0,0,0,0,0,0,0,0,0},
     data_points = {},    
-    ref_points = nil,
+    data_points2 = {},    
     
     grid_x_divs = 10,
     grid_y_divs = 8, 
@@ -299,7 +301,7 @@ function GUI.dh_Graph:init()
     -- # Draw reference graph.
     
     if self.ref_points then
-        GUI.color({1,0.2,0.2,1})
+        GUI.color({0.85,0.85,0.85,1})
         self:draw_graph(self.ref_points, grid_x, grid_y, y_ref, false)
     end
     
@@ -327,8 +329,20 @@ function GUI.dh_Graph:draw()
 	
 	--GUI.Msg("\n== dh_Graph:draw : call draw_graph with blue ")
 	
-	GUI.color({0,1,1,1})
-	self:draw_graph(self.data_points, self.grid.x, self.grid.y, self.grid.y_ref, true)
+	local color_l = self.data_points2 and {1,0.3,0.3,1} or {0,0.9,0.9,1}
+	local color_r = self.data_points2 and {0,0.9,0.9,1} or {1,0.3,0.3,1}	
+	
+	if self.data_points and (#self.data_points > 0) then
+	    --GUI.color({0,0.9,0.9,1})
+	    GUI.color(color_l)	    
+    	self:draw_graph(self.data_points, self.grid.x, self.grid.y, self.grid.y_ref, true)
+	end
+	
+	if self.data_points2 and (#self.data_points2 > 0) then
+        --GUI.color({1,0.3,0.3,1})
+	    GUI.color(color_r)	            
+	    self:draw_graph(self.data_points2, self.grid.x, self.grid.y, self.grid.y_ref, true)
+	end
 	
 end
 
@@ -348,10 +362,15 @@ function GUI.dh_Graph:draw_graph(dataset, grid_x, grid_y, y_ref, draw_nodes)
     
         -- Just to be safe.
         val = tonumber(val)
-    
-        --GUI.Msg("# draw_graph i : " .. i)    
-        --GUI.Msg("   val : " .. val)
-        --GUI.Msg("   type  val : " .. type(val))
+        
+        --[=[  
+        if i == 7 then
+            --GUI.Msg("\n# draw_graph index : " .. i)
+            --GUI.Msg("  draw_graph freq 392 val : " .. val)                
+            --GUI.Msg("   val : " .. val)
+            --GUI.Msg("   type  val : " .. type(val))
+        end
+        --]=]
                     
         local x_off = gfx.x + self.grid.x_step    
             
