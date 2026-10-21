@@ -1,7 +1,7 @@
 --dh_Toolkit_core.lua
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20260330
+-- Date: 20261009
 
 ------------------------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -35,6 +35,7 @@
 --CHANGELOG:
 
 -- 20260116: Added color functions (used for nighlighting).
+-- 20261009: Fixed wasn't redrawing hidden layers on theme change.
 
 ------------------------------------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
@@ -316,7 +317,7 @@ local function getUserThemes()
 
     local user_theme_name = DHTK.window_settings.user_theme     
 
-    --[-[ xxx TESTING: 
+    --[=[ xxx TESTING: 
     --GUI.Msg("     getUserThemes #DHTK.USER_THEME_NAMES : " .. #DHTK.USER_THEME_NAMES) 
     -- Mimic invalid user theme name.
     --user_theme_name = "Magenta-4xyz"
@@ -882,7 +883,7 @@ end
 -- @param requested_scale: string.
 --  if supplied will use it to scale app.
 --  if not supplied will look for it in menubox.
-  
+--zzz  
 DHTK.scaleApp = function (requested_scale)
 
     --GUI.Msg("\n** dhtk_scaleApp **")
@@ -954,9 +955,8 @@ DHTK.scaleApp = function (requested_scale)
         Elements draw themselves to a buffer once on :init()
           and then just blit/rotate/etc as needed afterward.
           
-        GUI.Main is run on every update loop of the GUI script; anything you would put
-        inside a reaper.defer() loop should go here. (The function name doesn't matter)
-            
+        GUI.Main is run on every update loop of the GUI script. 
+
         GUI.Main <main loop> calls:
            GUI.Main_Update_State() checks if script window w or h changed:
              Yes: updates GUI.cur_w and GUI.cur_h, sets GUI.resized = true,
@@ -970,7 +970,10 @@ DHTK.scaleApp = function (requested_scale)
            
            --****  
            Runs user function <dhMain> if defined.
-             ??? Here I am calling if GUI.resized then gfx.init() and GUI.redraw_z[0] = true
+             (Calls GUI.func if defined. Assign main function here
+                GUI.func = dhMain
+                    Here I am calling if GUI.resized then gfx.init() and GUI.redraw_z[0] = true
+             )
            
            GUI.update_elms_list()
            
@@ -982,7 +985,7 @@ DHTK.scaleApp = function (requested_scale)
              
         dhMain()
             if GUI.resized then
-                gfx.qujit()
+                gfx.quit()
                 gfx.init(GUI.name, GUIO.w, GUI.h, 0, x, y)
                 GUI.redraw_z[0] = true
              
@@ -1004,11 +1007,11 @@ DHTK.scaleApp = function (requested_scale)
     end
       
     GUI.Init()
-    
+--zzz    
     -- This init all elms, but doesn't redraw them.
     -- Therefore next update only redraws visible layers.
     --GUI.update_elms_list(true)     
-    
+
     -- Need to redraw everything, even hidden layers.
 
     for key, elmslist in pairs(GUI.elms_list) do
@@ -1499,7 +1502,6 @@ GUI.New("chkl_Options",	"dh_Checklist",	{
 
     GUI.Val("mbx_dhThemes", DHTK.table_index_from_value(dhth.DH_THEME_NAMES, DHTK.window_settings.theme))
 
---zzz             
     updateOutlines(DHTK.window_settings.use_outlines)
     GUI.Val("chkl_UseOutlines", DHTK.window_settings.use_outlines) 
     
@@ -1552,7 +1554,7 @@ GUI.New("chkl_Options",	"dh_Checklist",	{
     
     end
 
---zzz  
+
     function GUI.elms.mbx_dhThemes:onmouseup()
         --GUI.Msg("# GUI.elms.mbx_dhThemes:onmouseup")           
         local prev_opt = self.curr_opt
@@ -1591,12 +1593,24 @@ GUI.New("chkl_Options",	"dh_Checklist",	{
         end
         
         DHTK.window_settings.theme = dh_theme_name
-     	
-        -- Necessary!
-        GUI.update_elms_list(true)
-    	
-    	GUI.redraw_z[0] = true     	     	
-     	
+--zzz    
+        -- This init all elms, but doesn't redraw them.
+        -- Therefore next update only redraws visible layers.
+        --GUI.update_elms_list(true)   
+      	--GUI.redraw_z[0] = true     	
+        
+        -- Need to redraw everything, even hidden layers.
+
+        for key, elmslist in pairs(GUI.elms_list) do
+            if type(elmslist) == "table" then
+                for idx, elmval in ipairs(elmslist) do
+                    --GUI.Msg("> GUI.elms.list zkey is: " .. zkey .. " : elmval is: " .. elmval .. "\n")
+                    GUI.elms[elmval]:init()
+                    GUI.elms[elmval]:redraw() 
+                end
+            end
+        end
+    
     end
     
     -- If mbx_UserThemes visible there must be at least
@@ -1614,12 +1628,24 @@ GUI.New("chkl_Options",	"dh_Checklist",	{
         local user_theme_name = self.optarray[self.curr_opt]
         DHTK.window_settings.user_theme = user_theme_name
         dhth.set_theme(DHTK.USER_THEMES[user_theme_name], true)
-     	
-        -- Necessary!
-        GUI.update_elms_list(true)
-    	
-    	GUI.redraw_z[0] = true     	
-     	
+--zzz       	
+        -- This init all elms, but doesn't redraw them.
+        -- Therefore next update only redraws visible layers.
+        --GUI.update_elms_list(true)   
+    	--GUI.redraw_z[0] = true     	
+        
+        -- Need to redraw everything, even hidden layers.
+        
+        for key, elmslist in pairs(GUI.elms_list) do
+            if type(elmslist) == "table" then
+                for idx, elmval in ipairs(elmslist) do
+                    --GUI.Msg("> GUI.elms.list zkey is: " .. zkey .. " : elmval is: " .. elmval .. "\n")
+                    GUI.elms[elmval]:init()
+                    GUI.elms[elmval]:redraw() 
+                end
+            end
+        end
+
     end    
 
     function GUI.elms.chkl_UseOutlines:onmouseup()
