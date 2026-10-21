@@ -1,7 +1,7 @@
 --dh_ThemeDesigner.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20260330
+-- Date: 20261009
 
 ------------------------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -390,7 +390,7 @@ end --<save_user_theme>
 --zzz
 local function setTheme(theme_type)
 
-    GUI.Msg("## setTheme:  ")
+    --GUI.Msg("## setTheme:  ")
     
     if theme_type == "user" then
         local theme_index, theme_name = GUI.Val("mbx_UserThemes")
