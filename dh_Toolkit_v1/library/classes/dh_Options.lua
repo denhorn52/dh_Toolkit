@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Options.lua
--- Date: 20260330
+-- Date: 20261009
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Options class
@@ -38,7 +38,7 @@
        need to see which item was clicked.
      20251105 Added shadows.
      20251109 Removed property "pad. Replaces with "pad_x" and "pad_y".  
-       
+
 --]]
 ---------------------------------------------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
@@ -457,8 +457,10 @@ function dh_Option:drawoptions()
     -- Assuming cap_h = 24; cap_pad_y  = 4
     -- above: 28; middle: 12; below: -(bw + 4)
     
-    if self.cap_pos == "inside" then    
-        y = y + bw + self.cap_pad_y + self.cap_h + self.pad_y
+    -- This is for first option.
+    if self.cap_pos == "inside" then
+        --y = y + bw + self.cap_pad_y + self.cap_h + self.pad_y           
+        y = y + bw + self.cap_pad_y + self.cap_h + (self.pad_y // 2)
     else  -- if top or no caption
         y = y + bw + self.pad_y
     end
