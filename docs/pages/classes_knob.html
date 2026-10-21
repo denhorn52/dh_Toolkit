@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -24,36 +27,40 @@
     <div class="pageBody">
 
 <div class="heading">dh_Knob: </div>
+
+<div class="sectionIndent100"> <!-- # MAIN -->
     
-<div class="sectionDefault"> 
+<p class="top100"> 
 Draws a knob with optional caption and optional display. 
 Built upon the Lokasenna Knob. Changed some property names, 
 and added many customizable features.
-</div>
+</p>
 
 <div class="subHeading">Basic Properties: </div>
 
-<div class="sectionListItemIndented">             
-<span class="textEmphasis110">centered: </span>                       
+<div class="sectionIndent100"> <!-- # Basic Properties -->
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">centered: </span>                       
 If false then knob is positioned with x and y as the top-left 
 of an imaginary square around knob body. 
 If true then knob is positioned with x and y as the center of knob.
 </div>
 
-<div class="sectionListItemIndented">             
-<span class="textEmphasis110">min: </span>                       
+<div class="hanging050 top075">
+<span class="textEmphasis105">min: </span>                       
 The minimum range of the knob (fully counter-clockwise). 
 May be an integer or floating-point number.
 </div>
 
-<div class="sectionListItemIndented">             
-<span class="textEmphasis110">max: </span>                       
+<div class="hanging050 top075">
+<span class="textEmphasis105">max: </span>                       
 The maximum range of the knob (fully clockwise). 
 May be an integer or floating-point number.
 </div>
 
-<div class="sectionListItemIndented">             
-<span class="textEmphasis110">inc: </span>                       
+<div class="hanging050 top075">
+<span class="textEmphasis105">inc: </span>                       
 This is the value that the Knob's output changes with each 
 step of the knob's rotation. May be an integer or 
 floating-point number. The increment determines the 
@@ -61,8 +68,8 @@ number of steps in the knob's rotation:
 <span class='inlineBlock'>(max - min) / inc</span>
 </div>
 
-<div class="sectionListItemIndented">             
-<span class="textEmphasis110">default: </span>                       
+<div class="hanging050 top075">
+<span class="textEmphasis105">default: </span>                       
 This determines the initial value of the knob, and where it 
 returns to when double-clicked. 
 The default value must be an integer corresponding to a step 
@@ -82,29 +89,32 @@ in the knob's range (0 to steps), with 0 being fully ccw.
 </pre>
 </div>
 
-<div class="sectionIndented"> 
-<span class="textEmphasis110">knob_style: </span>                       
+<div class="hanging050 top075">
+<span class="textEmphasis110">knob_style: </span>
+</div>
 
-<div class="sectionListItemIndented">             
+<div class="sectionIndent100"> <!-- # knob style -->
+
+<div class="hanging050 top075">                       
 <span class="textEmphasis">Pointer:</span>
 Displays a knob with a triangular pointer attached to the 
 knob body. 
 </div>
 
-<div class="sectionListItemIndented">             
+<div class="hanging050 top075">                       
 <span class="textEmphasis">Flange:</span>
 Displays a knob with a flange and a central body.
 The indicator is a white line on a black flange.
 </div>
 
-<div class="sectionListItemIndented">             
+<div class="hanging050 top075">                       
 <span class="textEmphasis">Simple:</span>
 Displays a round knob with the indicator on top.
 </div> 
 
 </div> <!-- end knob style -->
 
-<div class="sectionListItemIndented">             
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">travel: </span>                       
 Accepts one of three values: 90,180, 270.<br>
 The default is 270 degrees (135 left and 135 right from top). 
@@ -112,57 +122,64 @@ The default is 270 degrees (135 left and 135 right from top).
 and 90 right.
 </div>
 
-<div class="sectionListItemIndented">             
-<span class="textEmphasis110">retval: </span>                       
+<div class="hanging050 top075">                       
+<span class="textEmphasis110">retval: </span> 
+It holds the current value as a formatted string.                       
 It is calculated internally and should not be set directly. 
-It can be accessed directly.
+Set it using GUI.Val("knob_name", val)
+It can be accessed directly, or by using GUI.Val("knob_name")
 It holds the current value as a formatted string. 
 </div>
 
-<div class="sectionListItemIndented">             
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">cur_num_val: </span>                       
 It is calculated internally and should not be set directly. 
 It can be accessed directly.
 It holds the current numerical value. 
 </div>
 
+</div> <!-- end # Basic Properties -->
+
+
 <div class="subHeading">Display Properties: </div>
 
-<div class="sectionIndented"> 
+<div class="sectionIndent100"> <!-- # Display Properties -->
+
+<div class="hanging050 top075">                       
 There are several ways to display the current value of the knob. 
 You can use any or a combination of the various ways.
 </div>
 
-<div class="sectionListItemIndented"> 
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">show_values: </span> 
 If true then values are displayed as numbers around the knob. 
 Note: when increasing 'font_values' size you may need to also 
 increase 'pad_values', or else values may overlap.
 </div>
 
-<div class="sectionListItemIndented"> 
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">output: </span> 
 This property is used to modify how values are displayed. 
 It accepts a table or a function. See Lokasenna docs for details.        
 </div> 
 
-<div class="sectionListItemIndented"> 
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">show_tickmarks: </span> 
 If true then tickmarks will be drawn around the knob.
 </div>
 
-<div class="sectionListItemIndented"> 
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">tickmark_size: </span> 
 Set the size of the tickmarks.<br>
 </div>
 
-<div class="sectionListItemIndented"> 
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">tickmark_steps: </span> 
 Tickmark steps should have some correspondence to knob steps.
 Say, knob steps is 100, tickmark_steps can be 10.
 </div>
  
-<div class="sectionListItemIndented"> 
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">hard_ticks: </span> 
 Hard ticks refers to a set of tickmarks which 
 can be enhanced with length and/or thickness. 
@@ -173,8 +190,7 @@ If 'hard_ticks' is nil or an empty table, or 'show_tickmarks'
 is false then no hard ticks will be drawn.
 </div>
 
-
-<div class="sectionListItemIndented">  
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">show_min_max: </span>
 If true alpha-numerical values can be drawn at specified steps. 
 Although the property is called 'min_max_values' it can also 
@@ -186,8 +202,7 @@ to be displayed. The position is an integer corresponding to a
 knob step. The value is a string so anything alpha-numerical is valid. 
 </div> 
 
-
-<div class="sectionListItemIndented">  
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">display_style: </span> 	  
 The current value can be displayed in a box above (or below) the knob. 
 If 'display_style' is "none" then a box will NOT be displayed. 
@@ -201,7 +216,7 @@ the knob is placed.
 It can be "left", "center", or "right".
 </div> 
 
-<div class="sectionListItemIndented">  
+<div class="hanging050 top075">                       
 <span class="textEmphasis110">col_frame: </span> 	  
 The display box frame color, by default, uses highlight/lowlight 
 colors that are automatically calculated from the 'col_backdrop' color. 
@@ -211,7 +226,7 @@ property to true. Some themes can call for single color outlines
 regardless of the 'frame_use_outline' setting.
 </div>
 
-
+</div> <!-- end # Display Properties -->
 
 
 <div class="chartCont text110">
@@ -288,6 +303,8 @@ elm sel.outline:      col_active         "elm_active"
        except 'flange' style uses white.      
 ---------------------------------------------------------</pre>
 </div> 
+
+</div><!-- end # MAIN -->  
 
     <br><br>
     </div>  <!-- end pageBody -->

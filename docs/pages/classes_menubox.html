@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -25,17 +28,21 @@
     
 <div class="heading">dh_Menubox:</div>
 
-<div class="subHeading">Same as Lokasenna Menubox except for: </div>
+<div class="sectionIndent100"> <!-- # MAIN -->
+
+<div class="subHeading top100">Same as Lokasenna Menubox except for: </div>
+
+<div class="sectionIndent100"><!-- # LIST -->
                        
-<div class="sectionIndented"> 
+<div class="hanging050 top075">
 Changed some property names and default values.</span><br>  
 </div> 
 
-<div class="sectionIndented"> 
+<div class="hanging050 top075">
 Allows all of the color properties to be overridden.
 </div> 
 
-<div class="sectionIndented"> 
+<div class="hanging050 top075">
 Frame color, by default, uses highlight/lowlight colors that 
 are automatically calculated from the 'col_backdrop' color. 
 However, the frame can be set to use a single color (specified 
@@ -44,19 +51,23 @@ by the 'col_frame' property) by setting
 single color outlines regardless of the 'frame_use_outline' setting.
 </div>
 
-<div class="sectionIndented"> 
+<div class="hanging050 top075">
 Added property 'curr_opt' to replace 'retval'. (It does the 
 same thing, I just find it to be more descriptive).
 </div>
 
-<div class="sectionIndented"> 
+<div class="hanging050 top075">
 Changed position where menu pops up.
 </div>
 
+</div><!-- end # LIST -->
 
-<div class="subHeading">Properties:</div>
 
-<div class="sectionListItemIndented">             
+<div class="subHeading top150">Properties:</div>
+
+<div class="sectionIndent100"> <!-- # Properties -->
+
+<div class="hanging050 top075">             
 <span class="textEmphasis">opts </span>or 
 <span class="textEmphasis"> optarray: </span>
 Menubox options can be specified as a table of strings using 
@@ -70,20 +81,23 @@ Option2, Option3") it will be converted to a table and get
 stored in 'optarray'. As with gfx.showmenu, 
 there are a few special symbols that can be added at 
 the beginning of an option:
+
 <div class="sectionIndented">                 
 # : grayed out<br>
 > : this menu item shows a submenu<br>
 < : last item in the current submenu<br>
 An empty field will appear as a separator in the menu.<br>
 </div>
+
 </div>
 
-<div class="sectionListItemIndented">             
+<div class="hanging050 top075">             
 <span class="textEmphasis">curr_opt:</span>
 This is the index number of the currently selected option. 
 If not specified it will be the first option. 
 </div>
 
+</div> <!-- end # Properties -->
 
 <div class="chartCont text110">
 <pre>--------------------------------------------------------
@@ -124,7 +138,7 @@ backdrop:           col_backdrop       "wnd_bg"
 ----------------------------------------------------------------------------</pre>
 </div> 
 
-
+</div><!-- end # MAIN -->  
 
     <br><br>
     </div>  <!-- end pageBody -->

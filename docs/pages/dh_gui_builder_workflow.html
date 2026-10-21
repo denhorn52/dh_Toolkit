@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -24,22 +27,23 @@
 
 <div class="heading">4.01 Example Workflow:</div>
 
+<div class="sectionIndent100"> <!-- section #4.01 -->  
 
-<div class="sectionIndented top100">  
+<p class="top100">  
 Say you are developing a script called "MyScript.lua" 
 Save your main script "MyScript.lua" in the "scripts" 
 directory. (You can use a copy of dh_Template.lua as a starting 
 point. More on this later.) 
-</div>
+</p>
 
-<div class="sectionIndented top100">  
+<p>  
 In GUI Builder create a new project.
 In 'Project Settings' set the name of your project to "MyScript". 
 Insert elements in the workspace. They will created on layer 1. 
 You can then edit the 'z' property to place it on a different layer.
-</div>
+</p>
 
-<div class="sectionIndented top100">  
+<p>  
 Many elements can appear on the same layer. Even so, any element 
 that has heavy usage, and needs to be redrawn frequently are probably  
 best to be on their own layer. How many layers are possible? 
@@ -47,9 +51,9 @@ Good question. I believe somewhere in the Lokasenna documentation
 it says 1024. But the real limitation might be how many drawing 
 buffers are available. One reference states 128. Another says 1024. 
 I wonder if anybody really knows.
-</div>
+</p>
 
-<div class="sectionIndented top100">  
+<p>  
 All elements names must be unique. GUI Builder has 
 mechanisms to ensure names are unique. It is recommended to  
 decide on an element's name early on so that you 
@@ -57,26 +61,26 @@ do not need to change it later. Later changes may affect any
 property assignments made in the main script. 
 I use the convention: element type, underscore, functionality. 
 Hence 'btn_SetColor' signifies a button used to set a color.
-</div>
+</p>
 
-<div class="sectionIndented top100">  
+<p>  
 dh_Toolkit classes are Lokasenna classes that have been 
 modified to be compatible with dh_Toolkit theming. They also 
 include other enhancements.
 Although the Lokasenna classes are available to use, I 
 recommend using the dh_Toolkit classes due to the 
 aforementioned reasons.
-</div>
+</p>
 
-<div class="sectionIndented top100">  
+<p>  
 An element class refers to the definition of an element and is 
 contained in a class file, e.g., dh_Button.lua is the class 
 file that defines the class dh_Button. 
 An element refers to a 
 created instance of a class.
-</div>
+</p>
 
-<div class="sectionIndented top100">  
+<p>  
 A dh_Tabs element can be used to groups elements for display. 
 The dh_Tabs class has a property 'z_sets' which is a table 
 that contains the layer (z) numbers of the layers which will 
@@ -86,17 +90,18 @@ on a single tab, or on multiple tabs.
 GUI Builder has a Tabs Title Editor which is used to add, 
 remove, rename, and reposition tabs. The Tabs Z_sets editor 
 is used to define what layers are to appear on a particular tab. 
-</div>
+</p>
 
-<div class="sectionIndented top100">  
+<p>  
 Save the project with 'File -> Save Elements'. 
 The file will be saved to the "scripts" directory with the name 
 "MyScript_ELMS.lua". 
-</div>
+</p>
 
-<div class="sectionIndented top100">  
+<p>  
 In "MyScript.lua" insert the following code in the "Elements" 
 section:
+</p>
 
 <div class="preCont text110"> 
 <pre>
@@ -104,17 +109,19 @@ load(GUI.script_path .. "MyScript_ELMS.lua")()
 </pre>
 </div>
 
-</div>
-
-<div class="sectionIndented top100">  
+<p>  
 All of the elements will now appear when you run "MyScript.lua".
 Any additional changes to your layout that you save to 
 "MyScript_ELMS".lua" will appear the next time you run "MyScript.lua".
-</div>
+</p>
+
+</div> <!-- end #4.01 -->
 
 <div class="heading">4.01.01 Additional assignments:</div>
 
-<div class="sectionIndented">
+<div class="sectionIndent100"> <!-- # Additional Assignments -->
+
+<p>
 After the elements are loaded it is time to make additional 
 assignments to some of the elements' properties. These additional 
 assignments need to be made after "MyScript_ELMS.lua" is loaded  
@@ -129,25 +136,29 @@ The only problem arises when changing an element's name or
 deleting an element within GUI Builder, which can result in 
 any additional assignments made in the main script 
 no longer being valid. 
-</div>
+</p>
 
-<div class="sectionIndented">
-<span class="textEmphasis110">Button functions: </span>  
+
+<p class="top075">
+<span class="textEmphasis110">Button functions: </span>
+</p>
+
+<p class="top075">
 Buttons have a property 'func'. It accepts the name 
 of a function which is to be called when the button is clicked. 
 It also has an optional property 'params' which include any 
 parameters which should be passed to that function. 
-
-<div class="sectionDefault">
+</p>
+<p>
 GUI Builder does not expose the 'func' property for editing. 
 That property should only be assigned in the main script. 
 Let's just say that keeping that tenet makes maintenence 
 so much easier.
-</div>
-<div class="sectionDefault">
+</p>
+<p>
 Note: There is an order to where these components are placed. 
 Say:
-</div>
+</p>
 
 <div class="preCont text110">
 <pre>
@@ -155,7 +166,7 @@ button.func = MyButtonFunc,
 </pre>
 </div>
 
-<div class="sectionDefault top100">
+<p class="sectionDefault top100">
 MyButtonFunc needs to be declared before this button 
 assignment is made, whether that assignment is in the element's 
 creation parameters, or a later assignment. The later 
@@ -163,20 +174,20 @@ assignment allows that any changes made to the layout
 ("MyScript_ELMS.lua") does not affect the main script. 
 In the template file, "dh_Template.lua", MyButtonFunc could 
 be placed in the section titled "Element Functions".
-</div>
+</p>
 
-<div class="sectionDefault">
+<p>
 Next is the element creation section. It is here where the 
 elements are defined or imported.
 In the template file, "dh_Template.lua", 
 the elements could be placed in
 the section titled "Elements".
-</div>
+</p>
 
-<div class="sectionDefault">
+<p>
 Next is property assignments. This obviously needs to be 
 after element creation. 
-</div>
+</p>
 
 <div class="preCont text110">
 <pre>
@@ -184,17 +195,21 @@ GUI.elms["MyButtonName"].func = MyButtonFunc
 GUI.elms["MyButtonName"].params = {...}
 </pre>
 </div>
+<!--end button functions -->
 
-</div>  <!--end button functions -->
 
-<div class="sectionIndented top100">
-<span class="textEmphasis110">Element method overrides: </span>  
+<p class="top200">
+<span class="textEmphasis110">Element method overrides: </span>
+</p>
+
+<p class="top075">  
 An element's methods, esp., mouse events can be overridden 
 to provide additional functionality. These overrides need 
 to be placed after the element is declared (or imported). 
 I place mine in the main script section "Method Overrides".
+</p>
 
-<div class="preCont text110">
+<div class="preCont text110"> <!-- Method overrides -->
 <pre>
 -- Example mouseup override:
 
@@ -209,12 +224,15 @@ function GUI.elms.lbx_SnapshotsNames:onmouseup()
 	
 end
 </pre>
-</div><!-- end Method overrides -->
+</div> 
+<!-- end Method overrides -->
 
-</div>
 
-<div class="sectionIndented top100">
-<span class="textEmphasis110">Menu assignments: </span>  
+<p class="top200">
+<span class="textEmphasis110">Menu assignments: </span>
+</p>
+
+<p class="top075">  
 The Menubar.menus and Menubox.optarray properties reference 
 menus that can get fairly complicated. They can have sub-menus, 
 grayed-out items, and separators. (In dh_ThemeDesigner 
@@ -225,6 +243,7 @@ properties, and that is for layout purposes only.
 Because of this restriction it is necessary to design your 
 menus in the main script then later assign them to the 
 appropriate element (after the element is declared or imported).
+</p>
 
 <div class="preCont text110">
 <pre>
@@ -241,8 +260,9 @@ GUI.elms["MyMenubar"].menus = {
 </pre>
 </div>
 
-<br>
+<p>
 You can also define the menu earlier, and then assign it.
+</p>
 
 <div class="preCont text110">
 <pre>
@@ -262,16 +282,20 @@ load(GUI.script_path .. "MyScript_ELMS.lua")()
 -- Make the assignment.
 GUI.elms["MyMenubar"].menus = myMenus
 </pre>
-</div>
+</div> 
+<!-- end Menu assignments -->
 
-</div><!-- end Menu assignments -->
 
-<div class="sectionIndented top100">
-<span class="textEmphasis110">Layer sets: </span>  
+<p class="top200">
+<span class="textEmphasis110">Layer sets: </span>
+</p>
+
+<p>  
 Layer sets are saved in the Elements file as GB_Project_Layer_Sets. 
 They then are loaded (imported) as the same. Layer set 1 will be 
 GB_Project_Layer_Sets[1]. You can use this imported vatiable 
 as is, assign it to another variable, or just create a new variable. 
+</p>
 
 <div class="preCont text110">
 <pre>
@@ -280,9 +304,10 @@ local my_layer_set = {45, 46, 47}
 </pre>
 </div>
 
-<br>
+<p>
 Hide the layers in the layer set. This, obviously, has to 
 be after the elements are loaded.
+</p>
 
 <div class="preCont text110">
 <pre>
@@ -293,10 +318,11 @@ end
 </pre>
 </div>
 
-<br>
+<p>
 There needs to be a way to show the layer set. One way is to 
 override a button mouseup event. You can also use, perhaps, 
 a function assigned to a menu item. 
+</p>
 
 <div class="preCont text110">
 <pre>
@@ -327,8 +353,9 @@ end
 </pre>
 </div>
 
-<br>
+<p>
 You also need to be able to restore the previous state.
+</p>
 
 <div class="preCont text110">
 <pre>
@@ -350,11 +377,14 @@ function GUI.elms.btn_RestoreLayers:onmouseup()
 end
 </pre>
 </div>
+<!-- end # Layer sets -->
 
-</div><!-- end Layer sets -->
+</div> <!-- end # Additional Assignments -->
 
-<div class="heading">4.01.02 Using a template: </div>
-<div class="sectionIndented">
+
+<div class="heading top200">4.01.02 Using a template: </div>
+
+<p class="left100 top075">
 <span class="textEmphasis110">Using a template: </span>  
 dh_Toolkit provide a couple of scripts can be used as templates 
 for a new script: "dh_Template.lua" and "dh_Template-multi.lua". 
@@ -366,7 +396,7 @@ Refer to section
 <span class = "textEmphasis">"7.04 Anatomy of a script" </span>
 for a brief 
 desription.
-</div>
+</p>
 
      <br><br><br>   
      </div>  <!-- end pageBody --> 

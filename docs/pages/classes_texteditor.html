@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -24,27 +27,33 @@
     <div class="pageBody">
     
 <div class="heading">dh_TextEditor:</div>
+
+<div class="sectionIndent100"> <!-- # MAIN -->
     
-<div class="subHeading">Same as Lokasenna TextEditor except for:</div>    
+<p class="top100"> 
+Same as Lokasenna Textbox except for:
+</p>
 
-<div class="sectionIndented">
+<div class="sectionIndent100">
+
+<p>
 Changed most of the property names for consistency with other dh_Toolkit classes.
-</div> 
+</p> 
 
-<div class="sectionIndented">
+<p>
 Allows all of the color properties to be overridden, including the scrollbar thumb.
-</div> 
+</p> 
 
-<div class="sectionIndented">
+<p>
 Frame color, by default, uses highlight/lowlight colors that 
 are automatically calculated from 'col_backdrop' color. 
 However, the frame can be set to use a single color (specified 
 by the 'col_frame' property) by setting 
 'frame_use_outline' property to true. Some themes can call for 
 single color outlines regardless of the 'frame_use_outline' setting.
-</div>
+</p>
 
-<div class="sectionIndented">
+<p>
 Added ability to change the selected text highlight color.
 The property 'col_sel_text' specifies the highlight color. 
 That color is ADDED to the list background color to produce 
@@ -53,13 +62,14 @@ The GUI color 'sel_txt' is an alpha adjusted color.
 If 'sel_txt' color is specified it will use 
 its alpha and color. Otherwise it will use the 
 specified color with a default alpha of 0.5.
-</div>
+</p>
 
-<div class="sectionIndented">
+<p class="bottom000">
 The scrollbar track color is specified with the 'col_track' color. 
 Scrollbar thumb and outline are automatically calculated using it. 
-</div>
+</p>
 
+</div>
 
 <div class="chartCont text110">
 <pre>--------------------------------------------------------
@@ -110,7 +120,7 @@ backdrop:           col_backdrop       "wnd_bg"
 ----------------------------------------------------------------------------</pre>
 </div>
 
-
+</div><!-- end # MAIN -->  
 
     <br><br>
     </div>  <!-- end pageBody -->

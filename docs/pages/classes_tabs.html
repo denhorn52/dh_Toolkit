@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -25,17 +28,19 @@
     
 <div class="heading">dh_Tabs:</div>
 
-<div class="sectionDefault">
+<div class="sectionIndent100"> <!-- # MAIN -->
+
+<p class="top100"> 
 Same as Lokasenna Tabs except changed most property names.  
-</div>
+</p>
 
 <div class="subHeading">Properties:</div>
 
-<div class="sectionIndented">
+<div class="sectionIndent100"> <!-- # Properties -->
 
-<div class="sectionListItem">             
-<span class="textEmphasis">opts </span>or 
-<span class="textEmphasis"> optarray: </span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">opts </span>or 
+<span class="textEmphasis105"> optarray: </span>
 The titles of the tabs. Can be specified as a table of strings using 
 'opts' or 'optarray', or a comma separated string using 'opts'.
 Tab titles are ultimately stored in 'optarray'.
@@ -47,37 +52,37 @@ Tab2, Tab3") it will be converted to a table and get
 stored in 'optarray'. 
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">tab_w:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">tab_w:</span>
 The width of the individual tabs.
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">tab_h:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">tab_h:</span>
 The height of the tab bar.
 </div>
 
-<div class="sectionListItem">
+<div class="top075">
 Note: The tab bar draws a 6 pixel high rectangle at the bottom 
 using "wnd_bg" color to cover up some "ugliness" at bottom of bar. 
 This adds 6px to the tab_h. I think there is better way to handle 
 this, but haven't attacked it yet.
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">fullwidth:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">fullwidth:</span>
 When true the menu extends to the right of the script window.
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">limit_w:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">limit_w:</span>
 When 'fullwidth' is false this can be set to limit the 
 width of the menubar. If less than the width of the combined titles, 
 the latter will be used. If set to 0 then the combined title width 
 will be used.
 </div>
 
-</div><!-- end Properties -->
+</div><!-- end # Properties -->
 
 
 <div class="chartCont text110">
@@ -102,6 +107,8 @@ inactive tab:       col_tab_inactive   "tab_inactive"
 
 --------------------------------------------------------</pre>
 </div> 
+
+</div><!-- end # MAIN -->  
 
     <br><br>
     </div>  <!-- end pageBody -->

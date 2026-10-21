@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -22,94 +25,103 @@
     
 <div class="heading">5.00 Library:</div> 
            
-<div class="sectionIndented"><!-- sectiom #1 -->
+<p class="left100">
 The library/common directory contains the files used to 
 implement scaling and theming of scripts utilizing 
 the Lokasenna GUI library, and the dh_Toolkit library. 
 The library/classes directory contain modified Lokasenna classes (see Classes section). 
-</div><!-- end Section #1 -->
+</p>
 
-<div class="heading">5.00.1 library/common directory</div>
+<div class="heading top150">5.00.1 library/common directory</div>
 
-<div class="sectionIndented">  <!-- sectiom #2 --> 
+<div class="sectionIndent100"> <!-- sectiom #1 --> 
  
-<div class="subHeading">dh_Toolkit_core.lua:</div>
+<div class="subHeading top100">dh_Toolkit_core.lua:</div>
         
-<div class="sectionIndented">  
+<div class="sectionIndent100">  <!-- sectiom #1a -->
+
+<p>   
 This module is the heart of dh_Toolkit. It manages the scaling 
 of the script window, managing themes, scaling fonts, and saving and loading 
 the settings pertaining to both. It also contains the color 
 functions used by some of the classes. It provides a "Preferences" window 
 for choosing scaling and themes. For proper usage refer 
 to the highly commented dh_Template files in the "scripts" directory.
-</div>
+</p>
                 
-<div class="sectionIndented">  
+<p>  
 This file also contains some utility functions that may be of use to adeveloper. See the file for further explanation. 
 The most likely to be used by the developer are:
-</div>
+</p>
 
-<div class="sectionIndented">  
-
-    <div class="sectionListItemIndented">   
+<div class="sectionIndent100"> <!-- section #1b -->  
+    <div class="top050">   
       function DHTK.return_focus_to_reaper()
     </div>    
-    <div class="sectionListItemIndented">   
+    <div class="top050">   
       function DHTK.hash_table_length(t) 
-    </div>
-    <div class="sectionListItemIndented">   
+    </div>    
+    <div class="top050">   
       function DHTK.table_index_from_value(tbl, val)
-    </div>
-    <div class="sectionListItemIndented">   
+    </div>    
+    <div class="top050">   
       function DHTK.validate_name(name, show_msg)
-    </div>
-    <div class="sectionDefault">   
-      There are several other functions which are used 
-      by dh_ThemeDesigner which are made public. 
-      You probably won't need to use them, but see file for description.
-    </div> 
+    </div>    
+</div> <!-- end Section #1b -->         
     
-</div>  
+<p>   
+  There are several other functions which are used 
+  by dh_ThemeDesigner which are made public. 
+  You probably won't need to use them, but see file for description.
+</p>
+    
+
+</div> <!-- end Section #1a -->
+</div> <!-- end Section #1 -->
+
                                                                                  
 <div class="subHeading">dh_Toolkit_themes.lua:</div>
             
-<div class="sectionIndented">  
+<p class="left100">  
 This module contains several pre-defined themes, and the functions 
 for handling colors and setting the theme. 
 You probably will not need to directly access any of these.
-</div>
+</p>
 
 <div class="subHeading">gui_overrides.lua:</div>
             
-<div class="sectionIndented">  
+<div class="sectionIndent100"> 
+
+<p> 
 Although I attempted to develop dh_Toolkit without making any 
 modifications to the Lokasenna GUI, I eventually found it 
 necessary. The Lokasenna text elements classes do not reuse 
 their drawing buffers if re-initialized while a script is 
 running. This can result in a script crashing due to a lack of 
 buffers. I have overridden those classes' init( ) functions 
-to overcome that. 
-<div class="sectionDefault">  
+to overcome that.
+</p> 
+<p>  
 GUI.GetBuffer( ) function limits buffer assignment to the range of 
 1023 to z-layer max + 1. This made no sense to me. Buffers 
 shouldn't need to be tied to z-layers. So I have also overridden 
 that function. Ideally, I think the Lokasenna GUI should be 
 updated, but in the interim this works fine. 
-</div>
-<div class="sectionDefault">  
+</p>
+<p>  
 This file needs to be loaded after the Lokasenna classes are loaded.  
+</p>
+
 </div>
 
-
 </div>
 
-
-</div><!-- end Section #2 -->
+</div> <!-- end Section #2 -->
 
 
 <div class="heading">5.00.2 library/classes directory</div>
 
-<div class="sectionIndented">  
+<p class="left100">  
 dh_Toolkit defines element classes derived from the Lokasenna classes. 
 They differ mainly with renaming of some property names, 
 and/or default colors, and in some cases additional properties and functionality. 
@@ -117,7 +129,7 @@ They are prefixed with "dh_". For basic functionality and
 usage of the Lokasenna GUI and its classes refer to its 
 <a href="https://github.com/jalovatt/Lokasenna_GUI/wiki">website</a>. 
 Any differences are noted on page <a href="classes.html">"4.02 Classes"</a>.
-</div>
+</p>
 
 
 

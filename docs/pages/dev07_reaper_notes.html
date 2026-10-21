@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -24,18 +27,18 @@
         
 <div class="heading">7.07 Reaper Notes:</div>   
      
-<div class="sectionDefault left050">     
+<div class="sectionIndent100"> <!-- #MAIN -->
+
                                 
-<div class="sectionListItem">
+<p class="hanging100">
 <span class="textEmphasis110">Using reaper.SetProjectExtState to persist data:</span>
-</div>
+</p>
 
-<div class="sectionDefault left050">     
+<p class="left050">     
 Save a key/value pair for a specific extension, to be restored the next time this specific project is loaded.
-</div>
+</p>
 
-<div class="sectionDefault left050">     
-<div class="preCont text110">
+<div class="preCont left050">
 <pre>integer reaper.SetProjExtState(ReaProject proj, string extname, string key, string value)
 
 Params:
@@ -50,28 +53,28 @@ Returns the size of the state for this extname.
 If val is "" it returns size = 2.
 </pre>
 </div>
-</div>
                 
-<div class="sectionDefault left050">     
+<p class="left050">     
 If data is a table it can be compiled into string using json_encode.
-</div>
+</p>
                 
-<div class="sectionDefault left050">     
-IMPORTANT: Table must be an indexed table or keyed table.
+<p class="left050">     
+<b>IMPORTANT:</b> Table must be an indexed table or keyed table.
   Mixed tables will crash script and may crash reaper.
 Although I use json.lua, any stringify method should work.
 
 Trying to encode values which are unrepresentable in JSON will never result in type conversion or other magic: 
 sparse arrays, tables with mixed key types or invalid numbers (NaN, -inf, inf) will raise an error.
-</div>
+</p>
         
-<br><hr>
-<div class="sectionDefault">     
-Note: gfx draws circle, hence roundrect, one pixel larger than design size. 
-A circle with radius of 9 will yield a diameter of 19; a radius of 10 will yield a diameter of 21.
-</div>
+<hr>
 
-</div>
+<p class="left050">     
+<b>Note:</b> gfx draws circle, hence roundrect, one pixel larger than design size. 
+A circle with radius of 9 will yield a diameter of 19; a radius of 10 will yield a diameter of 21.
+</p>
+
+</div> <!-- end #MAIN -->      
 
     <br><br><br>
     </div>  <!-- end pageBody -->

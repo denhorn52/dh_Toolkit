@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -22,23 +25,26 @@
     
     <div class="pageBody">
 
-<div class="heading">2.04 dh_HearingTest:</div><br>
-        
-<div class="imgTitle">dh_HearingTest (showing Mocha theme)</div>
-<div class="imgContainer"><img src="../images/hearing_test.png" alt="dh_HearingTest"></div>  
+<div class="heading">2.04 dh_HearingTest:</div>
 
-<div class="subHeading">Introduction: </div>
-<div class="sectionIndented"> 
+<div class="sectionIndent100"> <!-- # Hearing Test -->
+
+<div class="subHeading top150">Introduction: </div>
+
+<div class="sectionIndent050 top075"> 
 Say, an individual has a significant hearing loss at 3000Hz. 
 While mixing a song that person may tend to boost the gain at 
 that frequency so it sounds good to him or her. But for a 
 person with "normal" hearing that boost may not be so pleasing. 
-Another factor is, even a person with normal hearing perceives a 1 Khz tone 
-to be louder than a 200hz tone with the same sound pressure.
+Also, consider equal loudness perception. Even a person with 
+normal hearing perceives different frequencies with the same 
+sound pressure level to be different loudness than the 1 Khz 
+reference frequency.
 </div>
 
-<div class="subHeading">Objective: </div>
-<div class="sectionIndented"> 
+<div class="subHeading top150">Objective: </div>
+
+<div class="sectionIndent050 top075"> 
 To produce a dataset of an individual's perceived loudness 
 to a set of tones, using a Fletcher-Munson curve of equal loudness 
 (to what is considered normal hearing) as a reference. 
@@ -46,201 +52,472 @@ The data can then be used to set up an equalizer to compensate
 your mix for any hearing loss, so that you may hear it more as 
 someone with normal hearing while not actually boosting frequencies 
 where they shouldn't be boosted. 
-Note: The equalizer should be the last fx on your master track.  
+Note: The equalizer should be the last fx on your master track. 
+Enable the equalizer during mixing. Disable it when rendering output.
 </div>
 
-<div class="subHeading">Notes: </div>
-<div class="sectionIndented"> 
+<div class="subHeading top150">Fletcher-Munson curves: </div>
 
-<div class="sectionDefault"> 
+<div class="sectionIndent050"> <!-- # Fletcher-Munsun curves --> 
+
+<p class="top075"> 
+Fletcher-Munson curves are datasets of perceived equal loudness 
+to a reference frequency at a particular sound pressure level. 
 The Fletcher-Munson curve of 60 phon is defined as 
-60db sound pressure level (at your ears) at 1Khz. 
-60db is considered the level of normal conversation.
-If calibrating to 60db SPL then you use the 60 phon curve 
-for the subsequent test. The starting loudness of the other 
+60dB sound pressure level (at your ears) at 1Khz. 
+60dB is considered the level of normal conversation.
+If calibrating to 60dB SPL then you use the 60 phon curve 
+for the subsequent tests. The starting loudness of the other 
 frequencies will be adjusted using the curves.
+</p>
+
+<div class="sectionDefault">
+ 
+<p>
+An explanation of equal loudness can be found at:
+</p>
+
+<div class="sectionIndent100"> 
+<p>
+<a href="https://soundproofgeek.com/fletcher-munson-curves-equal-loudness-explained/" >
+https://soundproofgeek.com/fletcher-munson-curves-equal-loudness-explained/</a>
+</p>
+<p>
+<a href="https://williamssoundstudio.com/tools/iso-226-equal-loudness-calculator-fletcher-munson.php" >
+https://williamssoundstudio.com/tools/iso-226-equal-loudness-calculator-fletcher-munson.php</a>
+</p>
 </div>
 
-<div class="sectionDefault"> 
-I chose 1047Hz (note C6) as the reference frequency, as it is 
+</div>
+
+</div> <!-- end # Fletcher-Munsun curves -->
+
+
+<div class="subHeading top150">Conventions: </div>
+
+<div class="sectionIndent050"> <!-- # Conventions --> 
+
+<p class="hanging050 top075"> 
+<b>datum:</b> This is the base frequency for which to which the 
+test tones will be compared to.
+</p>
+
+<p class="hanging050"> 
+<b>test tone:</b> This is the frequency for which the gain gets 
+adjusted to achieve perceived equal loudness.
+</p>
+
+<p class="hanging050"> 
+<b>dBFS:</b> decibels full scale. The maximum level which can 
+be reached without clipping. If a track has an input signal 
+at a level of -12dBFS, as is the case with the default calibration 
+using the tone generator wet mix gain set at -12dB, then this 
+is added to the track gain. The track gain of -18dB is 
+referenced to the reaper track 0 which is -12dBFS. So the 
+track gain of -18dB is actually -30dBFS. Therefore, adding the 
+input signal of -12dBFS to the actual track gain of -32dBFS 
+yields an output signal of -42dBFS.
+</p>
+
+<p class="hanging050"> 
+<b>SPL:</b> Sound pressure level produced by the speakers/headphones. 
+A tone creates waves in the air. The waves create a pressure. 
+We are mainly concerned with the SPL at the eardrums, which is 
+where we begin to perceive sound.
+Ideally measured with a sound pressure meter.
+</p>
+
+</div> <!-- end # Conventions -->
+
+
+<div class="subHeading top150">Notes: </div>
+
+<div class="sectionIndent050"> <!-- # Notes --> 
+
+<p class="top075"> 
+<b>IMPORTANT:</b> 
+The script is tied to a particular project that you have 
+set up with a track that has a tone generator inserted. The 
+script must be opened with that project as the active project.
+If you have more than one project tab open, 
+be sure that the project you intend to use the script with 
+is the active project. The test parameters and test results 
+are stored in profiles which are saved in the active project's 
+file. The project that you opened the script in is shown in 
+the script's title bar. 
+</p>
+ 
+<p> 
+If you open the script while you have a different project 
+active then you will not have access to the desired data. 
+If you try to close the script with a different project 
+active then the script will try to save the data to the 
+proper project, as long as the correct project is still open. 
+If it isn't then there is nothing you can do at that point. 
+Once the close button is clicked there is no way to stop 
+the script from closing.
+</p>
+
+<p> 
+I chose 1047Hz (note C6) as the datum frequency, as it is 
 close to the 1Khz frequency from which the Fletcher-Munson 
-equal loudness curves were derived. 
-</div>
+equal loudness curves were derived. I could have used the 
+true 1000Hz reference, but the difference is small and is 
+compensated for. 
+</p>
 
-<div class="sectionDefault"> 
+<p> 
 I've read somewhere that headphones are better than speakers 
 for discriminating loudness differences at lower frequencies, 
 and poorer at high frequencies. 
-</div>
+</p>
 
-<div class="sectionDefault"> 
+<p> 
+I have found that when listening with speakers, at least with 
+my gear set-up, that at higher frequencies ear position is a 
+major factor in perceived loudness. Turning or moving my head 
+just slightly causes drastic changes in perceived loudness. 
+This may be due to speaker sweet spots, and/or room resonances.
+</p> 
+
+<p> 
 Perceived loudness difference is greater at soft listening 
 levels than at loud levels.
+</p>
+
+<p> 
+At higher sound pressure levels it takes less gain to perceive 
+equal loudness. My preliminary testing bears this out.
+</p>
+
+</div> <!-- end # Notes -->
+
+
+<div class="subHeading top150">Main Window: </div>
+
+<div class="sectionIndent050"> <!-- # Main Window --> 
+
+<p class=" top075"> 
+(See images below)
+</p>
+
+<p class="hanging050"> 
+<b>Frequency selection box:</b> Select a frequency for testing.
+</p>
+<p class="hanging050"> 
+<b>Locked checkbox:</b> If checked then the frequency is not 
+available for testing. This is useful to prevent overwriting 
+test results once a frequency has been tested.
+</p>
+<p class="hanging050"> 
+<b>Bypass checkbox:</b> Does not affect any testing. If it is 
+checked then any resulting test data, although it will be 
+saved, will not be included in the resulting dataset. 
+</p>
+<p class="hanging050"> 
+<b>Profiles selection box:</b> This has the names of all rhe saved 
+profiles. Select one to make it active. The active profile's 
+parameters will be used to conduct the tests, and the test 
+results will be saved to it.
+</p>
+<p class="hanging050"> 
+<b>Select Test radio box:</b> Select which test type to run. The 
+controls for the selected test type will appear to the right. 
+The different test types are elaborated on further down.
+</p>
+<p class="hanging050"> 
+<b>Edit button:</b> This opens the Profile editor. The Profile 
+editor is elaborated on further down.
+</p>
+<p class="hanging050"> 
+<b>Print button:</b> Prints the active profile's test data to the 
+script console.
+</p>
+<p class="hanging050"> 
+<b>Graph:</b> The graph plots a point for each frequency of the 
+active profile. If Test 1 is active then is displays 
+those of the active channel.
+</p>
+
+</div> <!-- end # Main Window -->
+
+
+<div class="subHeading top150">Set up: </div>
+
+<div class="sectionIndent050"> <!-- # Set up --> 
+
+<p class="top075"> 
+Create a new project. Name it "Hearing Test", or whatever you wish. 
+</p>
+<p> 
+Insert a new track.
+</p>
+<p> 
+Insert a JS tone generator on that track.
+</p>
+<p> 
+Disable the tone generator so it isn't outputting a tone.
+</p>
+<p> 
+Leave tone generator wet mix gain at default -12dBFS.
+</p>
+<p> 
+The default track gain is set to -18db (-30dB Full Scale). 
+This can be changed in the Calibration section of the 
+Profile editor.
+</p>
+<p> 
+Set the pan law. On the track with the tone generator right-click 
+on the pan knob. This opens the Pan Law dialog box. Make sure 
+that the Pan mode is set to "Stereo balance". Check the 
+"Override default track pan law" then select -3dB. 
+Gain compensation can be unchecked. Use the Sine taper.
+</p>
+
+<div class="chartCont text110">
+<pre>
+Effect of pan law override:
+
+datum_gain -18dB  wet_mix_gain -12dBFS
+
+ -- track output signal --
+ left   center  right
+-38.2   -41.2   38.2  with   0dB override 
+-41.2   -41.2   41.2  with  -3dB override 
+</pre>
 </div>
-<div class="sectionDefault"> 
-An explanation of equal loudness can be found at:
-</div>
 
-<div class="sectionIndented"> 
-<a href="https://soundproofgeek.com/fletcher-munson-curves-equal-loudness-explained/" >
-https://soundproofgeek.com/fletcher-munson-curves-equal-loudness-explained/</a>
-<br><br>
-<a href="https://williamssoundstudio.com/tools/iso-226-equal-loudness-calculator-fletcher-munson.php" >
-https://williamssoundstudio.com/tools/iso-226-equal-loudness-calculator-fletcher-munson.php</a>
-</div>
-
-</div> <!-- end Notes -->
-
-<div class="subHeading">Set up: </div>
-<div class="sectionIndented"> 
-
-<div class="sectionDefault"> 
-Create a new project. Name it "Hearing Test", or whatever you wish.
-</div>
-
-<div class="sectionDefault"> 
-Insert a new track.<br><br>
-Insert a JS tone generator on that track.<br><br>
-Disable the tone generator so it isn't outputting a tone.<br><br>
-Leave tone generator wet mix gain at default -12db.<br><br> 
-Set track gain to -18db.<br><br>
-<span class="textEmphasis110">IMPORTANT! </span> 
+<p>
+<b>IMPORTANT!</b> 
 The tone generator gain settings and the track gain must not 
-be changed throughout testing, or it will invalidate the test 
-results. Tests may be set up with the wet mix gain and/or the 
-track gain at a different level than the default. Do this by 
-making the adjustments in the "Calibration" section, accessed 
-by clicking the "Edit" button. That way the settings will be 
-saved in the "profile". I originally added this section for 
-experimentation, but decided to keep it in the event anyone 
-finds it necessary. 
+be changed throughout testing, or it will invalidate the 
+active profile's test results. Tests may be set up with the 
+wet mix gain and/or the track gain at a different level than 
+the default. Do this by making the adjustments in the 
+Calibration section of the Profile editor.
+More on this later. 
+</p>
 
-</div>
-
-<div class="sectionDefault"> 
-The DAW settings level should now be -42db below max. peak. 
+<p>
+The DAW settings level should now be -42dBFS. 
 This should leave plenty of headroom for running the tests. 
+The tests add the datum gain, the equal loudness gain, and any 
+additional gain using the test gain adjustment knob.
 These settings represent the level sent to your output device: 
 audio interface, speakers, headphones, etc.; not the sound 
 pressure at your ears.  
-</div>
+</p>
 
-<div class="sectionDefault"> 
+<p>
 The sound pressure level in decibels that you hear is 
 determined not only by the above DAW settings, but by any 
 hardware settings between your DAW, up to and including 
 your headphones/speakers. You will need to set your headphones /
-speakers to 60db sound pressure level at listening position. 
+speakers to 60db sound pressure level at listening position 
+when using the phon_60 dataset. If using the phon_80 dataset 
+set the SPL to 80dB. Ideally this is accomplished by using a 
+sound pressure meter (more on this later).
+</p>
+
+<p>
 Do this by adjusting an audio interface or your speaker output 
 directly. If those options are not available you will need to 
 adjust the tone generator gain to achieve the desired levels, 
 as noted above. 
-At higher sound pressure levels it takes less gain to perceive 
-equal loudness. My preliminary testing bears this out.
-</div>
+</p>
 
-</div> <!-- end Set up -->
+</div> <!-- end # Set up -->
 
-<div class="subHeading">Calibrate: </div>
-<div class="sectionIndented"> 
+<div class="subHeading top150">Calibrate: </div>
 
-<div class="sectionDefault"> 
-Set the tone generator to use note "C" and octave +1. 
-This is our reference frequency of 1047Hz. If desiring to 
-change the tone generator wet mix gain do so in the 
-"Profiles" editon by clicking the "Edit" button. Enable the 
-tone generator, then set the gain.
-</div>
-<div class="sectionDefault"> 
-Play the tone.
-</div>
+<div class="sectionIndent050"> <!-- # Calibrate --> 
 
-<div class="sectionDefault"> 
-<span class="textEmphasis110">Calibrate using an SPL 
-(sound pressure loudness) meter: </span>                       
+<p class="top075"> 
+The Calibration section of the Profile editor (accessed using 
+the Edit button) contains the controls that can be used to 
+adjust the test's datum frequency parameters. The script should 
+have set the tone generator to use note "C" and octave +1. 
+This is our datum frequency of 1047Hz. 
+</p>
+<p class="hanging050"> 
+<b>Enable checkbox:</b> Use to toggle the tone generator 
+output on or off.
+</p>
+<p class="hanging050"> 
+<b>Phon Curve radio box:</b> Use to select which equal loudness 
+curve is used for the tests. 
+</p>
+<p class="hanging050"> 
+<b>Datum Pan knob:</b> Used to set the datum tone to the 
+perceived center of the audio field. 
+This is used only for Test 2.
+</p>
+<p class="hanging050"> 
+<b>Datum Gain knob:</b> Used to set the gain of 
+the reference tone. 
+</p>
+<p class="hanging050"> 
+<b>Wet Mix Gain (tone generator) knob:</b> Use to set the 
+wet mix gain of the tone generator. This can be considered as 
+the input signal to the track even though it is being 
+generated "within" the track.
+</p>
+<p> 
+If setting the gain knobs to other than the defaults be 
+careful to avoid clipping.
+</p>
+<p> 
+Enable the tone generator to set the speaker/headphone levels 
+to the appropriate SPL level indicated by the phon curve 
+you are using.
+</p>
+
+</div> <!-- end # Calibrate -->
+
+<div class="subHeading top150">Calibrate using an SPL meter: </div>
+
+<p class="top075 left050"> 
 Adjust the speaker/headphone volume (or the tone generator 
-gain) until 60db sound pressure level is achieved at your ears. 
+gain) until the appropriate sound pressure level is achieved 
+at your ears (60dB SPL when using the phon_60 curve). 
 If you don't have an SPL meter there are some 
-phone apps available. I cannot attest to their efficacy. 
-</div>
+phone apps available. I cannot attest to their efficacy. They 
+rely entirely on the quality of your device's mictophone.
+Or you can guess (highly subjective).
+</p> <!-- end Calibrate SPL -->
 
-<div class="sectionDefault"> 
-<span class="textEmphasis110">Subjective calibration: </span>
+
+<div class="subHeading top150">Subjective calibration: </div>
+
+<div class="sectionIndent050"> <!-- # Subjective calibration --> 
+
+<p class="top075"> 
 The Fletcher-Munson curves all have basically the same shape, 
 except for their scale. So, if you're not exactly at the correct 
 phon level, the perceived gain differences will be in the 
-correct direction, and should be in an acceptable range.
-</div>
-<div class="sectionDefault"> 
-Assuming normal conversation is 60db, and assuming that your 
+correct direction, and should be in, although far from 
+optimal, an acceptable range. Except maybe the very low and 
+very high frequencies which have a greater equal loudness factor.
+</p>
+<p> 
+Assuming normal conversation is 60dB, and assuming that your 
 mid-range hearing is okay (here comes the very subjective part):
-</div>
-<div class="sectionDefault"> 
-Adjust the speaker volume until you think it is at that of 
-normal conversation.
-</div>
-<div class="sectionDefault"> 
+</p>
+<p> 
+Adjust the speaker volume until you think that the datum tone 
+is at that of normal conversation.
+</p>
+<p> 
 Once you have your test calibrated this becomes the level 
 for which the entire test is based. This level must not be 
 changed or it invalidates all other test measurements. 
-</div>
-<div class="sectionDefault"> 
+</p>
+<p> 
 Note the settings. I run my output through an audio interface, 
 then through a Big Knob to the speakers. If I want to 
-repeat or continue the test later, it will need those 
-settings. Perhaps save as a profile: 
+repeat or continue the test later, I will need to duplicate 
+those settings. I try to include these in the name of the profile: 
 <span class='inlineBlock'>[ speaker level / headphones level; etc. ]</span>
-</div>
-<div class="sectionDefault"> 
+</p>
+<p> 
 Proceed to the test now that 'calibration' is done.
-</div>
+</p>
 
-</div> <!-- end Calibrate -->
+</div> <!-- end # Subjective calibration -->
 
-<div class="subHeading">Main Test: </div>
-<div class="sectionIndented"> 
+<div class="subHeading top150">Select a Test: </div>
 
-<div class="sectionDefault"> 
-Select the track that has the tone generator from the Track select box.
-</div>
-<div class="sectionDefault"> 
-Select a frequency (other than the 1047Hz reference) to test. 
-</div> 
-<div class="sectionDefault"> 
-In the Channel radio box select which channel is to be used for 
-the test: left, center, or right.
-</div>
-<div class="sectionDefault"> 
+<div class="sectionIndent050"> <!-- # Select a Test --> 
+
+<p class="top075"> 
+Select which test to run using the Select Test radio box.
+</p>
+<p> 
+Make sure that the track that has the tone generator inserted 
+is selected in the Track select box. 
+</p>
+<p> 
 Make sure the Locked checkbox is not checked. If checked that 
 frequency is considered locked and a test cannot be performed 
 on it.
-</div>
-<div class="sectionDefault"> 
-The Bypass checkbox does not affect any testing. If it is 
-checked then any resulting test data, although it will be 
-saved, will not be included in the resulting dataset. 
-</div>
+</p>
+<p> 
+Test parameters and results are saved in profiles. All 
+profiles are auto-saved when the script is closed.
+</p> 
 
-<div class="sectionDefault"> 
-Press the Start button to start the test. 
+</div> <!-- end # Select a Test -->
+
+
+<div class="subHeading top150">Test 1: </div>
+
+<div class="sectionIndent050"> <!-- # Test 1 --> 
+       
+<div class="imgTitle top100">Test 1 (showing Mocha theme)</div>
+<div class="imgContainer"><img src="../images/hearing_test_1.png" alt="Test 1"></div>  
+
+<p class="top100"> 
+Select a frequency (other than the 1047Hz reference) to test. 
+</p> 
+<p> 
+In the Channel radio box select which channel is to be used for 
+the test: left, center, or right. Test results will be saved 
+for each channel/frequency tested.
+</p>
+<p> 
+Press the Start button to start the test.
+</p>
+<p> 
 The tone generator will produce bursts of tones alternating 
 between the selected frequency and the test frequency.
-Use the "Inc Vol" or "Dec Vol" buttons to adjust the test 
-frequency's loudness until it appears equal to the 
-reference tone. 
-</div>
-<div class="sectionDefault"> 
+Use the Gain knob to adjust the test frequency's loudness 
+until it appears equal to the reference tone. 
+</p>
+<p> 
 When satified press the Stop button to end that frequency test. 
-The test results will be saved internally. 
-</div>
-<div class="sectionDefault"> 
+The test results will be saved to the active profile.. 
+</p>
+<p> 
 Repeat for each desired frequency and/or channel.
-</div>
+</p>
 
-</div> <!-- end Main test -->
+</div> <!-- end # Test 1 -->
 
+
+<div class="subHeading">Test 2: </div>
+
+<div class="sectionIndent050"> <!-- # Test 2 --> 
+      
+<div class="imgTitle top100">Test 2 (showing Mocha theme)</div>
+<div class="imgContainer"><img src="../images/hearing_test_2.png" alt="Test 2"></div>  
+
+<p class="top100"> 
+Select a frequency (other than the 1047Hz reference) to test. 
+</p> 
+<p> 
+Press the Start button to start the test.
+</p>
+<p> 
+The tone generator will produce bursts of tones alternating 
+between the selected frequency and the test frequency.
+Use the Gain knob to adjust the test frequency's loudness 
+until it appears equal to the reference tone. Use the Pan knob 
+to adjust the test tone so that it sounds centered.
+</p>
+<p> 
+When satified press the Stop button to end that frequency test. 
+The test results will be saved to the active profile.. 
+</p>
+<p> 
+Repeat for each desired frequency and/or channel.
+</p>
+
+</div> <!-- end # Test 2 -->
+
+
+<!-- Not currently using!
 <div class="subHeading">LR Test: </div>
-<div class="sectionIndented"> 
+<div class="sectionIndent050"> 
 
 <div class="sectionDefault"> 
 I discovered that I also have hearing differences between my 
@@ -268,96 +545,166 @@ Press the Stop button to end the test.
 The test results will be saved internally. 
 </div>
 
-</div> <!-- end LR test -->
+</div>--> <!-- end LR test -->
 
-<div class="subHeading">Profiles: </div>
-<div class="sectionIndented"> 
-<div class="sectionDefault"> 
-A set up can be saved as a profile. This is useful if you use 
-different configurations for your tests. You may have one 
-profile for using a particular set of headphones, and another 
-for using a pair of monitors. Click the "Edit" button below 
-the "Profiles" select box to open the profiles editor. There 
-you can add, rename, or delete profiles. Profiles are saved in 
-reaper-extstate.ini file.
 
-Select a saved profile from the "Profiles" select box to load it.
-</div>
+<div class="subHeading top150">Profiles: </div>
 
-</div> <!-- end Profiles -->
-<br>
+<div class="sectionIndent050"> <!-- # Profiles --> 
 
-<div class="imgTitle">dh_HearingTest Profiles (showing Mocha theme)</div>
-<div class="imgContainer"><img src="../images/hearing_test_profiles.png" alt="dh_HearingTest Profiles"></div>  
+<p class="top100"> 
+A test set up and all its test results are saved as a profile. 
+This is useful if you use different configurations for your tests. 
+You may have one profile for using a particular set of headphones, 
+and another for using a pair of monitors. The Profiles 
+selection box contains the names of all saved profiles, 
+including a somewhat default one named "Working Copy".
+</p>
 
-<div class="sectionIndented"> 
-The 'Reset' button will set the test data of current profile 
-with the default (pre-test) data. You will be prompted to confirm.
-</div>
+<p> 
+The active profile is the shown in the "Profiles" selection box 
+on the script's main page. The Profiles editor is used to 
+operate on the data of the profile. Tests use this data for 
+their performance as long as it is active. Test results are 
+also saved to the active profile. 
+</p>
 
-<div class="subHeading">Using the Test data: </div>
-<div class="sectionIndented"> 
-<div class="sectionDefault"> 
-Click the "Print" button to write the data of the currently 
-selected profile to the console window. You can use this data 
-to set up an equalizer to compensate for any hearing deficiencies 
+<p> 
+Click the Edit button located at the right of the script window
+to open the Profiles editor. There you can add, rename, 
+or delete profiles. Profiles are saved in in the active 
+project's file. 
+</p>
+
+<p> 
+<b>IMPORTANT!</b> Be sure you open the 
+script with the correct project active. 
+If the script is opened with a different project it will not 
+have access to any saved profiles in a different project. 
+Profiles were originally saved in reaper-extstate.ini file. 
+During development that section of the file got corrupted. 
+It didn't do any damage beyond no longer being able to access 
+any saved profiles. 
+I decided then to save the data with the project. Be sure to 
+have the Hearing Test project active when opening the script.
+</p>
+
+<div class="imgTitle top150">Profile Editor (showing Mocha theme)</div>
+<div class="imgContainer"><img src="../images/hearing_test_profiles.png" alt="Profiles Editor"></div>  
+
+<p class="hanging050"> 
+<b>Track selection box:</b> Displays the track that has the 
+tone generator inserted. When the script loads it seaches 
+the project for it. If it didn't find it, it may be that a 
+tone generator hasn't been inserted. If that is the case 
+then insert a tone generator then select the track 
+from the selection box.
+</p>
+
+<p class="hanging050"> 
+<b>Active Profile:</b> Label above the Profile name displays 
+the name of the active profile. This will get updated if 
+saving, renaming, or deleting the profile.
+</p>
+
+<p class="hanging050"> 
+<b>Profile Name textbox:</b> Displays the name that will 
+be used for the saving, renaming, and deleting operations. 
+Edit it as use see fit.
+</p>
+
+<p class="hanging050"> 
+<b>Save button:</b> This uses the text in the Profile Name 
+textbox for its operations. It the text is different than the 
+Active Profile name then the a new profile will be saved 
+using the name in the textbox. If the text is the same then 
+the active profile is immediately saved to the project file. 
+If a new profile is created it becomes the active profile.<br>
+You will be prompted to confirm an overwrite. 
+</p>
+
+<p class="hanging050"> 
+<b>Rename button:</b> Use to rename the active profile. 
+The new name is the text in the textbox.
+The Active Profile name gets updated with the new profile name.<br> 
+You will be prompted to confirm an rename. 
+</p>
+
+<p class="hanging050"> 
+<b>Delete button:</b> Use to delete the active profile. 
+The profile "Working Copy" will become the active profile.<br> 
+You will be prompted to confirm an delete. 
+</p>
+
+<p class="hanging050"> 
+<b>Reset button:</b> Replaces all of the calibration 
+and test data of the active profile with default data.<br>
+You will be prompted to confirm a reset.
+</p>
+
+<p class="hanging050"> 
+<b>Calibrate Tone Generator</b> section was discussed earlier.
+</p>
+
+<p class="hanging050"> 
+<b>Prefs button:</b> Use to open the Preferences window  
+where you can change the script window scale and/or theme.
+</p>
+
+<p class="hanging050"> 
+<b>Unlock All button:</b> Use to unlock all of the frequencies.
+</p>
+
+</div> <!-- end # Profiles -->
+
+
+<div class="subHeading top150">Using the Test data: </div>
+
+<div class="sectionIndent050"> <!-- # Test data --> 
+
+<p class="top075"> 
+Click the Print button to write the data of the active 
+profile to the console window. You can use this data to set up 
+an equalizer to compensate for any hearing deficiencies 
 you may have. If the data shows that you have a hearing 
 deficiency (as compared to "normal" hearing) then you can 
 insert a band at that frequency, boosting its gain to compensate. 
 You would probably want to adjust it's Q for a smooth transition.
-</div>
-<div class="sectionDefault"> 
+</p>
+
+<p> 
 Use the equalizer as the last fx on your master track. 
 Enable the equalizer to hear your music closer to how someone 
-with normal hearing hears your music. Disable the equalizer to remove 
-your adjusted bias from the mix. Personally, I will probable 
-use an equalizer for each channel as I have significant 
-differences in my hearing perception between my left and right ear.
-</div>
+with normal hearing hears your music. Disable the equalizer 
+to remove your adjusted bias from the mix. 
+Personally, I will probable use an equalizer for each channel 
+as I have significant differences in my hearing perception 
+between my left and right ear.
+</p>
 
-</div> <!-- end Test data -->
-
-<div class="subHeading">Graph: </div>
-<div class="sectionIndented"> 
-<div class="sectionDefault"> 
-The graph plots a point for each frequency of the currently 
-selected channel of the currently selected profile. The graph 
-has two modes: "C" and "F". "C" displays the Fletcher-Munson 
-curve overlaid with the profile's data points and their 
-deviation from it. "F" is a flat graph displaying each frequency's 
-gain deviation from "normal". 
-</div>
-
-</div> <!-- end Graph -->
-
-<div class="subHeading">Prefs: </div>
-<div class="sectionIndented"> 
-<div class="sectionDefault"> 
-Click the "Prefs" button to open the Preferences window. Here 
-you can change the script window scale and / or theme.
-</div>
-
-</div> <!-- end Profiles -->
+</div> <!-- end # Test data -->
 
 
-<div class="subHeading">Caveat: </div>
-<div class="sectionIndented"> 
+<div class="subHeading top150">Caveat: </div>
+
+<div class="sectionIndent050 top075"> 
 dh_HearingTest is not to be a substitute for a 
 professional hearing test. It is only an approximation using 
 the Fletcher-Munson curves as a reference. Perceived 
-loudness can be skewed by differences in sound hardware amongst 
-other factors.
+loudness can be skewed by differences in sound hardware 
+amongst other factors.
 </div>
 
-<div class="subHeading">CAUTION: </div>
-<div class="sectionIndented"> 
+<div class="subHeading top150">CAUTION: </div>
+
+<div class="sectionIndent050 top075"> 
 Always use caution when adjusting volume levels 
 to protect your hearing, especially when using headphones. 
-Start with headphone / speaker volume to minimum output then 
+Start with headphone/speaker volume to minimum output then 
 adjust up as necessary.
 </div>
 
-        
+</div> <!-- end # Hearing Test -->        
      <br><br><br>   
      </div>  <!-- end pageBody --> 
 

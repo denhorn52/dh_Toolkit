@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -25,7 +28,7 @@
     
 <div class="heading">7.08 Lua Notes:</div> 
 
-<div class="sectionDefault left050">
+<div class="sectionIndent100"> <!-- #MAIN -->
 
 <p>
 While learning to code in Lua I was somewhat dismayed by the 
@@ -35,11 +38,13 @@ Two things that had me scratching my head I will address here.
 
 <div class="subHeading">Lua types:</div>
 
+<div class="sectionIndent050"> <!-- #Lua types -->
 
-<div class="sectionDefault">
+<p class="left050 top100 bottom000">
 <span class="textEmphasis110">Variables:</span><br>
+</p>
 
-<div class="left050">
+<p class="left100 top050">
 Variables are data stored at a memory location. The data type 
 is either a value type or a reference type. The data stored 
 is the value, and the reference is the address. 
@@ -57,135 +62,216 @@ of the data in A is put in the address referenced by B.
 
 If A is of a reference type, B is assigned the address of A 
 and references the same data as A.
+</p>
 
 
-
-</div>
-
-
-<div class="sectionDefault">
-
+<p class="left050 top100 bottom000">
 <span class="textEmphasis110">Value types:</span><br>
+</p>
 
-<div class="left050">
+<p class="left100 top050">
 number, string, nil, and boolean are value types.<br> 
 Assigning a variable with a value type to another variable 
 COPIES the value.<br>
-</div>
+</p>
 
-<div class="chartCont left150 top000 text125">    
-<pre>a = 25   -- a holds the value 25
+<div class="preCont left100 text110">    
+<pre>
+a = 25   -- a holds the value 25
 b = a    -- b now has the value 25
-a = 32   -- a now holds the value 32
-         -- b still has the value 25</pre>
+a = 32   -- a now holds the value 32  
+         -- b still has the value 25  
+</pre>
 </div>  
        
-</div>
-
-<div class="sectionDefault">
-
+<p class="left050 top075 bottom000">
 <span class="textEmphasis110">Reference types:</span><br>
+</p>
 
-<div class="left050">
+<p class="left100 top050">
 table, function, userdata, and thread are reference types.<br> 
 Assigning a variable of reference type to another variable 
 COPIES the reference.
-</div>
+</p>
 
-<div class="chartCont left150 top000 text125">    
+<div class="preCont left100 text110">    
 <pre>a = {1,2,3,4}  -- 'a' holds the memory address where the value {1,2,3,4} is located. 
 b = a          -- 'b' now holds the memory address where {1,2,3,4} is located. 
-a = {5,6,7,8}  -- the memory address that 'a' references now holds the value {5,6,7,8}
-               -- the memory address that 'b' references has the value {5,6,7,8}</pre>
+a = {5,6,7,8}  -- the memory address that 'a' references now holds the value {5,6,7,8}  
+               -- the memory address that 'b' references has the value {5,6,7,8}  </pre>
 </div>         
 
-</div>
+</div> <!-- #Lua types -->
+
+<hr>
 
 <div class="subHeading">Ternary operation:</div>
 
-<div class="sectionDefault left050">
-
-<p>
-I have come across code statements that addled me. Upon investigation 
-I realized that they were attempts to utilize a ternary 
-(composed of three parts) operation.
-</p>
+<div class="sectionIndent100"> <!-- # Ternary -->
 
 <p>
 A ternary operator is an expression that returns one result if 
-a condition is true, but a different result if the condition is false. 
-It is a concise form of the logic achieved by using an if-then_else statement.
+a condition is true, but a different result if the condition 
+is false. It is a concise form of the logic achieved by 
+using an if-then_else statement.
+</p>
 
-<div class="chartCont left150 top000 text125">  
-<pre>if condition then
+<div class="preCont text110">  
+<pre>
+if condition then
     return value_if_true
 else
     return value_if_false
-end</pre>
+end
+</pre>
 </div> 
-</p>
 
 <p>
 Lua lacks a built-in ternary operator, but it can be mimicked 
-by using the logical and...or operators. This works as a side effect 
-of how Lua evaluates the and...or operators. All three parts 
-of the ternary expression can be a value, a variable, or an expression.  
-</p>
-<p> 
-Lua returns the last operand evaluated that results in a true condition. 
-An and operation evaluates all its operands.If all are true it returns true.
-An or operation stops evaluation at the first operand that is true. 
-In Lua all values except for nil and false are considered to be true.
+by using the logical and...or operators. This works as a side 
+effect of how Lua evaluates the and...or operators.
 </p>
 
-<p>
-The expression is evaluated from left to right.
-<div class="left150"> 
-  result = condition and value_if_true or value_if_false
-</div>  
-</p>
+<div class="subHeading">Rules:</div>
 
-<p>
-For brevity let's rewrite it as:
-<div class="left150"> 
-  result = A and B or C
-</div>  
-Since all operands of an and operation must be evaluated we can rewrite it as:
-<div class="left150"> 
-  result = (A and B) or C
+<div class="left100">
+
+<div class="hanging050 top075">
+All three parts of the ternary expression can be a value, a variable, 
+or an expression.
 </div>
+
+
+
+<div class="hanging050 top075">  
+Expression are evaluated from left to right.
+</div>
+
+<div class="hanging050 top075"> 
+'and' operations are evaluated before 'or' operations.
+</div>
+
+<div class="hanging050 top075"> 
+Lua returns the last operand evaluated that results in a 
+true condition. 
+</div>
+
+<div class="hanging050 top075"> 
+It's important to remember that in Lua all 
+values except for nil and false are considered to be true.
+</div>
+
+<div class="preCont text110">  
+<pre>
+ local x = 30
+ local A      -- is nil, evaluates to false.
+ local A = X          -- Evaluates to true.
+ local A = true       -- Evaluates to true.
+ local A = false      -- Evaluates to false.
+ local A = (x == 30)  -- Evaluates to true.
+ local A = (x == 40)  -- Evaluates to false.  
+</pre>
+</div> 
+
+<p>
+Consider first the logical 'and' operator:
+
+All operands of an 'and' operation must be true for the 
+result to be true. Stops evaluating when a false operand is 
+encountered then returns false.
 </p>
 
+<div class="preCont text110">  
+<pre>
+  -- cond is a variable or expression that evaluates to true or false.
+  -- exp_B is a value an expression that returns a value.
+  
+  result = cond and exp_B
+  
+  If cond is false, evaluation ends, result is false
+  If cond is true, evaluates exp_B:
+    If exp_B is false returns false
+    If exp_B is true returns exp_B
+  
+  Example:
+    
+  x = 30
+    
+  --         false       not evaluated
+  result = (x == 40) and "it's true"
+  
+  cond is false, result is false.
+    
+  --         true             true
+  result = (x == 30) and "condition is true"
+  
+  cond is true, result is "condition is true"
+</pre>
+</div> 
 
-If both A and B are true the expression (A and B) is considered true 
-  and C is not evaluated. The last operand evaluated is returned. <br>
-  If B is a value or variable that value or variable is returned. <br>
-  If B is an expression the result of that expression is returned. <br>
-  Say B is 4 + 2. 4 + 2 equates to 6 which is considered true. 
-  Therefore Lua will return 6. 
-<br><br>  
-If either A or B is false the expression (A or B) is considered false 
-  and C is evaluated. The return result is evaluated as above.
-<br>
-The "ternary" operation does differ from the aforementioned 
-  if-then-else statement. It is more comparable to:
-<div class="codeCont"> 
-  if (condition == true) and (value_if_true == true) then
-      return value_if_true
-  else
-      return value_if_false
-  end
+<p>
+Consider next the logical 'or' operator:
+
+If any operand of an 'or' operation is true the result is true.
+</p>
+
+<div class="preCont text110">  
+<pre>
+  result = cond or exp_B
+  
+  If cond is true, evaluation stops, returns true
+  If cond is false, evaluates exp_B 
+    if exp_B is false returns false
+    if exp_B is true returns exp_B
+  
+</pre>
+</div>
+
+<p>
+Now combine them:
+</p> 
+
+<div class="preCont text110">  
+<pre> 
+  result = (cond and exp_B) or exp_C
+  
+  If (cond and exp_B) is true returns exp_B
+    no need to evaluate exp_C
+    exp_B was the last operand to make expression true  
+  
+  If (cond and exp_B) is false, evaluates exp_C
+    If exp_C is false returns false
+    If exp_C is true returns exp_C
+    
+  Example:
+      
+  local x = 30
+  
+  --          true            true         not evaluated
+  result = ((x == 30) and "cond is true") or "cond is false"
+  
+  result is "cond is true" because it was the last operand 
+  evaluated resulting in a true expression.
+
+  --          false           true              evaluated
+  result = ((x == 40) and "cond is true") or "cond is false"
+  
+  The 'and' operation is false so the 'or' operand [exp_C] is evaluated.
+  exp_C is a string so it is considered true.
+  Therefore the result is the string "cond is false" because it was the 
+  last operand evaluated resulting in a true expression.
+</pre>
 </div>
 
 <p>
 I think my original confusion was because of the length and 
-complexity of the "ternary" statement I came across. Sometimes,  
+complexity some of the "ternary" statements I came across. Sometimes,  
 for clarity's sake, it would be better to use an if-then-else statement.
 </p>
 
-</div>
+</div> <!-- end # Ternary -->
 
-</div>
+</div> <!-- end #MAIN -->      
 
     <br><br><br>
     </div> <!-- end pageBody -->

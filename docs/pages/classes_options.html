@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -25,41 +28,35 @@
    
 <div class="heading">dh_Options:</div>
 
-<div class="sectionIndented"><!-- sectiom #1 -->
-This file provides two separate element classes:
+<div class="sectionIndent100"> <!-- # MAIN -->
 
-<div class="sectionListItemIndented"> 
+<div class="top100"> 
+This file provides two separate element classes:
+</div>
+
+<div class="sectionIndent100"> 
+<div class="hanging050 top050">
 <span class="textEmphasis">dh_Radio:</span>            
 A list of options from which the user can only choose one at a time.
-</div>              
-<div class="sectionListItemIndented"> 
+</div>
+<div class="hanging050 top075">
 <span class="textEmphasis">dh_Checklist:</span>            
 A list of options from which the user can choose any, all or none.
 </div>
-<div class="sectionDefault">                         
+</div>
+
+<div class="top075">
 See Lokasenna documentation for more detail.
 </div> 
 
-</div>
         
-<div class="subHeading">Properties:</div>
+<div class="subHeading top150">Properties:</div>
 
-<div class="sectionIndented"> 
-<!--     
-<div class="sectionListItem">
-<span class="textEmphasis">opts:</span>
-The names of the options. Accepts table or comma separated value string: 
-<span class="inlineBlock">"A, B, C, D".</span>
-CSV string gets converted to a table.
-Table is then stored in self.optarray.
-It is also possible to just specify a table in the element 
-definition. Instead of "opts" specify 
-<span class="inlineBlock">optarray = {"A", "B", "C", "D"}</span>
-</div> 
--->
-<div class="sectionListItem">             
-<span class="textEmphasis">opts </span>or 
-<span class="textEmphasis"> optarray: </span>
+<div class="sectionIndent100"> <!-- # Properties -->
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">opts </span>or 
+<span class="textEmphasis105"> optarray: </span>
 Options can be specified as a table of strings using 
 'opts' or 'optarray', or a comma separated string using 'opts'.
 Options are ultimately stored in 'optarray'.
@@ -71,8 +68,8 @@ Option2, Option3") it will be converted to a table and get
 stored in 'optarray'.
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">optindex:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">optindex:</span>
 This is an internal property which gets set during
 Checklist.onmouseup. It gets set to the index of the last 
 selected item. Index now available to use in onmouseup override. 
@@ -80,45 +77,45 @@ This may be useful if you need to see which item was clicked.
 This should never be set directly.
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">dir:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">dir:</span>
 If "v" (default) then options are displayed vertically. If "h" then 
 options are displayed horizontally.
 </div> 
 
-<div class="sectionListItem">
-<span class="textEmphasis">swap:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">swap:</span>
 If false (default) then option 'bubbles' appear before option title.
 </div> 
 
-<div class="sectionListItem">
-<span class="textEmphasis">border_width:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">border_width:</span>
 If greater than 0 then a border will be drawn around the element. 
 </div> 
 
-<div class="sectionListItem">
-<span class="textEmphasis">radius:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">radius:</span>
 If greater than 0 then the element will be drawn with rounded corners. 
 If showing a border then the radius is to the inside of the border.
 </div> 
 
-<div class="sectionListItem">
-<span class="textEmphasis">option_size:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">option_size:</span>
 Size of the option 'bubble' (rectangle for checklist 
 and circle for radio).
 </div> 
 
-<div class="sectionListItem">
-<span class="textEmphasis">pad_x:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">pad_x:</span>
 Horizontal space between element edge and option bubble.
 </div> 
 
-<div class="sectionListItem">
-<span class="textEmphasis">pad_y:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">pad_y:</span>
 Vertical space between options.
 </div> 
 
-</div><!-- end Properties --> 
+</div><!-- # end Properties --> 
 
 <div class="chartCont text110">
 <pre>-------------------------------------------------------
@@ -161,7 +158,7 @@ backdrop:           col_backdrop       "wnd_bg"
 -------------------------------------------------------</pre>
 </div>
 
-
+</div><!-- end # MAIN -->  
 
     <br><br>
     </div>  <!-- end pageBody -->

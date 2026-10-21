@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -25,33 +28,35 @@
     
 <div class="heading">dh_Panel:</div>
 
-<div class="sectionDefault"><!-- sectiom #1 -->
+<div class="sectionIndent100"> <!-- # MAIN -->
+
+<p class="top100"> 
 Draws a rectangle using the color specified in 'col_bg'.<br>
 It can have an optional border and optional rounded corners. <br>
-</div>
+</p>
 
 <div class="subHeading">Properties:</div>
 
-<div class="sectionIndented">
+<div class="sectionIndent100"> <!-- # Properties -->
 
-<div class="sectionListItem">
-<span class="textEmphasis">border_width:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">border_width:</span>
 If greater than 0 then a border will be drawn around the element. 
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">radius:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">radius:</span>
 If greater than 0 then the element will be drawn with rounded corners. 
 If showing a border then the radius is to the inside of the border.
 </div> 
 
-<div class="sectionListItem">
-<span class="textEmphasis">shadow:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">shadow:</span>
 If true the panel will be drawn with shadows.
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">text:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">text:</span>
 The Panel can display text with adjustable line height. 
 Although the tyext can be updated dynamically, It is only for displaying, 
 and not editing the text (think glorified label). 
@@ -62,22 +67,22 @@ No scrolling or word wrap. If need scrolling use dh_Listbox.<br>
 (As of 3-18-2026 text only accepts a table of string values.)    
 </div>
 
-<div class="sectionListItem">
+<div class="top075">
 The Panel can be used like a button. (Actually, any element 
 can be used as a button by overriding its mouseup event.)
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">func:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">func:</span>
 The name of a function which is to be called when clicking on the panel. 
 </div>
 
-<div class="sectionListItem">
-<span class="textEmphasis">params:</span>
+<div class="hanging050 top075">
+<span class="textEmphasis105">params:</span>
 Any parameters to be passed to the function.
 </div>
 
-</div><!-- end Properties --> 
+</div><!-- end # Properties --> 
     
 <div class="chartCont text110">
 <pre>-------------------------------------------------------
@@ -116,7 +121,7 @@ backdrop:           col_backdrop       "wnd_bg"
 -------------------------------------------------------</pre>
 </div>
 
-
+</div><!-- end # MAIN -->  
 
     <br><br>
     </div>  <!-- end pageBody -->

@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -23,15 +26,13 @@
     <div class="pageBody">
         
 <div class="heading">7.04 Anatomy of a script:</div>   
-     
-<div class="sectionDefault left050"><!-- sectiom #1 -->         
       
-<div class="sectionDefault">
+<p class="left100">
 This page illustrates the basic outline of a script utilizing 
 the Lokasenna GUI and dh_Toolkit. The order of the steps are important to maintain. 
 For a detailed description refer to dh_Template.lua. 
 That is a highly commented bare-bones script that can also be considered as a tutorial.
-</div>
+</p>
 
 <hr>
 
@@ -39,9 +40,10 @@ That is a highly commented bare-bones script that can also be considered as a tu
 7.04.01 Script sections and actions required:
 </div>
 
+<div class="sectionIndent050"><!-- sectiom #1 -->
+         
 <!-- <div class="chartCont left050 top000 text110"> -->
-
-<div class="sectionDefault left050 text110">    
+<div class="left050 text110">    
 <pre>
 Load Lokasenna GUI:
     Set the name to appear in the script's title bar.
@@ -125,17 +127,16 @@ GUI.Main()
 
 <hr>
 
-<div class="sectionDefault left050"> <!-- NOTES -->
+<div class="left050"> <!-- NOTES -->
 
-<b>Note 1:</b>
-<br> 
+<p><b>Note 1:</b></p>
 
-<div class="sectionDefault left050">
+<p class="left050">
 Create a function to hold your exit code and assign it to reaper.atexit 
 (the name doesn't matter but "Exit" says it all):
+</p>
 
-
-<div class="preCont leftPad">
+<div class="preCont left050">
 <pre>local function Exit()
     -- Your exit code --
 end
@@ -143,32 +144,29 @@ end
 reaper.atexit(Exit)</pre>
 </div>
 
-<br>
-<div class="sectionDefault left050">
+<p class="left050">
 Alternatively you can use the following, as long as it appears before GUI.Init( ).
-</div>
+</p>
 
-<div class="preCont leftPad">
+<div class="preCont left050">
 <pre>local function Exit()
     -- Your exit code --
 end
 
 GUI.exit = Exit</pre>
 </div>
-<br>
 
-<div class="sectionDefault left050">
+<p class="left050">
 Basically, GUI.Init( ) assigns it by calling
-</div>
+</p>
 
-<div class="preCont leftPad">
+<div class="preCont left050">
 <pre>if GUI.exit then reaper.atexit(GUI.exit) end</pre>  
 </div>                     
-<br>
 
-<div class="sectionDefault left050">
+<p class="left050">
 I prefer the first, more direct method.                     
-</div>
+</p>
 
 </div>
 

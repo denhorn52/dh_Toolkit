@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -25,7 +28,7 @@
     
 <div class="heading">3.08 Selected Text Highlights:</div> 
 
-<div class="sectionDefault left050"> <!-- section # 1 -->
+<div class="sectionIndent100"> <!-- section # 1 -->
 
 <!--
 <p>
@@ -34,30 +37,32 @@ but may be also useful to a script developer,
 esp. if overriding default behavior.
 </p>
 -->
-<div class="sectionDefault">
+<p>
 The text element classes Listbox, Textbox, and TextEditor 
 provide for highlighting selected text. The highlighted color 
 is added to the selection's background and text color to produce 
 the highlight. An alpha value is used to determine the intensity 
 of the highlight. 
-</div>
+</p>
 
-<div class="sectionDefault">
+<p>
 The applicable Lokasenna text element classes use the GUI color 
 "elm_fill" and an alpha value of 0.5. These are fixed in code. 
 While this generally provides satisfactory results there are times 
 when more fine-tuning may be desired. Hence, dh_Toolkit introduces 
 the theme color "sel_txt". Themes use this color's alpha to 
 determine the intensity of the highlight.
-</div>
+</p>
 
-<div class="sectionDefault">
+<p>
 <span class="textEmphasis110">
 There are two ways to adjust the alpha value:
 </span>
-</div>
+</p>
 
-<div class="sectionListItem left050">
+<div class="sectionIndent100">
+
+<p class="hanging050">
 <span class="textEmphasis">Method 1:</span> 
 Use the "sel_txt" color's alpha value.<br>
 In dh_ThemeDesigner use the "selAlpha" slider on the "dh_Toolkit" 
@@ -68,9 +73,9 @@ set to "sel_txt" (the default). In dh_ThemeDesigner this
 affects the text elements on the "dh_Toolkit" tab and the 
 "Color uses" listbox in the Tools panel. 
 The "sel_txt" alpha value can be overridden by using Method 2. 
-</div> 
+</p> 
  
-<div class="sectionListItem left050">
+<p class="hanging050">
 <span class="textEmphasis">Method 2:</span> 
 Override the highlighting color's alpha value.<br> 
 By setting an element's "use_sel_alpha" property to true the 
@@ -88,66 +93,69 @@ selects a corresponding text color.) <br>
 
 By using this method the alpha is adjusted only for the element 
 for which it is set.
+</p>
+
 </div>
 
-
-<div class="sectionDefault">
+<p>
 A positive alpha value produces a highlight by lightening 
 both the background and text. This can produce washed out text 
 when use with a darker text. Conversely, using a negative alpha value 
 produces a highlight that darkens the background and text. 
-</div>
+</p>
 
-<div class="sectionDefault">
+<div class="sectionDefault top150">
 <span class="textEmphasis110">Theme design:</span><br>
 </div>
 
-<div class="sectionDefault left050">
+<div class="sectionIndent100">
+
+<p>
 It is always wise to choose a background color (elm_bg) and 
 a text color (elm_txt) with a good constrast, hence legibility. 
 Then choose a highlight color (sel_txt) and alpha value that 
 produces good results.
 It seems that best compatibility amongst themes 
 will come from using Case 1, and possibly Case 2.
-</div>
+</p>
 
-<div class="sectionDefault left050">
-
-<div class="sectionListItem">
+<p>
 Case 1: Dark background with light text (standard).
 Highlight color should lighten background. Text also gets 
 lightened. If it is white it will remain white. If 
 it is off-white it will get lightened which is fine.
-</div>
+</p>
 
-<div class="sectionListItem">
+<p>
 Case 2: Light background with dark text.
 Highlight color should darken background. Text also gets 
 darkened. If it is black it will remain black. If 
 it is very dark it will get darkened which is fine.
-</div>
+</p>
 
-<div class="sectionListItem">
+<p>
 Case 3: Medium gray background with dark text.
 Will need to use a lightening highlight for text to remain legible.
 Not a good choice. 
-</div>
+</p>
 
-<div class="sectionListItem">
+<p>
 Case 4: Medium gray background with light text.
 May need to use a darkening highlight for text to remain legible.
 Not a good choice. 
-</div>
+</p>
 
 </div>
 
-
-<div class="sectionDefault">
+<div class="sectionDefault top150">
+<span class="textEmphasis110">Caution:</span><br>
+</div>
+<p class="top075 left100">
 Keep in mind that overriding the standard settings may produce 
 unsatisfactory results with other themes. I use it in dh_ThemeDesigner 
 for the "Show" Listbox. dh_ThemeDesigner provides for adjusting 
 its alpha value during run time. 
-</div>
+</p>
 
 </div> <!-- end section # 1 -->
 

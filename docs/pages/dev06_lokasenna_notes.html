@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+  
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -24,48 +27,53 @@
         
 <div class="heading">7.06 Lokasenna Notes:</div>        
                                 
-<div class="sectionDefault left050">
-I saw this somewhere in the Lokasenna documentation:
+<div class="sectionIndent100"> <!-- #MAIN -->
 
+<p>
+I saw this somewhere in the Lokasenna documentation:
+</p>
        
-<div class="sectionIndented">
+<p>
 Functions can be declared 'local' if they are called (directly) by Lokasenna GUI, e.g., clicking a button.
 If called from within another function they must be global (no 'local') or it crashes script.
-</div> 
+</p>
                
-<div class="sectionDefault">
+<p>
 Example: my_function called from a button click.
-</div> 
-
-</div> 
-            
-<div class="preCont leftPad top000">                
-<pre>local function Button01_Click()
+</p>
+           
+<div class="preCont">                
+<pre class="padLeft100">
+local function Button01_Click()
     my_function()
 end
 
 -- If this is declared as local it crashes script.
 function my_function()
     -- do stuff --
-end</pre>
+end
+</pre>
 </div>
 
-<div class="sectionDefault">
+<p>
 What I have found is that "local my_function( )" works 
 if it is defined before the "Button01_Click" function definition.
-</div>
+</p>
 
-<div class="preCont leftPad top000">    
-<pre>local function my_function()
+<div class="preCont">    
+<pre class="padLeft100">
+local function my_function()
     -- do stuff --
 end
 
 local function Button01_Click()
     my_function()
-end</pre>
+end
+</pre>
 </div>
 
-<br><hr>
+<hr>
+
 <p>
 Normally, menubar items provides for assigning a function to be called 
 when clicking on a menu item. dh_ThemeDesigner overrides the mouseup event 
@@ -73,7 +81,8 @@ to allow for declaring parameters within the menu definition
 to be passed along with the function.
 </p>
 
-<br><hr>
+<hr>
+
 <p>
 The text element classes dh_Listbox, dh_Textbox, and dh_TextEditor 
 provide for highlighting selected text. As a default they use the 
@@ -81,6 +90,8 @@ color and alpha value of the GUI color "sel_txt". For a more
 detailed explanation see 
 <a href="dh_themedesigner_sel_txt.html" >&nbsp;3.08 Selected Text Highlights.</a>
 </p>
+
+</div> <!-- end #MAIN -->      
 
     <br><br>
     </div>  <!-- end pageBody -->

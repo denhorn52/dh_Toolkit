@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+
+  <!-- Modified: 20261009 -->
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -23,6 +26,8 @@
     
 <div class="heading">3.00 dh_ThemeDesigner:</div>
 
+<div class="sectionIndent100"> <!-- #MAIN -->
+
 <p>
 A theme is a collection of colors to be used by a script's 
 GUI. The colors are meant to provide a pleasing and coherent 
@@ -31,77 +36,91 @@ themes for scripts which use dh_Toolkit and the Lokasenna GUI.
 The script window (herein referred to as App) consists of two main parts. 
 The top is a Tabbed section, and the bottom is the Tools section.
 </p>
-    <!--
-    <div class="tocSubItem">
-      <a href="dh_themedesigner_workflow.html" >&nbsp;3.00_1 Workflow</a>
-    </div>
-    -->
-    <div class="tocSubItem">
+
+<div class="left150">
+
+    <div class="tocItem top100">
       <a href="dh_themedesigner_tab1.html" >&nbsp;3.01 Preferences Tab</a>
     </div>
-    <div class="tocSubItem">
+    <div class="tocItem">
       <a href="dh_themedesigner_tab2.html" >&nbsp;3.02  Lokasenna Tab</a>
     </div>
-    <div class="tocSubItem">
+    <div class="tocItem">
       <a href="dh_themedesigner_tab3.html" >&nbsp;3.03 dh_Toolkit Tab</a>
     </div>    
-    <div class="tocSubItem">
+    <div class="tocItem">
       <a href="dh_themedesigner_tab4.html" >&nbsp;3.04 Colors Tab</a>
     </div> 
-    <div class="tocSubItem">
+    <div class="tocItem">
       <a href="dh_themedesigner_tools.html" >&nbsp;3.05 Tools&nbsp; Panel</a>
     </div>
-    <div class="tocSubItem">
+    <div class="tocItem">
       <a href="dh_themedesigner_defaults.html" >&nbsp;3.06 Colors Default Uses</a>
     </div>
-    <div class="tocSubItem">
+    <div class="tocItem">
       <a href="dh_themedesigner_conventions.html" >&nbsp;3.07 Conventions</a>
     </div>
-    <div class="tocSubItem">
+    <div class="tocItem">
         <a href="dh_themedesigner_sel_txt.html" >&nbsp;3.08 Selected Text Highlights</a>
     </div>
-               
-<p>
+    
+</div>    
+             
+<p class="top150">
 <span class="textEmphasis110">Workflow: </span>
 The Preferences tab has selection boxes where you select a 
-theme to use as a starting point. The name of the selected theme 
+theme to use as a starting point. 
+It may be a pre-defined theme, or a previously saved user theme.
+The name of the selected theme 
 is displayed in the 'User Theme Name' textbox. This is merely a 
 convenience for saving and renaming user themes 
 (see 3.01 Preference Tab). 
-<br><br>
-Then you select a theme color to edit by clicking on a color 
+</p>
+
+<p>
+Select a theme color to edit by clicking on a color 
 swatch on the Colors tab, or selecting it from the Color Names 
 selection box in the Tools panel. Use the color sliders in the 
 Tools panel to edit the selected theme color. 
-The edits appear in the "New Color" swatch.
+The edited color appears in the "New Color" swatch.
 Clicking on the "New Color" swatch updates the GUI with its color. 
-<br><br>
+</p>
+
+<p>
 The loaded theme is not changed when editing. The current 
 'edit state' can be saved at any time as a user theme.
-<br><br>
-When exiting dh_ThemeDesigner the current 'edit state' is 
-preserved. It will appear the next time dh_ThemeDesigner 
-is opened.
-</p>        
-               
+</p>
+
 <p>
-<span class="textEmphasis">Side Note:</span> I pushed the limits with this. 
+When exiting the script (closing the window) dh_ThemeDesigner saves 
+the current 'edit state' is preserved. It is saved internally.
+It will appear the next time dh_ThemeDesigner is opened.
+</p>
+
+<p class="top150">
+<span class="textEmphasis110">Side Note:</span> I pushed the limits with this. 
 The script used 135 elements although there were, from what I could gather, 
-only 127 buffers available for elements to use. Another source says 
+only 127 drawing buffers available for elements to use. Another source says 
 that 1024 buffers are available. I could not find any definitive 
 answer for that. Plus some elements require more than one buffer.
 </p>
+
 <p>
 During development the script would often crash claiming a buffer error.
-I eventually found the issue. dh_ThemeDesigner is constantly reinitializing 
-all of its elements. And the Lokasenna text elements were not reusing their 
-buffers. Coupled with the way the GUI places a possibly narrow range limit on 
-available buffers. I addressed these issues by overriding the pertinent 
-functions in the library file 'GUI_overrides.lua'. But even before I addressed 
-those issues the current workspace was preserved. Restart the script and pick up 
-where you left off.  
-
+I eventually found the issue. dh_ThemeDesigner needs to constantly reinitialize 
+all of its elements whenever a color changes. 
+The Lokasenna text elements were not reusing their drawing buffers, 
+but creating new ones with each initialization. 
+There is a limit on available drawing buffers. 
+I believe that is a limitaion of Reascript. 
+I addressed these issues by overriding the 
+Lokasenna text element classes init() functions. The overrides are 
+in the library file 'GUI_overrides.lua'. Fortunately, even before I addressed 
+those issues the current workspace was preserved. 
 </p>
+
+
+</div> <!-- end #MAIN -->
 
     <br><br>                      
     </div>  <!-- end pageBody -->
