@@ -1,9 +1,9 @@
 -- NoIndex: true
 
---[===[
-func_Editor.lua
-Modified 20260330
+-- func_Editor.lua
+-- Modified 20261009
 
+--[===[
 The Editor consists of several elements housed on layers 494 and 495.
 Editor specific elements are created when Editor is "opened".
 Then layers 494 and 495 are moved to layers 1 and 2 to be displayed.
@@ -29,9 +29,9 @@ Editor.load_editor_elms = function()
     GUI.New("GB_editor_pnl", "dh_Panel", {
         z = 495,
         x = 0, 
-        y = MENUBAR_HEIGHT, 
-        w = WORKSPACE_WIDTH,  --DHTK.APP_WIDTH, 
-        h = WORKSPACE_HEIGHT,
+        y = 0, 
+        w = WORKSPACE_WIDTH,
+        h = WORKSPACE_HEIGHT + MENUBAR_HEIGHT,
         border_width = 4, 
         radius = 0, 
         col_border = "panel_border",	
@@ -56,8 +56,8 @@ Editor.load_editor_elms = function()
     
     GUI.New("GB_editor_type_lbl", "dh_Label", {
         z = 494,
-        x = 16, 
-        y = MENUBAR_HEIGHT + 12, 
+        x = 24, 
+        y = 16, --MENUBAR_HEIGHT + 12, 
         text = "Editor",    
         font = "sans28",
         col_bg = "wnd_bg",
@@ -67,7 +67,7 @@ Editor.load_editor_elms = function()
     GUI.New("GB_editor_info_lbl", "dh_Label", {
         z = 494,
         x = 28, 
-        y = MENUBAR_HEIGHT + 48, 
+        y = 64, --MENUBAR_HEIGHT + 48, 
         text = "Editor",    
         font = "sans28",
         col_bg = "wnd_bg",
@@ -77,7 +77,7 @@ Editor.load_editor_elms = function()
     GUI.New("GB_editor_close_btn", "dh_Button", {
         z = 494,
         x = WORKSPACE_WIDTH - 48, 
-        y = MENUBAR_HEIGHT + 12, 
+        y = 16, --MENUBAR_HEIGHT + 12, 
         w = 36, 
         h = 36, 
         text = "X",
@@ -88,7 +88,7 @@ Editor.load_editor_elms = function()
     GUI.New("GB_editor_save_btn", "dh_Button", {
         z = 494,
         x = WORKSPACE_WIDTH - (48 + 80), 
-        y = MENUBAR_HEIGHT + 12, 
+        y = 16, --MENUBAR_HEIGHT + 12, 
         w = 64, 
         h = 36, 
         text = "Save",
@@ -139,9 +139,7 @@ end
 --zzopen
 
 -- Editor operates on a copy of data. GUI is updated on "Save".
--- Ant elements created here need to be adjusted according to app scale.
-
-
+-- Any elements created here need to be adjusted according to app scale.
 
 Editor.open_editor = function(editor_type)
 
@@ -638,7 +636,7 @@ Editor.open_editor = function(editor_type)
     end  --<tab titles> 
     
     ----------------------------   
-    ----   #  Z_sets open   ----
+    ----   #  z_sets open   ----
     ----------------------------   
         
     if editor_type == "z_sets" then
@@ -654,8 +652,8 @@ Editor.open_editor = function(editor_type)
         
         local sel_elm = GUI.elms[GUI.elms.GB_frm_sel_elm.elm]
         
-            --GUI.Msg("\n# props_norm.z_sets : ")
-            --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))        
+        --GUI.Msg("\n# props_norm.z_sets : ")
+        --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))        
 
         -- Iterate to create Property elms. How?
 
@@ -720,71 +718,136 @@ Editor.open_editor = function(editor_type)
         
         GUI.elms.GB_editor_type_lbl.text = "Layer Sets Editor"
         GUI.elms.GB_editor_type_lbl:init()
-        GUI.elms.GB_editor_info_lbl.x = 148 * DHTK.APP_SCALE
-        GUI.elms.GB_editor_info_lbl.y = (MENUBAR_HEIGHT + 56) * DHTK.APP_SCALE        
+        GUI.elms.GB_editor_info_lbl.x = 228 * DHTK.APP_SCALE
+        --GUI.elms.GB_editor_info_lbl.y = (MENUBAR_HEIGHT + 56) * DHTK.APP_SCALE 
+        GUI.elms.GB_editor_info_lbl.y = 64 * DHTK.APP_SCALE                
         GUI.elms.GB_editor_info_lbl.text = " Enter integers separated by commas."
         GUI.elms.GB_editor_info_lbl:init()        
+              
+        -- # Iterate to create Property elms.
         
-        -- # Get reference to selected element.
-        
-        --local sel_elm = GUI.elms[GUI.elms.GB_frm_sel_elm.elm]
-        
-            --GUI.Msg("\n# props_norm.z_sets : ")
-            --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))        
-
-        -- Iterate to create Property elms. How?
-
-        --GUI.Msg("\n>  #sel_elm.optarray: " .. (#sel_elm.optarray or "nil"))
-        --GUI.Msg(">  #sel_elm.z_sets  : " .. (#sel_elm.z_sets or "nil"))
-        --GUI.Msg(">  #sel_elm.z_sets[1]  : " .. (#sel_elm.z_sets[1] or "nil") .. "\n")
-        --GUI.Msg("    PROPS_NORM.Z_SETS : ")
-        --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))
-        --GUI.Msg("    ELEMENTS.Z_SETS : ")
-        --GUI.Msg(GUI.table_list(sel_elm.z_sets))         
-        
-        local y_init, y_off = 72, 48                            
+        local y_init, y_off = 48, 44
+        local y_calc  -- need for calc y after loop                            
     
-        for idx = 1, 6 do
+        for idx = 1, 8 do
 
-            --GUI.Msg(">    #zset[" ..  idx .. "] : " .. (#zset or "nil"))
-            --GUI.Msg(">    type of z_set : " .. type(zset))
-            
-            local tab_name = "Layer set " .. tostring(idx)
-            local tbx_name = "GB_editor_tbx_" .. tostring(idx)
-            
-            --GUI.Msg(">    tbx_name : " .. tbx_name)
+            --GUI.Msg(">    Layer_sets open : " .. idx)
 
-            GUI.New(tbx_name, "dh_Textbox", {
+            -------------------------------          
+            -- # Checkboxes
+            -------------------------------          
+
+            local elm_name = "GB_layerset_ckb_" .. tostring(idx)
+            
+            y_calc = y_init + (idx * y_off)
+            
+            GUI.New(elm_name, "dh_Checklist", {
                 z = 1,
-                x = 144 * DHTK.APP_SCALE, 
-                y = (y_init + (idx * y_off)) * DHTK.APP_SCALE, 
-                w = (WORKSPACE_WIDTH - (144 + 24)) * DHTK.APP_SCALE, 
+                x = 16 * DHTK.APP_SCALE, 
+                y = y_calc * DHTK.APP_SCALE, 
+                w = 24 * DHTK.APP_SCALE,
+                h = 24 * DHTK.APP_SCALE,
+                caption = '',
+                optarray = {''},
+	            border_width = 0,
+	            opt_size = 20,
+	            pad_x = 0,	
+	            pad_y = 4,
+            })
+            
+            GUI.Val(elm_name, GB.ACTIVE_LAYER_SETS[idx])
+
+            table.insert(Editor.elms_to_delete, elm_name)  
+
+            -------------------------------          
+            -- # Layerset names textboxes
+            -------------------------------          
+
+            elm_name = "GB_layerset_name_tbx_" .. tostring(idx)
+
+            GUI.New(elm_name, "dh_Textbox", {
+                z = 1,
+                x = 44 * DHTK.APP_SCALE, 
+                y = y_calc * DHTK.APP_SCALE, 
+                w = 172 * DHTK.APP_SCALE,
                 h = 36 * DHTK.APP_SCALE,
-                caption = tab_name,
-                cap_pos = "left",
-                cap_pad_x = -12,
-                cap_pad_y = 0,
-	            font_caption = "sans24",                 
+                retval = GB.LAYER_SETS[idx][1],                 
+                caption = '',
+                font_text = "mono18",   --textbox needs mono font
+                pad = 8,
+                col_text = "elm_txt",
+                col_sel_text = "sel_txt",
+                col_backdrop = "wnd_bg",                                
+            
+            })
+                                    
+            table.insert(Editor.elms_to_delete, elm_name)  
+                      
+            -----------------------------          
+            -- # Layersets textboxes
+            -----------------------------          
+            
+            elm_name = "GB_editor_tbx_" .. tostring(idx)
+            
+            GUI.New(elm_name, "dh_Textbox", {
+                z = 1,
+                x = 224 * DHTK.APP_SCALE, 
+                y = y_calc * DHTK.APP_SCALE, 
+                w = (WORKSPACE_WIDTH - (224 + 16)) * DHTK.APP_SCALE, 
+                h = 36 * DHTK.APP_SCALE,
+                caption = '',                                
+                --caption = tab_name,
+                --cap_pos = "left",
+                --cap_pad_x = 12,
+                --cap_pad_y = 0,
+	            --font_caption = "sans24",                 
                 font_text = "mono18",   --textbox needs mono font
                 col_text = "elm_txt",
                 col_sel_text = "sel_txt",
                 col_backdrop = "wnd_bg",        
             })
             
-            table.insert(Editor.elms_to_delete, tbx_name)            
+            table.insert(Editor.elms_to_delete, elm_name)            
 
             -- values are design values.
             -- Say, Tabs.z design = 1, now is 11.
             -- zset has 11, but now hides Tabs.
             -- Need to get from props_norm.
-
---zzz            
-            local zset = GB.LAYER_SETS[idx]            
+--zzz
+            local zset = GB.LAYER_SETS[idx][2]            
                         
             -- Need to convert zset to string then put it in tbx.
-            GUI.elms[tbx_name].retval = table.concat(zset, ",")
+            GUI.elms[elm_name].retval = table.concat(zset, ",")
             
-        end  
+            idx_count = idx
+            
+        end  -- < Iterate to create Property elms >
+            
+        -- # Create additional elms.
+        
+        elm_name = "GB_hide_common_layers_ckb"
+        local bool = GB.HIDE_COMMON_LAYERS
+        
+        --GUI.Msg("    Open GB.HIDE_COMMON_LAYERS : " .. tostring(GB.HIDE_COMMON_LAYERS))        
+        
+        GUI.New(elm_name, "dh_Checklist", {
+            z = 1,
+            x = 24 * DHTK.APP_SCALE, 
+            y = (y_calc + y_off) * DHTK.APP_SCALE,
+            w = 96 * DHTK.APP_SCALE,
+            h = 24 * DHTK.APP_SCALE,
+            caption = '',
+            optarray = {'Hide common layers'},
+            border_width = 0,
+            opt_size = 20,
+            font_text = "sans24",
+            pad_x = 0,	
+            pad_y = 4,            
+        })
+        
+        GUI.Val(elm_name, bool)        
+        
+        table.insert(Editor.elms_to_delete, elm_name)  
         
     end
     
@@ -842,19 +905,12 @@ Editor.save_editor = function()
             table.insert(menus, {title = v, options = {}})
             
         end
-        
-        --do return end        
-        
+
         --sel_elm.menus = menus 
         sel_elm.props_norm.menus = menus
-        
-        --GUI.Val("my_menubar", new_menus)
-        
+        -- init and redraw called here.
         sel_elm:val(menus)
-        
-        
-        sel_elm:redraw()         
-    
+
     end
 
     -----------------------------------
@@ -886,9 +942,7 @@ Editor.save_editor = function()
             table.insert(new_min_max_values, mm_item)
             
         end
-        
-        
-        
+
         sel_elm.min_max_values = new_min_max_values 
         sel_elm.props_norm.min_max_values = new_min_max_values
         
@@ -1042,7 +1096,10 @@ Editor.save_editor = function()
         sel_elm.state = 1
         
         sel_elm.optarray = new_names
-        sel_elm.props_norm.optarray = new_names         
+        sel_elm.props_norm.optarray = new_names     
+            
+        sel_elm:init()
+        sel_elm:redraw()         
 
     end 
         
@@ -1053,14 +1110,12 @@ Editor.save_editor = function()
     if Editor.type == "z_sets" then
 
         -- Update selected element. Convert csv string to table.
-        -- Textbox will show design z.
+        -- Textbox will show design (norm) z.
         
         local elm_zsets = {}
         local norm_zsets = {}
         
         for idx = 1, #sel_elm.optarray do
-        
-            --GUI.Msg("    > idx : " .. idx)
         
             local elm_set = {}
             local norm_set = {}
@@ -1089,6 +1144,9 @@ Editor.save_editor = function()
         sel_elm.z_sets = elm_zsets 
         sel_elm.props_norm.z_sets = norm_zsets 
         
+        sel_elm:init()
+        sel_elm:redraw()         
+        
         --GUI.Msg("\n# PROPS_NORM.Z_SETS : ")
         --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))
         --GUI.Msg("\n# ELEMENTS.Z_SETS : ")
@@ -1104,76 +1162,48 @@ Editor.save_editor = function()
 
         -- Update selected element. Convert csv string to table.
         -- Textbox will show design z.
+
+        GB.HIDE_COMMON_LAYERS = GUI.Val("GB_hide_common_layers_ckb")
+        GB.LAYER_SETS_MENU[10][1] = (GB.HIDE_COMMON_LAYERS and "$ Hide common layers")
+                                       or "  Hide common layers"
+--zzz
+        -- # Process the layersets.
+
+        for idx = 1, 8 do
         
-        local elm_zsets = {}
-        local norm_zsets = {}
-        
-        for idx = 1, 6 do
-        
-            --GUI.Msg("    > idx : " .. idx)
-        
-            local elm_set = {}
-            local norm_set = {}
+            local norm_zset = {}
+                
+            -- # Update layer set names.
+            
+            GB.LAYER_SETS[idx][1] = GUI.elms["GB_layerset_name_tbx_" .. idx].retval
+
+            -- # Convert textbox string to tables.   
+                     
+            -- tbx_val contains csv string of design values.
             
             local tbx_val = GUI.elms["GB_editor_tbx_" .. idx].retval
             
-            --GUI.Msg("    tbx_val : " .. tbx_val)
+            --GUI.Msg("\n    INDEX " .. idx .. ": tbx_val ->>> " .. tbx_val)
             
-            -- tbx_val contains csv string of design values.
-            -- Add 10 offset for elms.
-                    
             for v in string.gmatch(tbx_val, "[^,]*") do
                 if math.tointeger(v) then
                     v = math.tointeger(v)
                     --GUI.Msg("        v : " .. v)
-                    table.insert(elm_set, v + 10)
-                    table.insert(norm_set, v)
+                    table.insert(norm_zset, v)
                 end
             end
-        
-            elm_zsets[idx] = elm_set 
-            norm_zsets[idx] = norm_set 
+            
+            GB.LAYER_SETS[idx][2] = norm_zset
+            
+            GB.ACTIVE_LAYER_SETS[idx] = GUI.Val("GB_layerset_ckb_" .. idx)
             
         end
-        
---zzz        
-        -- Will have to compensate when loading a set?
-        -- If I use elm_zsets 
-        
-        GB.LAYER_SETS = norm_zsets
-        --GB.LAYER_SETS = elm_zsets        
-        
-        --??? Do I have to do anything here? Update sets? 
-        
-        --GUI.Msg("\n# PROPS_NORM.Z_SETS : ")
-        --GUI.Msg(GUI.table_list(sel_elm.props_norm.z_sets))
-        --GUI.Msg("\n# ELEMENTS.Z_SETS : ")
-        --GUI.Msg(GUI.table_list(sel_elm.z_sets))
-         
+            
+        -- # Process Layer visibility and update menu.
+        Menu.change_layer_sets()
+
     end
-        
-    
-    -- # Update GUI
-    --Editor.close_editor()
-    
-    --[=[
-    for _, elm_name in ipairs(Editor.elms_to_delete) do
-        GUI.Msg("    elms_to_delete : " .. elm_name )
-        GUI.elms[elm_name]:delete()
-    end
-    
-    GUI.elms.GB_editor_pnl.z = 495
-    GUI.elms.GB_editor_sidebar_pnl.z = 495    
-    GUI.elms.GB_editor_type_lbl.z = 494
-    GUI.elms.GB_editor_info_lbl.z = 494    
-    GUI.elms.GB_editor_save_btn.z = 494
-    GUI.elms.GB_editor_close_btn.z = 494
-    GUI.elms_hide[495] = true
-    GUI.elms_hide[494] = true
-    --GUI.redraw_z[2] = true
-    --GUI.redraw_z[1] = true
-    GUI.redraw_z[0] = true        
-    --]=]    
+
 end
 
 
