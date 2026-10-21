@@ -13,7 +13,7 @@
                Added new single thumb dh_Slider.
                Added dh_Slider_H and dh_Slider_V
     20260420 - Revised some properties.
-    20260506: All dh_Graph.             
+    20260506 - Added dh_Graph.             
 --]]
 
 --[===[
@@ -67,35 +67,45 @@ properties - list of properties that gets displayed in Sidebar.
                 property doesn't change when scaling app.            
                 
 props is a convenience list of GB property objects.
+
+Currently class_Properties apply_value() is using
+  if needs_init ~= false then init
+  
+maybe want to go back to
+  if needs_init == true then init
+  
+See notes at end of this file.
     
 --]===]
   
---zzsl
+--zztop
 ------------------------------------------------
 local classes = {}
 
 -- Frequently-used properties so I only have to type them out once
 local props = {
 
-    name          = {prop = "name",          caption = "Name",            class = "Name"},
-    z             = {prop = "z",             caption = "Z",               class = "Coord_Z"},
-    x             = {prop = "x",             caption = "X",               class = "Integer"},
+    name          = {prop = "name",          caption = "Name",            class = "Name"},       -- elm will be recreated
+    z             = {prop = "z",             caption = "Z",               class = "Coord_Z"},    -- handled in its lostfocus
+    x             = {prop = "x",             caption = "X",               class = "Integer",     needs_init = false},
     -- Adjustments for menubar height are now done in store_elm_defaults.
     --y             = {prop = "y",           caption = "Y",               class = "Coord_Y"},
-    y             = {prop = "y",             caption = "Y",               class = "Integer"},
+    y             = {prop = "y",             caption = "Y",               class = "Integer",     needs_init = false},
     w             = {prop = "w",             caption = "W",               class = "Integer",     needs_init = true},
     h             = {prop = "h",             caption = "H",               class = "Integer",     needs_init = true},
     caption       = {prop = "caption",       caption = "Caption",         class = "String",      needs_init = false},
     font          = {prop = "font",          caption = "Font",            class = "Font",        needs_init = true},
     font_a        = {prop = "font_a",        caption = "Cap. Font",       class = "Font",        needs_init = false},
-    font_b        = {prop = "font_b",        caption = "Text Font",       class = "Font",        needs_init = true},
+    font_b        = {prop = "font_b",        caption = "Text Font",       class = "Font",        needs_init = false},
     col_txt       = {prop = "col_txt",       caption = "Text Color",      class = "Color",       needs_init = true},
-    col_fill      = {prop = "col_fill",      caption = "Fill Color",      class = "Color",       needs_init = false},
+    col_fill      = {prop = "col_fill",      caption = "Fill Color",      class = "Color",       needs_init = true},
     pad           = {prop = "pad",           caption = "Padding",         class = "Integer",     needs_init = true},
     shadow        = {prop = "shadow",        caption = "Shadow",          class = "Boolean",     needs_init = true},
---zzprop
+
     -- dhtk properties
     
+--zzprop  --zzck  --zzz
+
     text            = {prop = "text",            caption = "Text",            class = "String",  needs_init = false},
     font_text       = {prop = "font_text",       caption = "Text Font",       class = "Font",    needs_init = false},
     font_values     = {prop = "font_values",     caption = "Values Font",     class = "Font",    needs_init = false},
@@ -142,11 +152,13 @@ classes.Button = {
         props.w,
         props.h,
         "",
-        props.caption,
+        --props.caption,
+        {prop = "caption",       caption = "Caption",         class = "String",      needs_init = true},
         "",
         props.font,
         props.col_txt,
-        {prop = "col_fill",      caption = "Fill Color",      class = "Color",       needs_init = true},            
+        props.col_fill,
+        --{prop = "col_fill",      caption = "Fill Color",      class = "Color",       needs_init = true},            
     }
 }
 
@@ -180,7 +192,7 @@ classes.dh_Button = {
         props.allow_sel_outline,  
     }
 }
-
+--zzch
 ------------------------
 -- GUI.Checklist:new(name, z, x, y, w, h, caption, opts, dir, pad)
 
@@ -207,12 +219,15 @@ classes.Checklist = {
         props.pad,
         {prop = "swap",         caption = "Swap",           class = "Boolean",    needs_init = false}, 
         "2",
-        props.caption,
+        --props.caption,
+        {prop = "caption",      caption = "Caption",        class = "String",     needs_init = true},
         "",        
         props.font_a,
-        props.font_b,
+        --props.font_b,
+        {prop = "font_b",       caption = "Text Font",      class = "Font",       needs_init = true},
         props.col_txt,
-        {prop = "col_fill",     caption = "Fill Color",     class = "Color",      needs_init = true},        
+        props.col_fill,
+        --{prop = "col_fill",     caption = "Fill Color",     class = "Color",      needs_init = true},        
         {prop = "bg",           caption = "Text BG",        class = "Color",      needs_init = true}, 
         "",
         {prop = "frame",        caption = "Frame",          class = "Boolean",    needs_init = true},
@@ -305,7 +320,7 @@ classes.Frame = {
         props.col_txt,
     }
 }
---zzlh
+--zzlh  
 ------------------------
 -- GUI.dh_Panel:new(name, z, x, y, w, h, bw, rad)
 
@@ -354,7 +369,7 @@ classes.dh_Panel = {
         props.col_backdrop,        
     }
 }
---zzz
+
 ------------------------
 -- GUI.dh_Graph:new(name, z, x, y, w, h[, points]) 
 
@@ -427,7 +442,7 @@ classes.Knob = {
                 "font_a", "font_b", "cap_pad_x", "cap_pad_y",
                 "bg", "col_txt", "col_head", "col_body", 
     },
-    properties = {
+    properties = {  
         "1",
         props.name,
         "",
@@ -440,7 +455,7 @@ classes.Knob = {
         {prop = "max",          caption = "Max.",        class = "Number",   recreate = true,  noscale = true},
         {prop = "default",      caption = "Default",     class = "Number",   recreate = true,  noscale = true},
         {prop = "inc",          caption = "Increment",   class = "Number",   recreate = true,  noscale = true},
-        {prop = "vals",         caption = "Show Values", class = "Boolean"},
+        {prop = "vals",         caption = "Show Values", class = "Boolean",  needs_init = false},
         "2",
         props.caption,
         "",
@@ -476,7 +491,7 @@ classes.dh_Knob = {
                 "display_align", "font_display", "col_display_bg", "col_display_text", 
                 "frame_use_outline", "frame_thk", "col_frame", 
     },
-    properties = {
+    properties = {  
         "1",
         props.name,
         "",
@@ -503,7 +518,7 @@ classes.dh_Knob = {
         props.shadow_caption,
         "",
         {prop = "show_values",    caption = "Show Values",  class = "Boolean",  needs_init = false},
-        {prop = "font_values",    caption = "Values Font",  class = "Font"},
+        {prop = "font_values",    caption = "Values Font",  class = "Font",     needs_init = false},
         {prop = "pad_values",     caption = "Values Pad",   class = "Integer",  needs_init = false},
         "",
         --{prop = "output",         caption = "Output",     class = "Table"},
@@ -511,9 +526,9 @@ classes.dh_Knob = {
 --zzcolors
         "3",
         --props.col_bg,
-        {prop = "col_bg",         caption = "Background Col.",   class = "List"},            
+        {prop = "col_bg",         caption = "Background Col.",   class = "List", needs_init = true},            
         props.col_outline,
-        {prop = "col_body",       caption = "Body Color",        class = "Color"},
+        {prop = "col_body",       caption = "Body Color",        class = "Color", needs_init = true},
         --{prop = "col_indicator",  caption = "Indicator Color", class = "Color"},
         props.col_values,
         props.col_cap_text,
@@ -537,14 +552,14 @@ classes.dh_Knob = {
     
 --zzdisplay  --zzsl2
         "5",
-        {prop = "display_style",    caption = "Display Style",    class = "List"},     -- do not recreate
+        {prop = "display_style",    caption = "Display Style",    class = "List",      needs_init = true},  -- do not recreate
         {prop = "display_w",        caption = "Display Box W",    class = "Integer",   needs_init = true},
         {prop = "display_h",        caption = "Display Box H",    class = "Integer",   needs_init = true},
         {prop = "display_pos",      caption = "Display Position", class = "Cap_Pos",   needs_init = true},
         {prop = "display_pad_x",    caption = "Disp. Box Pad X",  class = "Integer",   needs_init = true},
         {prop = "display_pad_y",    caption = "Disp. Box Pad Y",  class = "Integer",   needs_init = true},
         props.font_display,
-        {prop = "display_align",    caption = "Align",            class = "Align",     noscale = true},
+        {prop = "display_align",    caption = "Align",            class = "Align",     needs_init = false, noscale = true},
         "",
         {prop = "col_display_bg",   caption = "Display BG Col",   class = "Color",     needs_init = true},        
         {prop = "col_display_text", caption = "Display Text Col", class = "Color",     needs_init = true}, 
@@ -569,7 +584,8 @@ classes.Label = {
         props.y,
         "",
         "",
-        props.caption,        
+        --props.caption,        
+        {prop = "caption",  caption = "Caption",      class = "String",  needs_init = true},
         props.font,
         {prop = "color",    caption = "Text Color",   class = "Color",   needs_init = true},
         {prop = "bg",       caption = "BG Color",     class = "Color",   needs_init = true},  
@@ -577,7 +593,7 @@ classes.Label = {
 
     }
 }
-
+--zzz
 ------------------------
 -- name, z, x, y[, text, shadow_text, font, col_bg, col_text]
 
@@ -593,11 +609,11 @@ classes.dh_Label = {
         "",
         {prop = "text",            caption = "Text",         class = "String",  needs_init = true},        
         props.font,
-        {prop = "text_pos",     caption = "Text Position",   class = "Cap_Pos", needs_init = true},
-        --props.col_bg,
+        {prop = "text_pos",    caption = "Text Justify",     class = "Cap_Pos", needs_init = true},
+        --{prop = "text_pos",    caption = "Text Position",   class = "Cap_Pos", needs_init = false},
         {prop = "col_bg",      caption = "Background Col.",  class = "List",    needs_init = true},            
-        {prop = "col_text",        caption = "Text Color",   class = "Color",   needs_init = true},
-        {prop = "shadow_text",  caption = "Text Shadow",     class = "Boolean", needs_init = true},
+        {prop = "col_text",    caption = "Text Color",       class = "Color",   needs_init = true},
+        {prop = "shadow_text", caption = "Text Shadow",      class = "Boolean", needs_init = true},
     }
 }
 
@@ -680,7 +696,7 @@ classes.dh_Listbox = {
         props.cap_centered,
         props.shadow_caption,
         props.shadow,
---zzz
+
         "3",
         props.col_bg,
         props.frame_use_outline,
@@ -756,9 +772,9 @@ classes.dh_Menubar = {
         props.y,
         props.w,
         props.h,
-        {prop = "fullwidth",    caption = "Full Width",     class = "Boolean",      needs_init = true},
+        {prop = "fulluwidth",    caption = "Full Width",     class = "Boolean",      needs_init = true},
         {prop = "limit_w",      caption = "Limit Width",    class = "Integer",      needs_init = true},
-        {prop = "menus",        caption = "Menu Titles",    class = "Editor",       needs_init = true, subclass = "menu_titles"},          
+        {prop = "menus",        caption = "Menu Titles",    class = "Editor",       needs_init = true,   subclass = "menu_titles"},          
         {prop = "font",         caption = "Text Font",      class = "Font",         needs_init = true},
         props.pad,
         props.shadow,        
@@ -886,13 +902,16 @@ classes.Radio = {
         props.pad,
         {prop = "swap",         caption = "Swap",           class = "Boolean",    needs_init = true},
         "2",
-        props.caption,
+        --props.caption,
+        {prop = "caption",      caption = "Caption",        class = "String",     needs_init = true},
         "",
         props.font_a,
         "",
-        props.font_b,
+        --props.font_b,
+        {prop = "font_b",       caption = "Text Font",      class = "Font",       needs_init = true},
         props.col_txt,
-        {prop = "col_fill",     caption = "Fill Color",     class = "Color",      needs_init = true},        
+        props.col_fill,
+        --{prop = "col_fill",     caption = "Fill Color",     class = "Color",      needs_init = true},        
         {prop = "bg",           caption = "Text BG",        class = "Color",      needs_init = true},
         "",
         {prop = "frame",        caption = "Frame",          class = "Boolean",    needs_init = true},
@@ -965,7 +984,7 @@ classes.Slider = {
     defaults = {96, "Slider", 0, 10, {5}},
     creation = {"w", "caption", "min", "max", "defaults", "inc", "dir", "", 
                 "font_a", "font_b", "show_handles", "show_values", "cap_pad_x", "cap_pad_y",
-                "bg", "col_txt", "col_fill", 
+                "bg", "col_txt", "col_fill", col_hnd,
     },
     properties = {
         "1",
@@ -992,12 +1011,13 @@ classes.Slider = {
         {prop = "font_b",       caption = "Val. Font",     class = "Font"},
         props.col_txt,
         props.col_fill,
+        {prop = "col_hnd",      caption = "Handle Color",  class = "Color",      needs_init = true},
         {prop = "bg",           caption = "BG Color",      class = "Color"},
 
     }
 }
 
---zzslider  --zzknob 
+--zzslider  --zzknob --zzck
 ------------------------
 -- GUI.dh_Slider_H:new(name, z, x, y, w, h, caption, min, max, default, inc)
 
@@ -1096,8 +1116,8 @@ classes.dh_Slider_H = {
         props.font_display,
         {prop = "display_align",          caption = "Align",            class = "Align",       needs_init = false, noscale = true},
         "",
-        {prop = "col_display_bg",         caption = "Display BG Col",   class = "Color",     needs_init = true},
-        {prop = "col_display_text",       caption = "Display Text Col", class = "Color",     needs_init = false},
+        {prop = "col_display_bg",         caption = "Display BG Col",   class = "Color",       needs_init = true},
+        {prop = "col_display_text",       caption = "Display Text Col", class = "Color",       needs_init = false},
 
     },
 }
@@ -1366,7 +1386,7 @@ classes.dh_Textbox = {
         props.col_backdrop,        
     }
 }
-
+--zzz
 ------------------------
 -- GUI.TextEditor:new(name, z, x, y, w, h, text, caption, pad)
 
@@ -1380,8 +1400,8 @@ classes.TextEditor = {
         props.z,
         props.x,
         props.y,
-        {prop = "w",            caption = "W",            class = "Integer",   needs_init = true},
-        {prop = "h",            caption = "H",            class = "Integer",   needs_init = true},
+        props.w,
+        props.h,
           
         "",
         props.caption, 
@@ -1429,8 +1449,8 @@ classes.dh_TextEditor = {
         props.z,
         props.x,
         props.y,
-        {prop = "w",            caption = "W",            class = "Integer",   needs_init = true},  --recreate = true
-        {prop = "h",            caption = "H",            class = "Integer",   needs_init = true},  --recreate = true
+        props.w,
+        props.h,
         
          "",
         {prop = "font_text",       caption = "Text Font",    class = "MonoFont",  needs_init = false},         
@@ -1485,3 +1505,148 @@ for class, data in pairs(classes) do
 end
 
 return classes
+
+--zzend
+
+-------------------------------------------- 
+--[===[ as of 20261011
+
+data_Elements: check which props needs_init = true
+
+Currently class_Properties apply_value using
+  if needs_init ~= false then init
+  
+Maybe want to go back to
+  if needs_init == true then init
+
+Everything seems to be working fine even when calling init() 
+  when it isn't required.
+
+Safest is to re-initialize everything.
+Second safest is probably re-initialize everything 
+  not explicitly set to false.
+
+Re-initialize only what is explicitly set true runs the 
+  risk of omitting something that should get re-initialized.
+
+In data_Elements would then need to set every property 
+  needs_init to true when re-initializing is required.
+This would be every property that gets set during the elm's init.
+(Every property that is used in draw() can be false.)
+
+Careful: possible some functionality can later be moved into init.
+  That is why first or second option is probably better.
+  
+Not all values listed. Some are specific to class and are set there.
+  
+* requires action
+
+not set (nil): doesn't need init?
+  name  class name - elm gets recreated
+  z     class coord_z 
+        * in classprops coord_z should I use 
+            elms or elms_list for redrawing?
+
+true:
+  w
+  h
+  
+  font
+  col_txt
+  col_hnd
+  pad
+  shadow
+  
+  col_values      
+  col_bg        
+  col_outline   
+  col_border     
+  col_frame   
+  col_fill - needs to be true except dh_slider
+  col_backdrop
+  frame_use_outline 
+  frame_thk   
+       
+  noarrow -mbx only
+  
+font_b - loka only
+      Cap Text
+knob   f   f
+lbx    f   f
+mbx    f   f
+opts   t   f
+sldr   f   f
+tabs   f   f
+
+
+false
+  x - false - can override individual classes if needed.
+  y - false - can override individual classes if needed.
+  caption - needs to be true for lk_button, lk_label, lk_option
+  font_a (cap font) true only for lk_options
+  font_b (text font) false 
+  
+  text - btn           
+  font_text - graph,      
+  font_values    
+  font_caption   
+  font_display   
+  cap_pad_x     
+  cap_pad_y     
+  cap_pos        
+  cap_centered   
+  col_cap_text
+  col_text - false except dh_btn, and dh_label,
+  col_face      
+  col_active     
+  col_sel_text  
+  use_sel_alpha
+  sel_alpha       
+  line_height 
+  use_pixels     
+  shadow_caption    
+  allow_sel_outline
+  display_align
+  scrollbar_width
+  
+  "Min_Max_Vals" no init, auto redraws
+      knob f, sliders f
+  (editor types - always inits?)
+  "Boolean" if self.needs_init 
+  "Align" no init, auto redraws
+     all are set to false anyway
+  "Cap_Pos" if self.needs_init, redraws
+  "Direction" no init, recreates slider, auto redrawss
+  "Line_Height" auto inits, auto redraws
+  "List" auto inits, auto redraws
+     all require init anyway
+  "Monofont" auto inits, auto redraws
+
+table
+
+chkl      optarray    f
+dh_panel  text        f
+dh_knob   hard_ticks  t
+lbx       list        f
+dh_lbx    list        f
+mbx       optarray    f
+dh_mbx    optarray    f
+radio     optarray    f
+slider    defaults    t
+dh_slider def_tickm   t
+tabs      optarray    f
+
+editors - have to do inits in editor save()
+    "menu_titles"    editor redraws, needs_init = true
+    "min_max_values" editor redraws, needs_init = false
+    "graph_labels"   editor redraws, needs_init = true
+    "options"        editor redraws, needs_init = false
+    "tab_titles"     editor none*,   needs_init = false?
+    "z_sets"         editor none**,  needs_init = false?
+    
+    *  should redraw
+    ** why no redraw?
+    
+--]===]
+
+
