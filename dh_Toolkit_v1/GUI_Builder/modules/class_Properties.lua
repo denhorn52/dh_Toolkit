@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- class_Properties.lua
--- Modified 20260506
+-- Modified 20261009
 
 
 --[===[
@@ -9,22 +9,33 @@
 Subclesses for the Property elements which get displayed in the Sidebar.
 
 The selected element is the user added element in the project area which is currently selected.
-The selected element's properties are updated with the (validated) value in the sidebar is changed.
+The selected element's properties are updated when the (validated) value in the sidebar is changed.
 
-Property Textbox: clicking the Enter button click or clicking outside the textbox ->
+Property.Textbox: clicking the Enter button click or clicking outside the textbox ->
     lostfocus calls "generic" apply_value which validates then applies value to selected element.
     
-Property Checklist (Booleans): onmouseup handler updates selected element.
+Property.Checklist (Booleans): onmouseup handler updates selected element.
 
-Property Menubox: onmouseup calls self:apply_value which validates then applies value to selected element.
+Property.Menubox: onmouseup calls self:apply_value which validates then applies value to selected element.
 
-Property Button: 
+Property.Editor (button): opens an editor.
+
+TODO:
+Coord_Z: 
+    do I really want to hide frm_sel_elm if moved to hidden layer?
+    should I use elms or elms_list for redrawing?
+
+x apply_value, move props_norm assignment to 
+    original position? then be sure to use val in calcs.
+    
+boolean - WHY? GUI.elms.GB_frm_sel_elm:redraw()
+
 --]===]
 
 --------------------------------------
 --------  Property classes  --------
 --------------------------------------
-
+--zzz
 --local Element = require("func_Elements")
 --local json = require("common/json")
 --local Editor = require("func_Editor")
@@ -64,7 +75,7 @@ Property.MonoFont     = GUI.table_copy(GUI.dh_Menubox)
 --zzapply --zzbool --zzdir --zzcap --zzmono  --zzlh --zzalign --zzlist -- zzset  --zztable
 
 -- Pass the property's new value to its target element.
--- Checklists(boolean) and Menuboxes have their own apply_value.
+-- Checklists(boolean) and Menuboxes have their own apply_value().
 -- This should only need to handle textboxes.
 -- self.prop is property name
 
@@ -82,7 +93,7 @@ local function apply_value(self)
     -- This will always represent normalized values.
     -- sel_elm may be scaled.
 
-    -- Make sure the value is valid, otherwise revert.
+    --Get value and validate.
     local val = self:validate()
 
     --GUI.Msg("  self.value is : " .. tostring(val))
@@ -91,7 +102,7 @@ local function apply_value(self)
     
         --local elm_val = val
         
-        sel_elm.props_norm[self.prop] = val
+        --sel_elm.props_norm[self.prop] = val
     
         --GUI.Msg("    if val prop  : " .. self.prop)
         --GUI.Msg("    if val value : " .. tostring(val))
@@ -102,103 +113,46 @@ local function apply_value(self)
             --GUI.Msg("    if Number : prop  : " .. self.prop)
             --GUI.Msg("    if Number : val  : " .. val)             
             --GUI.Msg("    if Number : type val  : " .. type(val))
+            
 --zzknob
             -- !!! Special cases.
-            --[==[
-            if sel_elm.type == "dh_Knob" and sel_elm.centered 
-                and ((self.prop == "x") or (self.prop == "y") or (self.prop == "w")) then
-
-                -- After a knob is created its x, y is top-left
-                --   of imaginary box containing the knob body.
+            
+            -- Since knob is already created its x,y is top-left.
+            -- Adjust centered x,y to sel_elm x or y for calculations.
+            
+            if  (sel_elm.type == "dh_Knob") and sel_elm.centered then
+            
+                if ((self.prop == "x") or (self.prop == "y")) then            
+                    val = (val - (sel_elm.props_norm.w // 2)) 
+                end
                 
-                if (self.prop == "x") or (self.prop == "y") then  
+                if (self.prop == "w") then
                 
-                    GUI.Msg("    APPLY val dh_Knob y : " .. val)
-                    GUI.Msg("    type of dh_Knob y : " .. type(val))                    
-                  
-                    -- Subtract rad to get norm x or y.
-                    --val = (val - (sel_elm.w // 2)) 
-                    elm_val = (val - (sel_elm.props_norm.w // 2)) 
-                    
-                    -- elm_val now has norm top or left.
-                    -- It will get scaled latrr.
-
-                elseif (self.prop == "w") then 
-                
-                    -- Force width to even so x,y not fractional. 
+                    -- Force width to even for better drawing. 
                     if val % 2 == 1 then 
                         val = val + 1 
                         self:val(val)
                     end
-                    
+                
                     -- This gets new norm rad.
                     local rad = math.floor((val / 2) + 0.5)
                     
-                    -- c will be norm x, y center of knob.
-                    -- Need to find new top-left.
+                    -- Get norm center x.
+                    local c = sel_elm.props_norm.x -- 200
                     
-                    -- Get existing norm center x.
-                    local c = GUI.Val("GB_prop_x") -- center x
-                    sel_elm.props_norm.x = math.floor((c - rad) + 0.5)
+                    -- props_norm.x doesn't change, but elm x does.
+                    sel_elm.x = math.floor(((c - rad) * DHTK.APP_SCALE) + 0.5)
                     
+                    -- Get norm center y.
+                    local c = sel_elm.props_norm.y -- 200
                     
-                    --[=[      
-                    -- Store new norm x value.
-                    -- Get existing center x.
-                    local c = GUI.Val("GB_prop_x") -- center x
-                    sel_elm.props_norm.x = math.floor((c - rad) + 0.5)
-                    -- Set elm x coord to center for init.
-                    sel_elm.x = sel_elm.props_norm.x * DHTK.APP_SCALE
-    
-                    -- Store new norm y value.
-                    -- Get existing center y.
-                      c = GUI.Val("GB_prop_y") -- center
-                    sel_elm.props_norm.y = math.floor((c - rad) + 0.5)
-                    -- Set elm y coord to center for init.
-                    sel_elm.y = (sel_elm.props_norm.y + MENUBAR_HEIGHT) * DHTK.APP_SCALE
-                    --]=]
-
-                end
-
-            end  -- <if knob>
-            --]==]
-            
-            -- Since knob already created its x,y is top-left.
-            -- Adjust centered x,y to sel_elm x or y.
-            
-            if ((self.prop == "x") or (self.prop == "y")) and
-               (sel_elm.type == "dh_Knob") and (sel_elm.centered == true) then
-                
-                val = (val - (sel_elm.props_norm.w // 2)) 
-                
-            end 
-               
-            if (self.prop == "w") and
-               (sel_elm.type == "dh_Knob") and (sel_elm.centered == true) then
-               
-                -- Force width to even for better drawing. 
-                if val % 2 == 1 then 
-                    val = val + 1 
-                    self:val(val)
+                    -- props_norm.y doesn't change, but elm y does.
+                    sel_elm.y = math.floor( ( (c - rad + MENUBAR_HEIGHT) * DHTK.APP_SCALE) + 0.5)
+                    
                 end
                 
-                -- This gets new norm rad.
-                local rad = math.floor((val / 2) + 0.5)
-                
-                -- Get norm center x.
-                local c = sel_elm.props_norm.x -- 200
-
-                -- props_norm.x doesn't change, but elm x does.
-                sel_elm.x = math.floor(((c - rad) * DHTK.APP_SCALE) + 0.5)
-                
-                -- Get norm center y.
-                local c = sel_elm.props_norm.x -- 200
-                
-                -- props_norm.y doesn't change, but elm y does.
-                sel_elm.y = math.floor(((c - rad) * DHTK.APP_SCALE) + 0.5)
-                
-            end 
-            
+            end
+                       
             -- Ensure minimum thicknesses.
             
             if self.prop == "track_thk" then
@@ -208,10 +162,36 @@ local function apply_value(self)
             if self.prop == "scrollbar_width" then
                 if val < 8 then val = 8 end
             end
+--zzz
+--zzlabel  
+            if (sel_elm.type == "dh_Label") and (self.prop == "x") then
+            --and sel_elm.props_norm.text_pos ~= "left" then
+
+                --GUI.Msg("> if x and dh_Label, IN:")
+                --GUI.Msg("    sel_elm.props_norm.text_pos is: " .. sel_elm.props_norm.text_pos)            
+                --GUI.Msg("    sel_elm.props_norm.x [val] is: " .. sel_elm.props_norm.x)
+                --GUI.Msg("    sel_elm.text_pos is: " .. sel_elm.text_pos)            
+                --GUI.Msg("    sel_elm.x is: " .. sel_elm.x)
+                --GUI.Msg("    sel_elm.w is: " .. sel_elm.w)
+                
+                -- Adjust elm.x because it will be drawn from left.
+                
+                if sel_elm.props_norm.text_pos == "center" then
+                    --val = (sel_elm.props_norm.x - self.w // 2) 
+                    val = (val - self.w // 2) 
+                elseif sel_elm.props_norm.text_pos == "right" then    
+                    --val = (sel_elm.props_norm.x - self.w) 
+                    val = (val - self.w) 
+                --else            
+                --    val = (sel_elm.props_norm.x) 
+                end
+                
+                --GUI.Msg("    val calc is: " .. val)                
+                
+            end            
             
             -- Store normalized adjusted value.
-            
-            --sel_elm.props_norm[self.prop] = val
+            sel_elm.props_norm[self.prop] = val
             
             --GUI.Msg("    sel_elm.props_norm : " .. tostring(sel_elm.props_norm[self.prop]))
             
@@ -231,11 +211,6 @@ local function apply_value(self)
             end
                        
             --GUI.Msg("    scaled value is : " .. tostring(val)) 
-
-        --else
-        
-            -- Store non-number value (could be table).
-        --    sel_elm.props_norm[self.prop] = val
         
         end  -- if number
 
@@ -245,9 +220,9 @@ local function apply_value(self)
         --if type(val) == "table" then
         --    GUI.Msg("    after if Number : val[1]  : ") -- .. val[1])
         --end        
-        
+       
         sel_elm[self.prop] = val
---------        
+
         -- INIT, RECREATE, OR REDRAW?
         -- Will recreate init? Yes
         
@@ -255,15 +230,13 @@ local function apply_value(self)
         if self.recreate then 
             Properties.recreate_elm(sel_elm, nil, true) 
         else
-            if self.needs_init == false then goto skip_init end
-            
-            sel_elm:init()
-            
-            ::skip_init::
+            if self.needs_init ~= false then 
+                sel_elm:init()
+            end
         end
         
         sel_elm:redraw()
-        
+
         -- Selection outline. Only really necessary for x,y,w,h ?
         GUI.elms.GB_frm_sel_elm:redraw()
 
@@ -282,39 +255,20 @@ local function apply_value(self)
 
         self:val(sel_elm[self.prop])
         
-        --GUI.Msg("self.value else is : " .. tostring(val))    
-        
+        --GUI.Msg("self.val else is : " .. tostring(val))    
             
     end  -- <if val>
 
 end  --<apply_value>
 
--- All property textboxes should apply their value when focus is lost.
 
 local function lostfocus(self)
 
     --GUI.Msg("# generic lost focus -> apply_value?")
 
     self:apply_value()
-    
-    --[=[
-    -- Need to transfer text editor retval when recreating elm.
-    -- Can't seem to transfer  anywhere else.- Maybe because it's not in GB props?
-    local retstr
-    
-    if GUI.elms[self.elm].type == "dh_TextEditor" or  GUI.elms[self.elm].type == "TextEditor" then
-        retstr = GUI.elms[self.elm]:val()
-    end
-    
-    if self.recreate then Properties.recreate_elm(GUI.elms[self.elm], nil, true) end
-    
-    if GUI.elms[self.elm].type == "dh_TextEditor" or  GUI.elms[self.elm].type == "TextEditor" then
-        GUI.Val(self.elm, retstr)
-    end
-    --]=]
-    
+
     GUI[self.type].lostfocus(self)
-    --self:redraw()
         
 end
 
@@ -372,10 +326,18 @@ local function revert_value(self)
     
 end
 
+--------------------------------------
 -- Common methods
--- apply_value will use generic apply_value
--- unless a Property overrides it.
--- Same for lostfocus.
+--------------------------------------
+
+-- lostfocus   - this is inherited from base class.
+--              will call generic apply_value() if not overridden 
+--
+-- apply_value - [generic] this gets called from lostfocus
+--              if not overridden.
+--              
+-- validate    - this needs to be implemented per Property
+--              if called from generic apply_value()
 
 for class in pairs(Property) do
     
@@ -391,9 +353,10 @@ end
 --------------------------------------
 
 -- Creation params for each type of property
--- (Not including name,type,z,x,y,w,h,caption, since they're determined at runtime.
--- dh. Could not get this to be useful.
+-- (Not including name,type,z,x,y,w,h,caption, 
+--     since they're determined at runtime.
 
+--!!! Could not get this to be useful.
 Property.Boolean.extra_params = {""}
     
 ------------------------------------
@@ -436,6 +399,8 @@ end
 ------------------------------
 ----------  NAME  ----------
 ------------------------------
+-- Renaming will recreate the element.
+
 function Property.Name:lostfocus()
     
     --GUI.Msg("\n# Property.Name:lostfocus : " )
@@ -464,12 +429,7 @@ end
 ---------------------------------
 ----------  COORD_Z  ----------
 ---------------------------------
---zzcz
--- lost focus called validate
--- validate calls val without newval
--- val tries to add to 10
---   if is not number crashes
--- Now do it all here.
+--zzcoordz
 
 function Property.Coord_Z:lostfocus()
 
@@ -477,8 +437,7 @@ function Property.Coord_Z:lostfocus()
     
     GUI[self.type].lostfocus(self)
     
-    --local val = self:validate()
-    local val = tonumber(self.retval)
+    local val = math.tointeger(self.retval)
     
     --GUI.Msg("    lostfocus : type val : " .. type(val))
     --GUI.Msg("    val : " .. tostring(val))
@@ -496,59 +455,47 @@ function Property.Coord_Z:lostfocus()
         -- Offset so 1-10 can be reserved for GB stuff.
         -- This is what is used in workspace.
         val = val + 10
-        
         GUI.elms[self.elm][self.prop] = val
-        GUI.elms[self.elm]:redraw()
 
-        GUI.elms.GB_frm_sel_elm:redraw()
+----------------
+
+        -- # If moved to a hidden layer then deselect.
+        
+        --??? Do I really want to deselect?
+        -- If moving to a hidden layer then elm not redrawn,
+        --   but properties and outline remain.
+        --   Then can quickly revert if changing mind.
+
+        if GUI.elms_hide[val] then
+        
+            --Element.deselect_elm()
+            GUI.elms.GB_frm_sel_elm.elm = nil
+            GUI.elms.GB_frm_sel_elm.z = -2
+            GUI.redraw_z[10] = true
+
+        else
+            
+            GUI.elms[self.elm]:redraw()            
+            
+        end
+
+----------------
         
         --GUI.Msg("    elm.z : " .. tostring(GUI.elms[self.elm].z))
         --GUI.Msg("    props_norm.z : " .. tostring(GUI.elms[self.elm].props_norm.z))
         
-        -- Need to draw even hidden elms in case using tabs,
+        -- Need to draw even hidden elms in case using tabs or layersets,
     	for key, __ in pairs(GUI.elms) do
             --GUI.elms[key]:init()
             GUI.elms[key]:redraw()
         end                
         
     else
-        -- If not a good value restore property display.
+        -- If not a good value revert property display.
         self:val(GUI.elms[self.elm][self.prop])
     end
     
 end
-
--- Offset so 1-10 can be reserved for GB stuff
--- Crashes script if retval is not number.
--- Getting newval from props_norm indirectly through mew property..
-
-function Property.Coord_Z:val(newval)
-
-    --GUI.Msg("#   Property.Coord_Z:val " )
-    
-    if newval then
-        --GUI.Msg("       newval : "  .. newval)        
-        self.retval = tonumber(newval) -- 10
-        self:redraw()
-    else
-        --??? Don't think this gets called, or if it does it shouldn't add 10?
-        --GUI.Msg("####       self.retval : "  .. self.retval)            
-        return self.retval + 10
-    end
-    
-end
-
--- I find this confusing. Would think should pass a value to validate.
--- Getting its value from val which needs a validated value.
---[=[
-function Property.Coord_Z:validate()
-
-    --GUI.Msg("   Property.Coord_Z:validate " )
-
-    return tonumber(self:val())
-
-end
---]=]
 
 ---------------------------------
 ----------  COORD_Y  ----------
@@ -575,8 +522,8 @@ end
 ------------------------------------
 ---------  MENU TITLES  ----------
 ------------------------------------
---zzmnu
--- Replaced with Editor.
+--zzmnu  
+--!!! Replaced with Editor.
 
 function Property.Menu_Titles:validate()
     local val = self:val()
@@ -631,7 +578,8 @@ end
 ---------------------------------
 -- Values must be in format: {{0,"0"}, {6,"6"}, {12,"12"}}
 -- List of {position: integer, display string}
--- Replaced with Editor.
+
+--!!! Replaced with Editor.
 
 -- This gets called everytime a knob is selected.
 
@@ -700,8 +648,13 @@ function Property.Min_Max_Vals:apply_value(val)
     
     -- ??? Do I need reinit?
     
-    GUI.elms[self.elm]:redraw()
-    GUI.elms.GB_frm_sel_elm:redraw()
+    if self.needs_init ~= false then 
+        sel_elm:init()
+        sel_elm:redraw()
+    else
+        GUI.elms[self.elm]:redraw()
+        --GUI.elms.GB_frm_sel_elm:redraw()
+    end
 
 end
 
@@ -855,8 +808,9 @@ function Property.Editor:init()
     elseif self.subclass == "z_sets" then
         self.text = "Z_sets"
     end
-    
+        
     GUI[self.type].init(self)
+    
 end
 
 -- Editor used to open editor.
@@ -871,7 +825,7 @@ function Property.Editor:onmouseup()
     --end
     
     Editor.open_editor(self.subclass)
-    
+
 end
 
 function Property.Editor:apply_value()
@@ -925,15 +879,15 @@ function Property.Boolean:onmouseup()
     --   sets optsel[1] to true/false.
     --   sets its self.focus to false
     --     preventing its self:lostfocus() from being called?
-    --     WHY?
+    --     Shouldn't need to call native handler. Only one option.
     --   calls redraw.
-    -- !!! Shouldn't need to call native handler. Only one option.
+
     
     --GUI[self.type].onmouseup(self)
 	self.optsel[1] = not self.optsel[1]
     self:redraw()
     
-    -- Should the rest of this can be rolled into apply_value
+    -- Should, or can, the rest of this be rolled into apply_value
     --   if including special case for dh_Knob?
     
     -- ## Reference to selected project elm.
@@ -984,24 +938,15 @@ function Property.Boolean:onmouseup()
         return
     end 
 
-    if self.needs_init == false then goto skipped end
-      
-    --GUI.Msg("    calling sel_elm:init() with elm.name: " .. self.elm)
-    --GUI.Msg("    self.needs_init == false ")
+    if self.needs_init ~= false then 
+        sel_elm:init()
+    end
     
-    sel_elm:init()
+    sel_elm:redraw()
     
-    ::skipped::
-        
-    --GUI.Msg("bool mouseup call elm init")        
-    --GUI.Msg("bool mouseup elm : " .. sel_elm.name)
-    --GUI.Msg("    prop : " .. self.prop .. " : " .. tostring(self.optsel[1]))
-    --GUI.Msg("    prop type : " .. tostring(type(self.optsel[1])))
-        
-    GUI.redraw_z[sel_elm.z] = true
-    
+    --??? Why?
     GUI.elms.GB_frm_sel_elm:redraw()
-            
+        
 end
 
 -- ??? Necessary? self:val does this?
@@ -1026,7 +971,7 @@ end
 ---------------------------------
 ------  Align (menubox)  ------
 ---------------------------------
---zzalign --zzz  
+--zzalign 
 
 function Property.Align:init()
 
@@ -1101,8 +1046,11 @@ function Property.Align:apply_value()
         sel_elm[self.prop] = val
         sel_elm.props_norm[self.prop] = val 
         
-        -- Should only need to redraw.
-        sel_elm:redraw()
+        if self.needs_init ~= false then 
+            sel_elm:init()
+        end
+        
+        sel_elm:redraw()        
 
     else
         --GUI.Msg("    # Inside if ELSE val  ")
@@ -1140,8 +1088,12 @@ function Property.Cap_Pos:init()
         self.optarray = {"left", "top", "right", "bottom"}
     end
     
+    --GUI.Msg("    sel_elm[self.prop] is: " .. sel_elm[self.prop])
+    --GUI.Msg("    sel_elm.props_norm[self.prop] is: " .. sel_elm.props_norm[self.prop])
+    
     -- Get value from project elm.
-    local pos = sel_elm[self.prop]
+    --local pos = sel_elm[self.prop]
+    local pos = sel_elm.props_norm[self.prop]    
     self.curr_opt = GUI.table_find(self.optarray, pos)
     --GUI.Msg("    curr_opt is: " .. self.curr_opt)
     self.cap_pos = "left" 
@@ -1168,10 +1120,12 @@ end
 
 function Property.Cap_Pos:apply_value()
 
-    --GUI.Msg("\n## Property.Cap_Pos:apply_value ##")
+    GUI.Msg("\n## Property.Cap_Pos:apply_value ##")
 
     -- Reference to selected project elm.
-    local sel_elm = GUI.elms[self.elm]  
+    local sel_elm = GUI.elms[self.elm]
+    
+    --GUI.Msg("    sel_elm type is: " .. sel_elm.type)   
       
     -- Get selected value as string.
     local val = self.optarray[self.curr_opt]
@@ -1189,13 +1143,12 @@ function Property.Cap_Pos:apply_value()
         --GUI.Msg("    sel_elm.props_norm.x is: " .. tostring(sel_elm.props_norm.x))
         --GUI.Msg("    sel_elm.x is: " .. tostring(sel_elm.x))
         --GUI.Msg("    sel_elm.w is: " .. tostring(sel_elm.w))                
-        -- Should only need redraw except for dh_Label x.
-        
+--zzz        
         if sel_elm.type == "dh_Label" then
-            
+            GUI.Msg("    type is dh label, props_norm.x : " .. sel_elm.props_norm.x)
             sel_elm.x = (sel_elm.props_norm.x * DHTK.APP_SCALE)
-            --sel_elm:init()
-            
+
+            -- Should only need for dh_Label x.
             GUI.elms.GB_frm_sel_elm:redraw()
         end
         
@@ -1203,7 +1156,7 @@ function Property.Cap_Pos:apply_value()
         --    sel_elm:init()
         --end 
         
-        if self.needs_init then
+        if self.needs_init ~= false then
             sel_elm:init()
         end
         
@@ -1290,11 +1243,11 @@ function Property.Direction:apply_value()
             sel_elm.w = sel_elm.props_norm.w * DHTK.APP_SCALE
             -- Need to use 8 for Lokasenna Slider.
             sel_elm.h = sel_elm.props_norm.h or 8 * DHTK.APP_SCALE        
-            Properties.recreate_elm(sel_elm, nil, true)                
+            --Properties.recreate_elm(sel_elm, nil, true)                
         end
        
         --!!! Must recreate! At least for slider.
-        --Properties.recreate_elm(sel_elm, nil, true)
+        Properties.recreate_elm(sel_elm, nil, true)
                 
         GUI.elms.GB_frm_sel_elm:redraw()        
 
@@ -1309,7 +1262,7 @@ end
 --------------------------------------
 ------  Line_Height (menubox) ------
 --------------------------------------
---zzlh --zzz  
+--zzlh 
 
 function Property.Line_Height:init()
 
@@ -1377,10 +1330,11 @@ function Property.Line_Height:apply_value()
         
         sel_elm[self.prop] = val
         sel_elm.props_norm[self.prop] = val 
+
+        if self.needs_init ~= false then
+            sel_elm:init()
+        end
         
-        -- ??? init or recreate?
-        sel_elm:init() 
-        -- Should only need redraw.
         sel_elm:redraw()
 
     else
@@ -1417,7 +1371,7 @@ function Property.List:init()
         
     elseif self.prop == "travel" then 
         self.optarray = {"90", "180", "270"}
-        val = GUI.elms[self.elm].frame_thk        
+        val = GUI.elms[self.elm].travel       
          
     elseif self.prop == "col_backdrop" then      
         self.optarray = {"wnd_bg", "panel_bg"}
@@ -1482,7 +1436,10 @@ function Property.List:apply_value()
             
         -- !!! DO NOT RECREATE!
         --Properties.recreate_elm(sel_elm, nil, true)
-        sel_elm:init()
+        if self.needs_init ~= false  then
+            sel_elm:init()
+        end
+        
         sel_elm:redraw()
 
     else  
@@ -1540,7 +1497,7 @@ function Property.MonoFont:onmouseup()
     self:apply_value()
 end
 
--- ??? Should be able to roll this into apply_value()
+-- ??? Should be able to roll this into generic apply_value()
 function Property.MonoFont:apply_value()
 
     --GUI.Msg("\n** Property.MonoFont:apply_value **")
@@ -1559,8 +1516,10 @@ function Property.MonoFont:apply_value()
         sel_elm[self.prop] = val
         sel_elm.props_norm[self.prop] = val
             
-        -- Not sure if init needed (may depend on usage) so just do it.
-        sel_elm:init()
+        if self.needs_init ~= false then
+            sel_elm:init()
+        end
+        
         sel_elm:redraw()
 
     else 
