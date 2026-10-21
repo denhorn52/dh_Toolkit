@@ -1,5 +1,6 @@
 -- dh_Slider_H.lua
--- Modified: 20260330
+
+-- Modified: 20261009
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Slider class
@@ -22,7 +23,7 @@
      2026-02-04 Changed how slider is drawn. 
                 Added col_backdrop to improve antialiasing for roundrect,
                 captions, and for drawing frames.        
-                
+     20261009 Changed display_pad_x to pad from right             
 --]]
 ---------------------------------------------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
@@ -78,9 +79,8 @@ function GUI.dh_Slider_H:new(name, z, x, y, w, h, caption, min, max, default, in
   
     Slider.frame_use_outline = Slider.frame_use_outline or false
     Slider.frame_thk = Slider.frame_thk or GUI.dh_Slider_H.defaults.frame_thk
-    if Slider.allow_sel_outline == nil then
-        Slider.allow_sel_outline = GUI.dh_Slider_H.defaults.allow_sel_outline  
-    end
+    
+    Slider.allow_sel_outline = Slider.allow_sel_outline or GUI.dh_Slider_H.defaults.allow_sel_outline
 
 ----colors-------------------------------------
     Slider.col_bg = Slider.col_bg or GUI.dh_Slider_H.defaults.col_bg
@@ -604,11 +604,13 @@ function GUI.dh_Slider_H:init()
             self.display_x = w + self.display_pad_x
             self.display_y = ((h - self.display_h) // 2) + self.display_pad_y
         elseif self.display_pos == "top" then
-            self.display_x = w - (self.display_w + self.track_start) + self.display_pad_x
+            --self.display_x = w - (self.display_w + self.track_start) + self.display_pad_x
+            self.display_x = w - (self.display_w + self.display_pad_x)            
             self.display_y = -(self.display_h + self.display_pad_y)
         else
             -- integrated
-            self.display_x = w - (self.display_w + self.track_start) + self.display_pad_x
+            --self.display_x = w - (self.display_w + self.track_start) + self.display_pad_x
+            self.display_x = w - (self.display_w + self.display_pad_x)            
             self.display_y = self.display_pad_y
         end
         
