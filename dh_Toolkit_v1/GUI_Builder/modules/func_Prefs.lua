@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- func_Prefs.lua
--- Modified 20260330
+-- Modified 20261009
 
 local Prefs = {}
 
@@ -125,6 +125,11 @@ function Prefs.save_settings()
             
             --GUI.Msg("    > " .. pref_elm.type .. " : " .. pref_elm.name .. " : GUI.Val : " .. tostring(GUI.Val(pref_elm.name)) .. " : type : " .. type(GUI.Val(pref_elm.name)))
             Prefs.preferences[prop_name] = GUI.Val(pref_elm.name)
+            
+        else  -- Must be text box.
+ 
+            Prefs.preferences[prop_name] = pref_elm.retval
+            
         end
         
         --GUI.Msg("      after if Pref.prop  : " .. prop_name .. " : " .. tostring(Prefs.preferences[prop_name]) .. " : " .. type(GUI.Val(pref_elm.name)))        
