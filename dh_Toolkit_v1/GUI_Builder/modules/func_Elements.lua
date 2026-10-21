@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 --func_Elements.lua
--- Modified 20260330
+-- Modified Date 20261009
 
 --[==[
   --  Introduced elm.props_norm  --  
@@ -77,6 +77,8 @@ end
 function Element.drag_elm(elm)
 
     -- Get target x,y
+    -- GUI.mouse.m_off_x is GUI.mouse.x - elm.x
+    -- That is drag distance at current scale.
     
     local target_x, target_y
     if GUI.mouse.m_down then
@@ -87,10 +89,6 @@ function Element.drag_elm(elm)
         target_y = GUI.mouse.y - GUI.mouse.off_y    
     end    
     
-    --GUI.Msg("\nnorm mouse : " .. tostring(GUI.mouse.x) .. " : " .. tostring(GUI.mouse.y))   
-    --GUI.Msg("\nnorm offset : " .. tostring(GUI.mouse.off_x) .. " : " .. tostring(GUI.mouse.off_y))       
-    --GUI.Msg("\nnorm_target : " .. tostring(norm_target_x) .. " : " .. tostring(norm_target_y))
-    
     -- !!! Special case for Knob centered.
     -- Need to use center for snap (add radius).
     -- !!! If I change property to knob_centered then only need one check.
@@ -100,16 +98,31 @@ function Element.drag_elm(elm)
         target_y = target_y + math.floor(((elm.props_norm.w / 2) + 0.5) * DHTK.APP_SCALE)
     end
     
+    -- !!! Special case for dh_Label centered or right.
+    -- Need to use center or right for snap.    
+    
+    if elm.type == "dh_Label" then
+                                               
+        if elm.text_pos == "center" then
+            target_x = target_x + (elm.w // 2)                              
+        elseif elm.text_pos == "right" then  
+            target_x = target_x + elm.w                                
+        end 
+           
+    end
+
     -- Snap to grid. 
 
     local new_x, new_y, proj_x, proj_y = Element.get_new_elm_coords(target_x, target_y)
     
-    --GUI.Msg("new from snap : " .. tostring(new_x) .. " : " .. tostring(new_y))
+    --GUI.Msg("    new_x from snap : " .. tostring(new_x))
+    --GUI.Msg("    proj_x from snap : " .. tostring(proj_x))    
+    
 ------------
     -- !!! Special case for Knob centered.
     -- new_x, new_y are scaled center x,y.
     -- elm x,y needs subtract radius then scale?
-    -- prop display needs integer center x,y (which is in props_norm.
+    -- prop display needs integer center x,y (which is in props_norm).
     
     if elm.type == "dh_Knob" and elm.centered then
     
@@ -136,6 +149,21 @@ function Element.drag_elm(elm)
         -- Update property display. 
         GUI.Val("GB_prop_x", elm.props_norm.x)
         GUI.Val("GB_prop_y", elm.props_norm.y)    
+    end
+    
+--[=[ --]=]   
+    
+    -- !!! Special case for dh_Label centered or right.
+    -- Return elm.x to correct position
+        
+    if elm.type == "dh_Label" then
+
+        if elm.text_pos == "center" then
+            new_x = new_x - (elm.w // 2)                              
+        elseif elm.text_pos == "right" then  
+            new_x = new_x - elm.w                                
+        end 
+
     end
 
 ------------
@@ -218,12 +246,12 @@ function Element.add_GB_methods(elm)
              
              -- This will display dialog, but can't return anything useful.
              Dialog.open(params)            
---zzz            
+
         else
         
             GUI[self.type].onmouseup(self)
-            
-            --[=[]
+--zzx                        
+            --[=[
             if GUI.elms.GB_frm_sel_elm.elm ~= self.name then
                 GUI.Msg("    not self.name") 
                 --Element.select_elm(self)  --!!! This seems redundant 
@@ -385,8 +413,7 @@ function Element.store_elm_defaults(elm, proj_x, proj_y)
 
     local defaults = {}
     local props_norm = {}
-    local gb_props = elm.GB.properties
-    
+    local gb_props = elm.GB.properties -- of elm class
     
 --[=[
     -- !!! 20260330: May not need prop_defaults anymore. Using GUI[elm.type].defaults. 
@@ -412,17 +439,19 @@ function Element.store_elm_defaults(elm, proj_x, proj_y)
    
     --GUI.Msg("\n**** store props_norm ****") 
     
+    -- # Iterate properties and copy them to props_norm.
+    
     for i = 1, #gb_props do
     
         -- "1"
         -- {prop = "y", caption = "Y", class = "Integer"},
         local prop_table = gb_props[i]  -- get property table or ""
 
-        -- Elm is created at 1x scale (norm).
-        -- Table means it is a property.
-        
-        -- Iterate properties and copy them to props_norm.
-        
+        -- Elm is created and loaded at 1x scale (norm).
+        -- Table means it is a property and not a separator.
+        -- Z values were loaded with design values.
+        --   Shift up by 10.
+
         if type(prop_table) == "table" then
         
             local p_name = prop_table.prop
@@ -439,7 +468,7 @@ function Element.store_elm_defaults(elm, proj_x, proj_y)
                 --GUI.Msg("     elm.z : " .. tostring(elm.z))
                 --GUI.Msg("   value   : " .. tostring(props_norm[p_name]))
             end
-             
+            
             if p_name == "z_sets" then
             
                 --GUI.Msg("\n# z_set defaults")            
@@ -470,29 +499,36 @@ function Element.store_elm_defaults(elm, proj_x, proj_y)
                 --GUI.Msg(GUI.table_list(elm.z_sets))                
 
             end
-             
-        end  --< if table>
+--zzz  
+            -- # Must be a dh_Label.
+                      
+            if p_name == "text_pos" then
+            
+                --GUI.Msg("        IMPORTED proj_x : " .. proj_x)                                
+                
+                props_norm.text_pos = elm.created_text_pos
+                proj_x = elm.created_x
+                
+                --[=[
+                elm.w = math.floor(elm.w + 0.5)
+
+                if elm.created_text_pos == "center" then
+                    proj_x = proj_x + (elm.w // 2)                                                 
+                elseif elm.created_text_pos == "right" then  
+                    proj_x = proj_x + elm.w                                
+                end
+                
+                GUI.Msg("        ADJUSTED proj_x : " .. proj_x)                                
+                --]=]
+            end
+                        
+        end  --< if type == "table">
         
     end  --< if gb_props>
     
     --GUI.Msg("\n# after build props_norm :")
     --GUI.Msg("    elm  z : " .. tostring(elm.z))
     --GUI.Msg("    props_norm z : " .. tostring(props_norm.z))    
-     
---[=[
-    -- Need to replace x, y 
-    
-    -- !!! Special case for dh_Knob centered.
-    -- Creating elm put elm.x, elm.y to top left,
-    -- proj_x, proj_y should be correct.
-    if elm.type == "dh_Knob" and elm.centered then
-        -- Subtract radius.
-        props_norm.x = proj_x - math.floor((props_norm.w + 0.5) / 2)
-        props_norm.y = proj_y - math.floor((props_norm.w + 0.5) / 2)
-    else
-        props_norm.x, props_norm.y  = proj_x, proj_y
-    end 
---]=]
 
     props_norm.x, props_norm.y  = proj_x, proj_y
     
