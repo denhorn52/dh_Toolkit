@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- func_Menu.lua
--- Modified 20260506
+-- Modified 20261009
 
 ------------------------------------
 -------- Menu bar ------------------
@@ -32,7 +32,6 @@ for _, val in ipairs(dhth.DH_THEME_NAMES) do
     table.insert(theme_options, {val, function() Menu.set_theme(val) end})      
 
 end
-
 
 -- ##  TEST  ## --
 -- Used during development to test certain features, or gather data.
@@ -66,11 +65,8 @@ local function test()
       end
     end        
     --]]    
-    
 
-    
 end    
-
 
 Menu.menu = {
 
@@ -104,168 +100,197 @@ Menu.menu = {
     {title = "Grid", options = {
         {"Toggle Grid Show", function() Menu.toggle_grid() end},
     }},
-    
+
     {title = "LayerSets", options = {
-        {"Layer Set 1", function() Menu.change_layer_sets(1) end},
-        {"Layer Set 2", function() Menu.change_layer_sets(2) end},        
-        {"Layer Set 3", function() Menu.change_layer_sets(3) end},        
-        {"Layer Set 4", function() Menu.change_layer_sets(4) end},        
-        {"Layer Set 5", function() Menu.change_layer_sets(5) end},        
-        {"Layer Set 6", function() Menu.change_layer_sets(6) end},
-        {"Open Editor", function() Menu.change_layer_sets(7) end},                
-        {"Restore layers", function() Menu.change_layer_sets(8) end},                        
+        {"  Layer Set 1", function() Menu.change_layer_sets(1) end},
+        {"  Layer Set 2", function() Menu.change_layer_sets(2) end},        
+        {"  Layer Set 3", function() Menu.change_layer_sets(3) end},        
+        {"  Layer Set 4", function() Menu.change_layer_sets(4) end},        
+        {"  Layer Set 5", function() Menu.change_layer_sets(5) end},        
+        {"  Layer Set 6", function() Menu.change_layer_sets(6) end},
+        {"  Layer Set 7", function() Menu.change_layer_sets(7) end},
+        {"  Layer Set 8", function() Menu.change_layer_sets(8) end},
+        {""},
+        {"  Hide common layers", function() Menu.change_layer_sets(10) end},  
+        {"  Open Editor", function() Editor.open_editor("layer_sets") end}
+   
     }},
-        
+
     {title = "Help", options = {
         --{"Instructions", function() Help.show_help_msg() end}
         {"Usage", function() GUI.elms.GB_wnd_help:open("usage_text") end},
         {"Defaults", function() GUI.elms.GB_wnd_help:open("defaults_text") end},
+        {"Show elms by z in console", function() Menu.show_elms_in_console('z') end},
+        {"Show elms by name in console", function() Menu.show_elms_in_console('name') end}
     }},    
     
 }
 
-function Menu.change_layer_sets(idx)
+-- This gets called when loading file, 
+-- on editor close,
+-- menu selection.
+-- @param: m_idx - LayerSets menu index.
 
-    --GUI.Msg(" #GB.LAYER_SETS : " .. #GB.LAYER_SETS)    
-    --GUI.Msg(" Menu.change_layer_sets; idx : " .. idx)
-    --GUI.Msg(" #GB.LAYER_SETS[idx] : " .. #GB.LAYER_SETS[idx])
-     
-    -- Same item clicked - go no further.
-    if idx == GB.CURRENT_LAYER_SET_INDEX then return end
-    
-    -- Deselect elm if onow on hidden layer.
-    
-    Element.deselect_elm()
-    
-          
- 
-    ---------------------    
-    -- # Open editor .--
-    ---------------------    
-    if idx == 7 then
-        Editor.open_editor("layer_sets")
-        return    
-    end
+function Menu.change_layer_sets(m_idx)
 
-    ------------------------
-    -- # Restore layers. --
-    ------------------------
-    if idx == 8 then
-    
-        -- # Already in restored state. Go no further.
-        
-        if GB.CURRENT_LAYER_SET_INDEX == 0 then
-            return
-        end
-        
-        --GUI.Msg("\n## RESTORE layers." .. "\n")
-
-        -- # Set the layer visibility back to where it was.
-        
-        -- GB.LAYER_SETS has normal (design) z layers.
-        -- GB.HIDDEN_LAYERS has z's that have been shifted up by 10.
-        
-        for i = 1, GUI.z_max do
-            GUI.elms_hide[i] = GB.HIDDEN_LAYERS[i]
-        end
-                
-        -- # Hide current layer set.
-                   
-        for _, z in ipairs(GB.LAYER_SETS[GB.CURRENT_LAYER_SET_INDEX]) do
-            --GUI.Msg("  Restore layer z : " .. z)                
-            GUI.elms_hide[z + 10] = true                       
-        end
-        
-        GB.CURRENT_LAYER_SET_INDEX = 0
-                         
-        return
-        
-    end
-    
-    -------------------------
-    -- # Apply layer set. --   
-    -------------------------  
-    
-     --GUI.Msg("\n## APPLY layer set." .. "\n")          
-       
-    -- # Do nothing if empty layer_set.
-    
-    --GUI.Msg("\n## APPLY  size of set : " .. #GB.LAYER_SETS[idx] .."\n")    
-    
-    if (not GB.LAYER_SETS[idx]) or (#GB.LAYER_SETS[idx] == 0) then
-        --GUI.Msg("    DO NOTHING.") 
-        return 
-    end
-        
-    -- GUI.elms_list is hash of elm_name = elm
-    -- GUI.elms_hide is a hash of z = {elm_name, elm_name, ...}
-    --   only used by GUI to signal if an elm 
-    --   should be updated: GUI.elms_hide[i] == true.
-    
-    -- # Store the actual hidden layers whether they're GB or not.
-    --   This will remain hidden on restore.
-    --   Don't really need to set it to true, 
-    --     but now I can access it by z.
- 
-    -- NOTE: At this point will have selected a new layer set.    
-    -- Don't want to update GB.HIDDEN_LAYERS if coming from a different selection set.
-    
-    local hidden_layers    
-    
-    if GB.CURRENT_LAYER_SET_INDEX == 0 then
-            
-        hidden_layers = {}
-        
-        -- # Store layer visibility state.
-
-        for i = 1, GUI.z_max do        
-            if GUI.elms_hide[i] then
-              
-                hidden_layers[i] = true
-                --table.insert(hidden_layers, i)
-                --GUI.Msg("  hidden_layers z : " .. i)
-                 
-            end        
-        end
-        
-        -- # Then hide all non GB elements.
-        
-        for elm_name, elm in pairs(GUI.elms) do
-            if not string.match(elm_name, "GB_") then
-                GUI.elms_hide[elm.z] = true
-            end
-        end        
-        
-    else
-        -- #  Will save current state.
-        hidden_layers = GB.HIDDEN_LAYERS
-        
-        -- # Hide current layer set layers. Need to shift the z's.
-        
-        for _, z in ipairs(GB.LAYER_SETS[GB.CURRENT_LAYER_SET_INDEX]) do
-    
-            GUI.elms_hide[z + 10] = true
-            hidden_layers[z + 10] = true
-    
-        end
-            
-    end
-    
-    -- # Finally, show selected layer_set.
-    -- GB.LAYER_SETS has normal (design) z layers.
-    -- So shift up by 10.
-    
-    for _, z in ipairs(GB.LAYER_SETS[idx]) do
-
-        --GUI.Msg("\n  Apply GB.LAYER_SETS[idx] z : " .. z)        
-        GUI.elms_hide[z + 10] = false  
+    if m_idx == 10 then
+        --GUI.Msg("\n    before update GB.HIDE_COMMON_LAYERS : " .. tostring(GB.HIDE_COMMON_LAYERS))         
+        GB.HIDE_COMMON_LAYERS = not GB.HIDE_COMMON_LAYERS
+        --GUI.Msg("\n    after update GB.HIDE_COMMON_LAYERS : " .. tostring(GB.HIDE_COMMON_LAYERS))     
+        local txt = (GB.HIDE_COMMON_LAYERS and "$ Hide common layers")
+                  or "  Hide common layers"
                   
-    end     
+        GB.LAYER_SETS_MENU[m_idx][1] = txt
     
-    GB.HIDDEN_LAYERS = hidden_layers
-    GB.LAYERS_TO_RESTORE = layers_to_restore
-    GB.CURRENT_LAYER_SET_INDEX = idx
+    end
+
+    if m_idx and (m_idx < 9) then
+        --GUI.Msg("\n    if m_idx and (m_idx < 9) : " .. tostring(m_idx))
+        -- Toggle. 
+        GB.ACTIVE_LAYER_SETS[m_idx] = not GB.ACTIVE_LAYER_SETS[m_idx]
+
+        -- Transistion to show. (was false, now true)
+        if GB.ACTIVE_LAYER_SETS[m_idx] == true then
+            --GUI.Msg("\n    if GB.ACTIVE_LAYER_SETS[m_idx] == true : ")
+            -- Show layers in selected layerset.
+            for i, norm_z in ipairs(GB.LAYER_SETS[m_idx][2]) do
+                GUI.elms_hide[norm_z + 10] = false
+            end
+            
+            GB.LAYER_SETS_MENU[m_idx][1] = "$ " .. GB.LAYER_SETS[m_idx][1]
+            return
+        else    
+            GB.LAYER_SETS_MENU[m_idx][1] = "  " .. GB.LAYER_SETS[m_idx][1]
+        end
+        
+    end
     
+    if not m_idx then
+        
+        -- # Update menu.
+    
+        for idx, active in ipairs(GB.ACTIVE_LAYER_SETS) do  
+    
+            local lyrset_name = (active and '$ ') or '  ' 
+            lyrset_name = lyrset_name .. GB.LAYER_SETS[idx][1]
+    
+            GB.LAYER_SETS_MENU[idx][1] = lyrset_name
+            --GUI.Msg("\n    Menu.change_layer_sets Update menu. : " .. lyrset_name) 
+        end
+    
+    end
+    
+    -- # Hide/show all non GB common elements.
+    --GUI.Msg("\n    Menu.change_layer_sets GB.HIDE_COMMON_LAYERS : " .. tostring(GB.HIDE_COMMON_LAYERS))     
+    local hide = GB.HIDE_COMMON_LAYERS
+    
+    for elm_name, elm in pairs(GUI.elms) do
+        if not string.match(elm_name, "GB_") then
+            GUI.elms_hide[elm.z] = hide
+        end
+    end        
+    
+    -- Should have at least default GB.LAYER_SETS
+    -- GB.LAYER_SETS holds design (non-shifted) z values
+    -- layerset is { name, {...} }
+    -- Remember to shift z's.
+
+    -- Must first hide inactive layerset layers, 
+    -- then show active layerset layers.
+    
+    -- # Hide inactive layerset layers.        
+    for idx, active in ipairs(GB.ACTIVE_LAYER_SETS) do
+
+        if not active then
+            local zset = GB.LAYER_SETS[idx][2]
+            --GUI.Msg("\n    if not active name: " .. GB.LAYER_SETS[idx][1])
+            --GUI.Msg("\n    if not active #zset: " .. tostring(#zset))                     
+            for _, norm_z in ipairs(zset) do
+                GUI.elms_hide[norm_z + 10] = true
+            end
+        end
+    
+    end
+    
+    -- # Show active layerset layers.        
+    for idx, active in ipairs(GB.ACTIVE_LAYER_SETS) do  
+    
+        if active then
+            local zset = GB.LAYER_SETS[idx][2]
+            for _, norm_z in ipairs(zset) do
+                GUI.elms_hide[norm_z + 10] = false
+            end
+        end
+        
+    end
+
+end
+
+--zzz
+-- GUI.elms_list is a table of existing layers.
+-- Each table is a list of elms (not sorted?) in that layer.
+
+function Menu.show_elms_in_console(sort_type)
+
+    local str = "\n####  PROJECT ELEMENTS  ####\n"
+    local z_elms = {}
+   
+    if sort_type == "z" then
+
+        --GUI.Msg("\n\n>>> GUI.z_max : " .. GUI.z_max)
+  
+        for z = 1, GUI.z_max do
+        
+            z_elms = {}        
+        
+            if GUI.elms_list[z] and #GUI.elms_list[z] > 0 then
+                --GUI.Msg("     z layer : " .. (z - 10)) 
+                -- # Extract any project elms.
+                for _, elm_name in pairs(GUI.elms_list[z]) do    
+        
+                    if not string.match(elm_name, "GB_") then  
+                         table.insert(z_elms, elm_name)
+                         --GUI.Msg("       elm_name : " .. elm_name)
+                    end
+                
+                end
+
+                if #z_elms > 0 then
+                
+                    -- z's get shifted down by 10.
+                    str = str .. "\n# Layer: " .. tostring(z - 10) .. "\n"
+                    table.sort(z_elms)
+                
+                    for _, name in ipairs(z_elms) do
+                        str = str .. "   " .. name .. "\n"
+                    end
+                
+                end
+    
+            end
+
+        end  -- <for z = 1>
+        
+    elseif sort_type == "name" then
+
+        for elm_name, elm in pairs(GUI.elms) do
+        
+            if not string.match(elm_name, "GB_") then  
+                 local estr = elm_name .. "  [" .. elm.z - 10 .. "]"
+            
+                 table.insert(z_elms, estr)
+            end
+
+        end
+        
+        table.sort(z_elms)
+        
+        str = str .. "\n" .. table.concat(z_elms, "\n")
+
+    end  -- <if sort_tpe>
+    
+    GUI.Msg(str)
+
 end
 
 -- Dialog params need to be set here before Dialog.open()
@@ -349,6 +374,8 @@ function Menu.new_project()
     end
     
     ::cont::
+--zzz    
+    -- # Delete all project elms.
     
     for elm_name, elm in pairs(GUI.elms) do
         if not string.match(elm_name, "GB_") then
@@ -356,6 +383,42 @@ function Menu.new_project()
             elm:delete()
         end
     end
+    
+    -- # Set layer sets to default.
+    
+    GB.LAYER_SETS = {
+      {"Layer Set 1", {} },
+      {"Layer Set 2", {} },
+      {"Layer Set 3", {} },
+      {"Layer Set 4", {} },
+      {"Layer Set 5", {} },
+      {"Layer Set 6", {} },
+      {"Layer Set 7", {} },
+      {"Layer Set 8", {} },      
+    }
+
+    GB.ACTIVE_LAYER_SETS = {false,false,false,false,false,false}
+    GB.HIDE_COMMON_LAYERS = false
+    
+    --[=[
+    -- # Update menu.
+         May need this in future if implementing
+         menu to toggle layers.
+    
+    -- # Get reference to layer sets menu.
+    local mls
+    
+    for i, mnu in ipairs(Menu.menu) do
+        if Menu.menu.title == "LayerSets" then
+            mls = mnu.options
+            break
+        end
+    end    
+    
+    for idx, layer in ipairs(GB.LAYER_SETS) do
+        mls[idx][1] = layer[1]        
+    end
+    --]=]      
     
     Project.proj_settings.name = "New project"
     
