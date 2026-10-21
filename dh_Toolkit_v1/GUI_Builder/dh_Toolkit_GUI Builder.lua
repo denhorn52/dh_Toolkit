@@ -4,7 +4,7 @@
 -- version 1.0 
 -- Author: Dennis R. Horn
 -- Enhanced GUI Builder for Lokasenna_GUI v2.9
--- Modified by Dennis R. Horn 20260330
+-- Modified 20261009
 
 --[[
     2025-04-09. 
@@ -205,28 +205,33 @@ GUI.elms.GB_wnd_help_lbx.h = WORKSPACE_MIN_H - 64
 -- For Layer sets.
 
 GB = {}
---[=[
-GB.LAYER_SETS = {
-  [1] = {},
-  [2] = {},
-  [3] = {},
-  [4] = {},
-  [5] = {},
-  [6] = {},
-}
---]=]
 
 GB.LAYER_SETS = {
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
+  {"Layer 1", {} },
+  {"Layer 2", {} },
+  {"Layer 3", {} },
+  {"Layer 4", {} },
+  {"Layer 5", {} },
+  {"Layer 6", {} },
+  {"Layer 7", {} },
+  {"Layer 8", {} },  
 }
 
-GB.HIDDEN_LAYERS = {}
-GB.CURRENT_LAYER_SET_INDEX = 0
+GB.ACTIVE_LAYER_SETS = {false,false,false,false,false,false,false,false}
+GB.HIDE_COMMON_LAYERS = false
+
+GB.LAYER_SETS_MENU = {}
+
+-- Get reference to LayerSets menu.
+-- Indexed list of {layerset_name, function}
+
+for i, mnu in ipairs(Menu.menu) do
+     --GUI.Msg("    menu title : " .. mnu.title)
+     if mnu.title == "LayerSets" then
+         GB.LAYER_SETS_MENU = mnu.options
+         break
+     end
+ end
 
 --======================================
 --    GUI ELEMENTS 
@@ -495,22 +500,10 @@ reaper.atexit(Exit)
 --zzinit
 --GUI.Msg("ready to initialize script")
 
-
--- Hide layer sets. NO! Only on project load.
-
---GUI.Msg("script load GB.CURRENT_LAYER_SET_INDEX : " .. GB.CURRENT_LAYER_SET_INDEX)
-
---if GB.CURRENT_LAYER_SET_INDEX > 0 then
---    Menu.change_layer_sets(GB.CURRENT_LAYER_SET_INDEX)
---end
-
-
-
 -- Scale window. 
 GUI.w = DHTK.APP_WIDTH * DHTK.APP_SCALE
 GUI.h = DHTK.APP_HEIGHT * DHTK.APP_SCALE
 GUI.anchor, GUI.corner = "screen", "TL"
-
 
 -- This will scale all GUI elms and fonts.
 -- When auto-loading last project will scale them too. 
