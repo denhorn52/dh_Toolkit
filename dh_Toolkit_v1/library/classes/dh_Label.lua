@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Label.lua
--- Date: 20260330
+-- Modified Date: 20261009
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Label class
@@ -11,15 +11,24 @@
 ---------------------------------------------------------------------
 --[[ Modified by Dennis Horn.
 
-     Same as Lokasenna Label except for changed property names. 
-     Note: init and draw functions added then subtracted 2 pixels from gfx.x and gfx.h.
-           This caused labels to be displayed at design x minus 2 causing problems with tight layout.
-           Changed to eliminate add/subtract. Doesn't seem to be causing any problems.
-     20251219 rev a: added properties "text_pos" and "x_override". Although gfx.drawstring() allows for justifying text 
-           dh_Label draws text on a background rectangle in a buffer then that buffer get blitted'
-           Positioning occurs during the draw cycle. Use "x_override" with position "center" or "right". 
-     20260106: x_override not needed. self.x will be repositioned if text_pos is not "left".       
-     
+   A label is primarily used to display some text.
+   I had added the property "func" to be able to call a function on the mouseup event.
+   I decided not to use it as that can easily be accomplished by overriding the mouseup event.
+   Either way it is dependent on its x,y,w, and h metrics.
+   
+   Although gfx.drawstring() allows for justifying text by adjusting its position
+     the x and w metrics will not be aligned with the text.
+     This presents a problem for using the mouseup event.
+     self.x will need to be repositioned.
+     Say you define x to be at 200 and text width is 80 with text_pos centered.
+       The label is displayed at 160 left to 240 right, but the
+       clickable area is from 200 left to 280 right.
+       x needs to be shifted. This is done in init().
+
+   Note: init and draw functions added then subtracted 2 pixels from gfx.x and gfx.h.
+         This caused labels to be displayed at design x minus 2 causing problems with tight layout.
+         Changed to eliminate add/subtract. Doesn't seem to be causing any problems.
+
 ]]--
 ---------------------------------------------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
@@ -46,13 +55,17 @@ function GUI.dh_Label:new(name, z, x, y, text, shadow_text, font, col_bg, col_te
 	label.x = label.x or x
     label.y = label.y or y
 
-	--label.caption = label.caption or caption or "Label"	
-	label.text = label.text or text or GUI.dh_Label.defaults.text	
+	label.text = label.text or text 
+	if not label.text or (#label.text < 1) then label.text = GUI.dh_Label.defaults.text end
+	
 	label.font = label.font or font or GUI.dh_Label.defaults.font
 	label.shadow_text = label.shadow_text or shadow_text or GUI.dh_Label.defaults.shadow_text
 
     label.text_pos = label.text_pos or GUI.dh_Label.defaults.text_pos   -- left,center,right
-    --label.x_override = label.x_override or label.x
+    
+    --!!! Need these for dh_GUI_Builder.
+    label.created_text_pos = label.text_pos
+    label.created_x = label.x
 
 ----colors---------------------------	
 	label.col_bg =     label.col_bg     or bg         or GUI.dh_Label.defaults.col_bg
@@ -93,26 +106,32 @@ function GUI.dh_Label:init(open)
 
     GUI.font(self.font)
     self.w, self.h = gfx.measurestr(self.text)
-    
-    --GUI.Msg("Label:init self.h for : " .. self.name .. " is " .. tostring(self.h))    
+
+    --GUI.Msg("Label:init self.x for : " .. self.name .. " is " .. tostring(self.x))    
     
     --??? Is this necessary? Does it really help antialiaing? 
     -- Two pixels is valuable in tight layouts.
     --local w, h = self.w + 4, self.h + 4
     local w, h = self.w, self.h
-    
-    -- Reposition self.x if not using default "left" alignment.
 
-    --GUI.Msg("\n** Label:init self.x before adjustment : " .. tostring(self.x))
-    
+    -- Reposition self.x if not using default "left" alignment
+    -- so that clickable area matches tthe text.
+   
     if self.text_pos == "center" then
-        self.x = math.floor(self.x - self.w / 2)
+        self.x = math.floor(self.x - self.w // 2)
     elseif self.text_pos == "right" then
         self.x = self.x - self.w
     end
         
-    --GUI.Msg("\n** Label:init self.x after adjustment : " .. tostring(self.x))
-    
+    --!!! Need this so clickable area matches text.
+    self.text_pos = "left"
+        
+    --if self.name == "dh_Label2" then
+    --    GUI.Msg("** Label:init after adjustment self.x : " .. tostring(self.x))
+    --    GUI.Msg("** Label:init after adjustment self.text_pos : " .. self.text_pos)
+    --    GUI.Msg("** Label:init after adjustment self.created_text_pos : " .. self.created_text_pos)
+    --end
+       
     -- Because we might be doing this in mid-draw-loop,
     -- make sure we put this back the way we found it
     local dest = gfx.dest
@@ -177,20 +196,6 @@ function GUI.dh_Label:draw()
     
     --gfx.x, gfx.y = self.x - 2, self.y - 2
     gfx.x, gfx.y = self.x, self.y
-    
-    --[[
-    if self.text_pos == "center" then
-        --gfx.x = self.x_override - self.w / 2
-        gfx.x = self.x - self.w / 2
-    elseif self.text_pos == "right" then
-        --gfx.x = self.x_override - self.w
-        gfx.x = self.x - self.w
-    else -- left    
-        gfx.x = self.x
-    end
-    
-    gfx.y = self.y
-    --]]
 
     -- Background
     gfx.blit(self.buffs[1], 1, 0)
@@ -218,6 +223,8 @@ function GUI.dh_Label:val(newval)
 end
 
 -- 20250430 Added by dh. Not currently using.
+-- This was oiginally to add the property "func" to be able
+-- to assign a callable function using that property.
 function GUI.dh_Label:onmouseup()
 --[[
 	--self.state = 0
