@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- tab_Properties.lua
--- Modified 20260330
+-- Modified 20260920
 
 local Property = GUI.req(GUI.script_path .. "modules/class_Properties.lua")()
 --local Element = require("func_Elements")
@@ -82,6 +82,11 @@ function Properties.recreate_elm(elm, new_name, selected, dup_x, dup_y, proj_x, 
     end
     
 -----------------------------------------------
+    --!!! Special cases.
+    
+    if  (elm.type == "dh_Label") and elm.text_pos ~= "left" then
+        elm.x = (elm.props_norm.x * DHTK.APP_SCALE)
+    end
 
     -- Adjust knob x, y if knob.centered.  
     -- !!! Needed this at some point, but now messes with display. 
@@ -316,7 +321,7 @@ function Properties.new_property(property, elm, pos)
     -- Shift some metrics if name.
     -- ref_properties = {x = 148, y = 60, w = 144, h = 24, off = 28}
     local ref_x = (prop == "name") and 16 or ref_properties.x 
-    local ref_y = (prop == "name") and (ref_properties.y + 16) 
+    local ref_y = (prop == "name") and (ref_properties.y + 8) 
                     or ref_properties.y
     local ref_w = (prop == "name") and (SIDEBAR_WIDTH - 32) 
                     or ref_properties.w
