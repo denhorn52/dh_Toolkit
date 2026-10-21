@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- wnd_Prefs.lua
--- Modified 20260330
+-- Modified 20261009
 
 
 local Prefs = GUI.req(GUI.script_path .. "modules/func_Prefs.lua")()
@@ -176,6 +176,18 @@ function GUI.elms.GB_wnd_prefs:onclose(ok)
         GUI.elms.GB_frm_bg:redraw()
         
     end
+
+end
+
+function GUI.elms.GB_wnd_prefs_grid_size:onmouseup()
+
+    local val_in = self.retval
+    
+    GUI.dh_Button.onmouseup(self)
+    
+    if not math.tointeger(self.retval) then
+        self.retval = val
+    end     
 
 end
 
