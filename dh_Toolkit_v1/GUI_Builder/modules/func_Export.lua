@@ -1,7 +1,7 @@
 -- NoIndex: true
 
---func_Export.lua
--- Modified 20260506
+-- func_Export.lua
+-- Modified 20261009
 ----------------------------------------------
 -------- File import / export functions -----
 --------    for GUI Builder -----------------
@@ -25,7 +25,7 @@ function Export.get_project_file()
 
     --GUI.Msg("# Export.get_project_file")
     
-    -- First, get file name.
+    -- # First, get file name.
     
     local export_path = ""
     local suffix = ""
@@ -45,7 +45,7 @@ function Export.get_project_file()
     local file_name = GUI.Val("GB_dlg_input1") .. suffix
     local file_path = export_path .. file_name
     
-    -- Check if file exists. Prompt if so.
+    -- # Check if file exists. Prompt if so.
     
     Dialog.data = file_path
     
@@ -64,7 +64,7 @@ end
 
 function Export.save_file()
 
-    -- Build file.
+    -- # Build file.
     
     local saving_template = (Dialog.params.save_state == "template")
     
@@ -83,8 +83,11 @@ function Export.save_file()
     local elements, elms_names_str = Export.build_elements_str()
     
     -- settings is "" for template. Handled above.
-    -- elms_names_str is different for template. Handled in build_elements_str.
-    -- elements need to be inside function.
+    -- elms_names_str is different for template. 
+    -- for trmplate element needs to be inside function.
+    -- handled in build_elements_str.
+    
+    -- # Save elms.
     
     local elements_str = ""
     
@@ -102,27 +105,44 @@ function Export.save_file()
     
     local layer_sets_str = ""
 
-    
     if not saving_template then
     
-        str = 'GB_Project_Layer_Sets = {'
+        -- # Save layer sets.
+    
+        str = '\nGB_Project_Layer_Sets = {'
+--zzz        
+        -- layer is {title, {...} }
+        for i, layer in ipairs(GB.LAYER_SETS) do
         
-        for i, zset in ipairs(GB.LAYER_SETS) do
-            --str = str .. '\n        [' .. tostring(i) .. '] = {'
-            str = str .. '\n        {'                             
-            for _, z in ipairs(zset) do   
+            str = str .. '\n    {'
+            str = str .. '"' .. layer[1] .. '", {'                                          
+        
+            for _, z in ipairs(layer[2]) do   
                 str = str .. tostring(z) .. ','
             end
-            str = str .. '},'                             
             
+            str = str .. '} },'   
+                                                 
         end
-             
-        str = str .. '\n    }\n'   
---zzz
-        -- Always start with no selected sets.         
-        --str = str .. 'GB_Project_Current_Layer_Set = ' .. tostring(GB.CURRENT_LAYER_SET_INDEX)
-        str = str .. 'GB_Project_Current_Layer_Set = ' .. tostring(GB.CURRENT_LAYER_SET_INDEX)         
+                   
+        str = str .. '\n}\n\n'   
 
+        -- # Save active layer sets.   
+        
+        str = str .. 'GB_Active_Layer_Sets = {'
+        
+        for i, v in ipairs(GB.ACTIVE_LAYER_SETS) do
+            --GUI.Msg("\n    Save File GB.ACTIVE_LAYER_SETS[i] i : " .. tostring(GB.ACTIVE_LAYER_SETS[i]))
+            --GUI.Msg("    Save File GB.ACTIVE_LAYER_SETS[i] v : " .. tostring(v))            
+            str = str .. tostring(GB.ACTIVE_LAYER_SETS[i]) .. ','
+        end
+                                                
+        str = str .. '}\n\n'     
+        
+        -- # Save hide common layers state.
+        str = str .. "GB_Hide_Common_Layers = " .. tostring(GB.HIDE_COMMON_LAYERS) .. "\n"
+        
+        -- # Finally.
         layer_sets_str = str
     
     end    
@@ -181,6 +201,7 @@ function Export.build_elements_str()
     local elms_strs = {}
     local params, strs
     
+    local elm_names = {}
     local elms_names_str
     
     if (Dialog.params.save_state == "template") then
@@ -234,7 +255,8 @@ function Export.build_elements_str()
 
         --table.insert(elms_names, elm_name)
         
-        elms_names_str = elms_names_str .. '    "' .. elm_name .. '",\n'
+        --elms_names_str = elms_names_str .. '    "' .. elm_name .. '",\n'
+        table.insert(elm_names, elm_name)
 
         -- Get elm params and build element string.
 
@@ -249,11 +271,16 @@ function Export.build_elements_str()
 
     end
     
+    ::finish_up::    
     
+    table.sort(elm_names)
     
+    for _, elm_name in ipairs(elm_names) do
     
-    ::finish_up::
+        elms_names_str = elms_names_str .. '    "' .. elm_name .. '",\n' 
     
+    end
+        
     if (Dialog.params.save_state ~= "template") then
         elms_names_str = elms_names_str .. '}\n\n'
     end     
@@ -299,6 +326,12 @@ function Export.build_elm_str(elm)
             local pname = params[i].prop
             local ptype = type(elm[params[i].prop])
 
+            --if params[i].prop == "text_pos" then
+            --    GUI.Msg("\n#  elm name : " .. elm.name)
+            --    GUI.Msg("   elm props_norm x : " .. elm.props_norm.x)
+            --    GUI.Msg("   elm props_norm text_pos : " .. elm.props_norm.text_pos)
+            --    GUI.Msg("   elm text_pos : " .. elm.text_pos)                
+            --end
             --GUI.Msg("  elm name : " .. elm.name)
             --GUI.Msg("  elm z : " .. elm.z)
             --GUI.Msg("  param name : " .. pname)
@@ -308,16 +341,28 @@ function Export.build_elm_str(elm)
                 
             if pname == "z" then
                 --GUI.Msg("  elm name : " .. elm.name)
-                --GUI.Msg("  elm z : " .. elm.z)
-                --GUI.Msg("  props_norm : " .. elm.props_norm[pname])
+                --GUI.Msg("  props_norm z  : " .. elm.props_norm.z )
+                --GUI.Msg("  props_norm prop : " .. elm.props_norm[pname])
                 valstr = tostring(elm.props_norm[pname])            
             
             elseif pname == "z_sets" then
                 valstr = Export.table2str(elm.props_norm[pname], elm.type, pname)                
 
             elseif ptype == "string" then
-                --valstr = '"' .. elm.props_norm[pname] .. '"'
-                valstr = '"' .. elm[pname] .. '"'
+                --??? Should they all be elm.props_norm[pname]? 
+                --    I swithched them to elm[pname] for a reason?
+                -- Anyway, text_pos definitely needs to be elm.props_norm[pname].
+                
+                if params[i].prop == "text_pos" then 
+                    valstr = '"' .. elm.props_norm[pname] .. '"'
+                else
+                    valstr = '"' .. elm[pname] .. '"'
+                end
+                
+                --GUI.Msg("\n  ptype is string")                                
+                --GUI.Msg("  valstr elm.props_norm[pname] : " .. elm.props_norm[pname])                
+                --GUI.Msg("  valstr elm.[pname] : " .. elm[pname] )
+
                 
             elseif ptype == "table" then
                 valstr = Export.table2str(elm[pname], elm.type, pname)
@@ -352,6 +397,11 @@ function Export.build_elm_str(elm)
     if (elm.type == "dh_TextEditor") then
         valstr = Export.table2str(elm.retval, elm.type)
         strs[#strs+1] = '    retval = ' .. valstr .. ','
+    end
+    
+    if (elm.type == "dh_Radio") then
+        valstr = tostring(elm.retval)
+        strs[#strs+1] = '    retval = ' .. valstr .. ','        
     end
     
     local str
@@ -475,7 +525,7 @@ function Export.load_project_file(load_type)
     --GUI.Msg("GUI.script_path: " .. GUI.script_path .. "\n")
 
     local menu_str = ""
-    local i = 0 
+    local i = 0
     local filelist = {}
 
     local dir_path
@@ -508,9 +558,10 @@ function Export.load_project_file(load_type)
         ::next::
          
         i = i + 1 
+        
     end 
     
-    -- Build list for gfx.showmenu --
+    -- # Build list for gfx.showmenu.
     
     if #filelist > 0 then
         for i, filename in ipairs(filelist) do
@@ -556,17 +607,18 @@ end  --< Export.load_project_file >
 -----------------------------------
 --------  LOAD PROJECT  --------
 -----------------------------------
-
+--zzz
 function Export.load_project(content)
 
-  xpcall(function()
+--!!! Disable xpcall for debugging.
+--  xpcall(function()
   
     --GUI.Msg("\n## Export.load_project")
     --GUI.Msg("< loaded content: > \n" .. content .. "\n")
     
     Element.deselect_elm()
     
-    -- Loading template. Check for unique name. 
+    -- # Loading template. Check for unique name. 
   
     if Export.load_type == "template" then
         
@@ -578,7 +630,7 @@ function Export.load_project(content)
         
             --GUI.Msg("    GB_TEMPLATE_element_name : " .. (GB_TEMPLATE_element_name or "nil"))
             
-            -- Check if elm name exists
+            -- # Check if elm name exists
             local i = 1
             local new_name = GB_TEMPLATE_element_name
             
@@ -597,9 +649,9 @@ function Export.load_project(content)
 
         GB_TEMPLATE_load_elm()
         
-    else
+    else  -- all project elements
 
-        -- Delete previous project elements.
+        -- # Delete previous project elements.
 
         -- This clears property elms, but 
         -- GUI.elms_list doesn't get updated until next GUI.Update,
@@ -612,7 +664,7 @@ function Export.load_project(content)
             end
         end
         
-        -- Load all elms and init them.
+        -- # Load all elms and init them.
 
         load(content)()    
     
@@ -626,7 +678,7 @@ function Export.load_project(content)
 
         for _, elm_name in ipairs(element_names) do        
         
-            --GUI.Msg("        imported elm name : " .. elm_name)        
+            --GUI.Msg("\n        imported elm name : " .. elm_name)        
     
             local elm = GUI.elms[elm_name]
           
@@ -649,7 +701,10 @@ function Export.load_project(content)
                 --GUI.Msg("        proj_y : " .. proj_y)    
 
             end
-            
+--zzlabel          
+            -- Loading dh_Label will have shifted x if text_pos is center or right.
+            -- Make adjustments in store_elm_defaults (where props_norm is created).
+
             -- Imported elements need to be on layer 1.
             if Export.load_type == "template" then
                 elm.z = 1
@@ -682,71 +737,68 @@ function Export.load_project(content)
     if Export.load_type == "template" then
         Element.select_elm(GUI.elms[GB_TEMPLATE_element_name])
     end
-
+    
+    -------------------------------
+    --      LAYER SETS
+    -------------------------------
     
     -- # Get the layer sets.
-    
+    -- When load(content)() table should have been parsed.
+
     if GB_Project_Layer_Sets then
 
-        GB.LAYER_SETS = GB_Project_Layer_Sets
+        -- # Verify Layer Sets.
         
-        --GUI.Msg("    GB.LAYER_SETS = GB_Project_Layer_Sets ")
-        --GUI.Msg("    #GB.LAYER_SETS : " ..  #GB.LAYER_SETS)
+        for idx = 1, 8 do
         
-        -- Hide all layer set layers.
-        -- Remember to shift z's.
+            local lyrset = {}
+            local zset = {}
+--zzz            
+            --!!! In case previous format 
+            --      or missing GB_Project_Layer_Sets.
         
-        --GUI.Msg("    ITERATE GB.LAYER_SETS ")
-    
-        for i, zset in ipairs(GB.LAYER_SETS) do
-        
-            --GUI.Msg("    INDEX of zset : " .. i)
-            --GUI.Msg("    SIZE of zset  : " .. #zset) 
-        
-            if #zset > 0 then
-            
-                --GUI.Msg("     zset value : " .. )
-            
-                for j, z in ipairs(zset) do
+            if not GB_Project_Layer_Sets[idx] or
+              (type(GB_Project_Layer_Sets[idx][1]) ~= "string") then    
+                  
+                --GUI.Msg(">>> no or improper layerset : " .. idx)
                 
-                    --GUI.Msg("      zset value : " .. z)                
+                table.insert(lyrset, "Layer Set " .. idx)
+                table.insert(lyrset, zset)   
                 
-                    GUI.elms_hide[z + 10] = true
-                    
-                end
+            else
+                --GUI.Msg(">>> a proper layerset exists : " .. idx)
+                
+                lyrset = GB_Project_Layer_Sets[idx]
+                --GUI.Msg("    SIZE of layerset  : " .. #lyrset)
+                --GUI.Msg("    SIZE of layerset zset  : " .. #lyrset[2])        
             end
+            
+            GB.LAYER_SETS[idx] = lyrset
+            
+        end
+                
+        --GUI.Msg("    SIZE of GB.LAYER_SETS  : " .. #GB.LAYER_SETS)                
+
+        if GB_Hide_Common_Layers then 
+            GB.HIDE_COMMON_LAYERS = GB_Hide_Common_Layers 
+        else
+            GB.HIDE_COMMON_LAYERS = false  -- default
         end
         
-    else
-        --GUI.Msg("    GB.LAYER_SETS = empty ")        
-        GB.LAYER_SETS = {{},{},{},{},{},{},{},}
-    end
-    
-    -- # Get current layer set index,
---zzz
-    --[=[    
-    if GB_Project_Current_Layer_Set then
-    
-        -- Always start with default: no selected sets.
-        GB.CURRENT_LAYER_SET_INDEX = GB_Project_Current_Layer_Set
+        GB.LAYER_SETS_MENU[10][1] = (GB.HIDE_COMMON_LAYERS and "$ Hide common layers")
+                                       or "  Hide common layers"        
+              
+        if GB_Active_Layer_Sets then
+            GB.ACTIVE_LAYER_SETS = GB_Active_Layer_Sets 
+        else
+            GB.ACTIVE_LAYER_SETS = {false,false,false,false,false,false,false,false}
+        end
         
-        --GUI.Msg("    GB.CURRENT_LAYER_SET_INDEX : " ..  GB.CURRENT_LAYER_SET_INDEX)
-    end
-    --]=]
-    
-    -- # Then update if necessary.
-    
-    if GB.CURRENT_LAYER_SET_INDEX > 0 then        
-        Menu.change_layer_sets(GB.CURRENT_LAYER_SET_INDEX)
-    end
+        -- # Process Layer visibility and update menu.
+        Menu.change_layer_sets()
         
-    -- No longer need these.
-    GB_Project_Elements_Names = nil
-    GB_Project_Layer_Sets = nil
-    GB_Project_Current_Layer_Set = nil
-    GB_TEMPLATE_element_name = nil
-    GB_TEMPLATE_load_elm = nil
-    
+    end  --<if GB_Project_Layer_Sets>
+
     if GB_Project_Settings then
         Project.populate_settings(GB_Project_Settings)
         Project.load_settings(GB_Project_Settings)        
@@ -755,8 +807,17 @@ function Export.load_project(content)
     
     Project.update_wnd_size("import")
     
+    -- # No longer need these.
+    
+    GB_Project_Elements_Names = nil
+    GB_Project_Layer_Sets = nil
+    GB_Active_Layer_Sets = nil
+    GB_Hide_Common_Layers = nil
+    GB_TEMPLATE_element_name = nil
+    GB_TEMPLATE_load_elm = nil
+    
 
-  end, Export.import_error_handler)
+--  end, Export.import_error_handler)
   
 end  --< Export.load_project >
 
@@ -784,7 +845,7 @@ function Export.sort_elm_strs(elm_strs)
 
             end
 
-            sorted[#sorted + 1] = "\n\n"
+            --sorted[#sorted + 1] = "\n\n"
 
         end
 
