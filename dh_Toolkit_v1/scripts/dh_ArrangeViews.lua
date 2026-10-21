@@ -1,7 +1,7 @@
 --dh_ArrangeViews.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20260330
+-- Modified Date: 20260806
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -661,9 +661,9 @@ local function goToArrangeView(menubox)
     end
 
 	-- Set loop time range --
---zz0425  goto	
+--zzgoto	
     if view_options.use_loop_time_range and view.loop_starttime and view.loop_endtime then
-	 	reaper.GetSet_LoopTimeRange(true, true, view.loop_starttime, view.loop_endtime, false)	
+	 	reaper.GetSet_LoopTimeRange2(0, true, true, view.loop_starttime, view.loop_endtime, false)	
     end   
   	
 	-- Deselect current media items --
@@ -871,12 +871,13 @@ local function selectRegion()
 			--dh_log("retval is: " .. tostring(retval))
 			--dh_log("region start_time is: " .. tostring(start_time) .. " ; end_time is: " .. tostring(end_time))
 			
+			-- Allow some left and right margin beyond region.
 			local display_factor = (end_time - start_time) * 0.06
 			local adj_start_time = start_time - display_factor
 			local adj_end_time = end_time + display_factor
 			reaper.GetSet_ArrangeView2(0, true, 0, 0, adj_start_time, adj_end_time)
---zz0425  region
-		    reaper.GetSet_LoopTimeRange(true, true, starttime, endtime, false)	
+--zzregion
+		    reaper.GetSet_LoopTimeRange2(0, true, true, starttime, endtime, false)	
 		else
 			reaper.ShowMessageBox("Region not found!\n", "Error", 0)
 			return
