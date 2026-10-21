@@ -1,20 +1,41 @@
 /* css for dh_Toolkit documentation 
+
+Modified: 20261009
+
+NOTES;
+
 All content outside of page header is in page body.
-Section headings are aligned to left of pageBody.
+Section headings should be aligned to left of pageBody.
 Sub headings are aligned to left of its container.
-All text shoule be in p.
-p, text sections, and images are padded left (via margin)..
-Use sectionIndented for 1.5em left margin.
-OR sectionText left150?
+
+I am trying to use <div> only for layout,
+and <p> for textual content. Far easier to read and maintain.
+
+Default line-height is declared in pageBody.
+
+I started this project by creating all sorts of rules, but
+soon came to realize it was a maintenence nightmare.
+Now, I am trying to move to a simpler format.
+Since most of the "sections" require designating left and top
+whether a paragraph or section block, I fing it is easier to
+just use say, <div class="left100 top150".
+Currently using sectionIndented[num], and maybe sectionDefault.
+Other "section" rules have been deprecated, and I may deprecate these also.
+
 */
 
+/* Try to use only block-indent with 0.5em defaultn*/
+/* Use block-indent100 is desired greater left */
 :root {
   --left-pad: 0.5em; /*0.5*/
-  --block-indent: 1.0em; /*1.0*/
+  --block-indent: 0.5em; /*1.0*/
+  --block-indent050: 0.5em; /*0.5*/
+  --block-indent100: 1em; /*0.5*/
 }
 
 *, *:before, *:after {
-   box-sizing: inherit;
+   /*box-sizing: inherit;*/
+   box-sizing: border-box; /** VERY IMPORTANT */   
 }
 
 body {
@@ -76,7 +97,7 @@ body {
 }
 
 .tocBody {
-  width: 100%,
+  width: 100%;
   top: 88px;
   height: calc(96vh - 88px);
   padding-left: 2em;
@@ -88,13 +109,13 @@ body {
 
 .tocItem {
   font-size: 1.0em;
-  line-height: 2;
+  line-height: 2em;
 }
 
 .tocSubItem {
   font-size: 1.0em;
-  line-height: 2;
-  margin-left: 1.5em;
+  line-height: 2em;
+  margin-left: 2em;
 }
 
 /* ---- PAGE  HEADING ---- */
@@ -145,7 +166,8 @@ body {
 /* ---- PAGE  BODY ---- */
 
 .pageBody {
-  width: 100%,
+  /*position: relative;*/      
+  width: 100%;
   top: 64px;
   height: calc(96vh - 64px);
   padding-left: 1em;
@@ -155,57 +177,82 @@ body {
   overflow-y: auto;
   overscroll-behavior: none;
   /*border: 4px solid red;*/
+  line-height: 1.4em;
 }
 
 /* ---- CONTENT ---- */
 
 .heading {
-  font-size: 1.5em;
+  font-size: 1.4em;
   font-weight: 700;
   margin-top: 0.75em;
+  text-indent: 3em hanging;
 }
 
 .subHeading {
-  font-size: 1.25em;
+  font-size: 1.2em;
   font-weight: 700;
   margin-top: 0.75em;
+  text-indent: 3em hanging;
 }
 
-/* p is not the same as sectionDefault as p adds blank line after. */
+/* p is not the same as sectionDefault as p adds 1em blank line after. */
 p {
   margin-top: 1.0em; /*0.5em;*/
   margin-left: 0;
-  line-height: 1.4em;
+  /*line-height: 1.4em;*/
 }
 
 .sectionDefault {
+  position: relative;
   margin-top: 0.5em;
- /* margin-left: var(--left-pad);*/
   margin-left: 0;
-  line-height: 1.4em;
+  /*line-height: 1.4em;*/
+  text-indent: 0;  
 }
 
 .sectionIndented {
+  position: relative;    
   margin-top: 0.5em;
-  /*margin-left: calc(var(--left-pad) + var(--block-indent));*/
   margin-left: var(--block-indent);
-  line-height: 1.4em;
+  /*line-height: 1.4em;*/
 }
 
-.sectionListItem {
+.sectionIndent050 {
+  position: relative;  
   margin-top: 0.5em;
- /* margin-left: var(--left-pad);*/
-  margin-left: 0;
-  line-height: 1.4em;
-  text-indent: 1.0em hanging;
+  margin-left: 0.5em;
+  /*line-height: 1.4em;*/
 }
 
-.sectionListItemIndented {
+.sectionIndent100 {
+  position: relative;  
   margin-top: 0.5em;
-  /*margin-left: calc(var(--left-pad) + var(--block-indent));*/
-  margin-left: var(--block-indent);
-  line-height: 1.4em;
-  text-indent: 1.0em hanging;
+  margin-left: 1em;
+  /*line-height: 1.4em;*/
+}
+
+.sectionIndent150 {
+  position: relative;  
+  margin-top: 0.5em;
+  margin-left: 1.5em;
+  /*line-height: 1.4em;*/
+}
+
+.sectionHanging050 {
+  position: relative;  
+  margin-top: 0.5em;
+  margin-left: 0.5em;
+  /*line-height: 1.4em;*/
+  text-indent: 0.5em hanging;
+}
+
+.sectionHanging100 {
+  position: relative;  
+  margin-top: 0.5em;
+  margin-left: 1em;
+  /*line-height: 1.4em;*/
+  text-indent: 0.5em hanging;
 }
 
 /* Use this to reset sub blocks. 
@@ -222,16 +269,52 @@ p {
 /* ---- RULES TO CHANGE DEFAULT BEHAVIOR ---- */
 /* headings default is 0 margin left */
 
-.leftPad {
-  margin-left: var(--left-pad);
+.bottom000 {
+  margin-bottom: 0;  
+}
+
+.hanging050 {
+  text-indent: 0.5em hanging;
+}
+
+.hanging100 {
+  text-indent: 1em hanging;
+}
+
+.hanging150 {
+  text-indent: 1.5em hanging;
+}
+
+.hanging200 {
+  text-indent: 2em hanging;
+}
+
+.indent050 {
+  text-indent: 0.5em;
+}
+
+.indent100 {
+  text-indent: 1em;
+}
+
+.indent150 {
+  text-indent: 1.5em;
+}
+
+.indent200 {
+  text-indent: 2em;
 }
 
 .left000 {
-  margin-left: 0.5em;
+  margin-left: 0em;
 }
 
 .left050 {
   margin-left: 0.5em;
+}
+
+.left075 {
+  margin-left: 0.75em;
 }
 
 .left100 {
@@ -239,30 +322,35 @@ p {
 }
 
 .left150 {
-  margin-left: 1.50em;
+  margin-left: 1.5em;
 }
 
-.top000 {
-  margin-top: 0em;  
-}
-
-.top050 {
-  margin-top: 0.5em;  
-}
-
-.top075 {
-  margin-top: 0.75em;  
-}
-
-.top100 {
-  margin-top: 1.0em;  
+.left200 {
+  margin-left: 2.0em;
 }
 
 .lineheight120 {
   line-height: 1.2em;
 }
+
 .lineheight125 {
   line-height: 1.25em;
+}
+
+.lineheight140 {
+  line-height: 1.4em;
+}
+
+.lineheight150 {
+  line-height: 1.5em;
+}
+
+.padLeft100 {
+  padding-left: 1em;
+}
+
+.padLeft150 {
+  padding-left: 1.5em;
 }
 
 .text110{
@@ -282,6 +370,11 @@ p {
   font-weight: 700;
 }
 
+.textEmphasis105 {
+  font-size: 1.05em;  
+  font-weight: 700;
+}
+
 .textEmphasis110 {
   font-size: 1.1em;  
   font-weight: 700;
@@ -297,31 +390,65 @@ p {
   font-weight: 700;
 }
 
-.indent050 {
-  text-indent: 0.5em;
+.top000 {
+  margin-top: 0em;  
 }
 
-.indent100 {
-  text-indent: 1em;
+.top050 {
+  margin-top: 0.5em;  
 }
 
-.hanging050 {
-  text-indent: 0.5em hanging;
+.top075 {
+  margin-top: 0.75em;  
+}
+
+.top100 {
+  margin-top: 1.0em;  
+}
+
+.top150 {
+  margin-top: 1.5em;  
+}
+
+.top200 {
+  margin-top: 2em;  
 }
 
 /* ---- Images ---- */
 
 .imgTitle {
+  position: relative;
   font-size: 0.9em;
-  /*margin-left: 0.5em;*/
-  margin-left: calc(var(--block-indent) + 0.5em); 
+  /*padding-left: 0.75em;*/
+  margin-left: 0.75em;/**/
+  /*margin-left: calc(var(--block-indent) + 0.5em);*/ 
+  padding-bottom: 0.2em;
+}
+
+.imgTitle100 {
+  position: relative;
+  font-size: 1em;  /*0.9em;*/
+  /*padding-left: 0.75em;*/
+  margin-left: 0.75em;/**/
+  /*margin-left: calc(var(--block-indent) + 0.5em);*/ 
+  padding-bottom: 0.2em;
+}
+
+.imgTitle110 {
+  /*position: relative;*/  
+  font-size: 1.1em;  /*0.9em;*/
+  padding-left: 0.75em;  
+  /*margin-left: 0.75em;*/
+  /*margin-left: calc(var(--block-indent) + 0.5em);*/ 
   padding-bottom: 0.2em;
 }
 
 .imgContainer {
+  position: relative;  
   width: 90%;
-  /*margin-left: 0.5em;*/
-  margin-left: var(--block-indent);
+  /*padding-left: 0.5em;*/  
+  margin-left: 0.5em;
+  /*margin-left: var(--block-indent);*/
 }
 
 .imgContainer img {
@@ -340,7 +467,7 @@ pre {
   background-color: #ddd;
   line-height: 1.2em;
   margin-top: 0.5em;
-  padding: 0.5em;
+  padding: 0 1em;
   overflow-x: auto; 
   overflow-y: auto;
 }
@@ -351,20 +478,22 @@ pre {
   line-height: 1.2em;
   /*margin-top: 0.5em;
   padding: 0.5em;*/
-  padding-left: var(--block-indent);
+  /*padding-left: var(--block-indent);*/
+  /*margin-left: 1em;*/    
   overflow-x: auto;
-  overflow-y: auto;
+  /*overflow-y: auto;*/
   /*overscroll-behavior-x: none;*/  
   /*border: 2px solid red;*/
 }
 
 .classesChart {
   width: calc(100% - 3vw);
-  height: 80vh; 
+  /*height: 80vh;*/ 
   line-height: 1.2em;
-  padding-left: var(--block-indent);  
+  /*padding-left: var(--block-indent);*/
+  margin-left: 1em;  
   overflow-x: auto;
-  overflow-y: auto;
+  /*overflow-y: auto;*/
   /*overscroll-behavior-x: none;*/  
   /*border: 2px solid red;*/
 }
@@ -396,7 +525,6 @@ code {
 }
 
 /* ######## */
-
 
 
 
