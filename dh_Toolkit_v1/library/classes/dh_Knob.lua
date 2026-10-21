@@ -82,12 +82,13 @@ function GUI.dh_Knob:new(name, z, x, y, w, caption, centered, min, max, default,
     	return string.format("%." .. places .. "f", val)
 	end
 	
---zzz 
+--zzzv 
 	Knob.travel = Knob.travel or GUI.dh_Knob.defaults.travel
 	
 	-- curstep is integer position from 0 to steps.
-	Knob.curstep = Knob.default
-	--Knob.curstep = Knob.default + Knob.min	
+	-- default is now a numerical representation.
+	--Knob.curstep = Knob.default
+	Knob.curstep = (Knob.default - Knob.min) // Knob.inc	
 	
 	-- curval is fraction of knob travel.
 	Knob.curval = Knob.curstep / Knob.steps
@@ -1261,8 +1262,8 @@ end
 -- Knob - Doubleclick
 function GUI.dh_Knob:ondoubleclick()
 
-    self:setcurstep(self.default)
-
+    --self:setcurstep(self.default)
+    self:setcurstep((self.default - self.min) // self.inc)
 	self:redraw()
 
 end
