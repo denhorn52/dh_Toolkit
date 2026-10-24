@@ -3,7 +3,7 @@
 -- data_Elements.lua
 
 --[[
-    Modified 20260506
+    Modified 20261009
 
     20251001 - added dh_ classes.
     20251001 - changed some property display orders.
@@ -13,7 +13,8 @@
                Added new single thumb dh_Slider.
                Added dh_Slider_H and dh_Slider_V
     20260420 - Revised some properties.
-    20260506 - Added dh_Graph.             
+    20260506 - Added dh_Graph.
+    20261009 - Eliminated dh_Menubar property col_over.             
 --]]
 
 --[===[
@@ -760,7 +761,7 @@ classes.dh_Menubar = {
     },
     creation = {"menus", "w", "h", "", "fullwidth", "pad",
                 "limit_w", "font", "pad", "do_pad_top", "pad_top_val",  
-                "col_bg", "col_text", "col_over",
+                "col_bg", "col_text", --"col_over",
                 "shadow",
     },
     properties = {
@@ -781,7 +782,7 @@ classes.dh_Menubar = {
         "2",
         props.col_bg,       
         props.col_text,
-        {prop = "col_over",     caption = "Hover Color",    class = "Color",        needs_init = false},
+        --{prop = "col_over",     caption = "Hover Color",    class = "Color",        needs_init = true},
         "",        
         {prop = "do_pad_top",   caption = "Do Pad Top",     class = "Boolean",      needs_init = false}, 
         {prop = "pad_top_val",  caption = "Pad Top Value",  class = "Integer",      needs_init = false},        
