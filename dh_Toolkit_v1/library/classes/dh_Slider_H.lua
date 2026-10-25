@@ -1381,7 +1381,8 @@ function GUI.dh_Slider_H:onwheel()
 
     -- How many steps per wheel-step
     local fine = 1
-    local coarse = math.max( GUI.round(self.steps / 30), 1)
+    --local coarse = math.max( GUI.round(self.steps / 30), 1)
+    local coarse = math.max( self.steps // 30, 1)    
 
     local adj = ctrl and fine or coarse
 
