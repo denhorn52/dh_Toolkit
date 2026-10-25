@@ -1,6 +1,6 @@
 -- dh_ThemeDesigner_data.lua
 
--- Date: 20260330
+-- Date: 20261009
 
 --zztop
 -----------------------------------
@@ -102,7 +102,7 @@ dh_ThemeDesigner_data.COLOR_USES = {
         "Knob head fill (L)",
         "Knob hilite value (L)",
         "Listbox Sel. text hilite (L*)",
-        "Menubar over hilite",
+        "Menubar over hilite(L*)",
         "Menubox outline focused (L*)",
         "Menubox Sel. text hilite (L*)",
         "Option bubble fill (L)",
@@ -273,8 +273,8 @@ dh_ThemeDesigner_data.data_color_defaults = {
 " ",
 "Menubar:", 
 "  bg:         elm_frame       btn_face       ",
-"  over:       elm_fill        elm_fill       ",
 "  text:       txt             btn_txt        ",
+"  over:       elm_fill        n/a            ",
 " ",   
 "Options:",
 "  bg:         wnd_bg          wnd_bg         panel_bg",
@@ -386,7 +386,7 @@ dh_ThemeDesigner_data.tab2_display_assignments = {
 dh_ThemeDesigner_data.tab3_property_assignments = {
     menubar_bg = {"btn_face", "btn_face"}, 
     menubar_text = {"btn_txt", "btn_txt"},
-    menubar_over = {"elm_fill", "elm_fill"},    
+    --menubar_over = {"elm_fill", "elm_fill"},    
     menubar_font = {"sans22", "sans22"},
     
     panel_bg = {"wnd_bg", "wnd_bg"}, 
@@ -439,7 +439,7 @@ dh_ThemeDesigner_data.tab3_property_assignments = {
 dh_ThemeDesigner_data.tab3_display_assignments = {
     {"menubar_bg",           "Menubar background:    col_bg            -> "},
     {"menubar_text",         "Menubar text:          col_text          -> "},
-    {"menubar_over",         "Menubar over:          col_over          -> "},  
+    --{"menubar_over",         "Menubar over:          col_over          -> "},  
     {"menubar_font",         "Menubar font:          font              -> "},          
     
     {"panel_bg",             "Panel background:      col_bg            -> "},    
