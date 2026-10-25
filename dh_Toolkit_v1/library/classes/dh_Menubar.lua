@@ -1,8 +1,7 @@
 -- NoIndex: true
 
 -- dh_Menubar.lua
--- Date: 20260330
-
+-- Date: 20261009
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Menubar class
 --   For documentation, see this class's page on the project wiki:
@@ -15,7 +14,9 @@
      Added properties do_pad_top and pad_top_val to allow for top padding of titles.
      This was my first attempt to vertically align titles. 
      Later changed code to vertically center titles if "do_pad_top" (default) is false.
-     20251103 Added property Tab.limit_w. 
+     20251103 Added property Tab.limit_w.
+     20261009 Revamped highlighting on mouseover/click. No longer using col_over.
+
 
 ]]--
 ---------------------------------------------------------------------
@@ -70,7 +71,7 @@ function GUI.dh_Menubar:new(name, z, x, y, menus, w, h, pad)
 ----colors----------------------------------------------------
     mnu.col_bg = mnu.col_bg or GUI.dh_Menubar.defaults.col_bg   
     mnu.col_text = mnu.col_text or GUI.dh_Menubar.defaults.col_text
-    mnu.col_over = mnu.col_over or GUI.dh_Menubar.defaults.col_over
+    --mnu.col_over = mnu.col_over or GUI.dh_Menubar.defaults.col_over
 --------------------------------------------------------------
 
     --mnu.shadow = mnu.shadow or false
@@ -99,7 +100,7 @@ GUI.dh_Menubar.defaults = {
  
     col_bg = "btn_face",    
     col_text = "btn_txt",
-    col_over = "elm_fill",    
+    --col_over = "btn_face",   -- "elm_fill"
 }
 
 function GUI.dh_Menubar:init()
@@ -123,14 +124,12 @@ function GUI.dh_Menubar:init()
     self.tab = gfx.measurestr(" ") * 4
 
     for i = 1, #self.menus do
-
         self.menus[i].width = gfx.measurestr(self.menus[i].title)
-
     end
     
     --GUI.Msg("    limit_w : " .. tostring(self.limit_w))    
         
-    -- Determine width.
+    -- # Determine width.
     self.w = self.fullwidth and (GUI.cur_w - self.x) or math.max(self.limit_w or 0, self:measuretitles(nil, true))
     self.h = self.h or gfx.texth
     
@@ -143,7 +142,7 @@ function GUI.dh_Menubar:init()
     --GUI.Msg("dh_Menubar:init GUI.cur_w - self.x : " .. tostring(GUI.cur_w - self.x))
     --GUI.Msg("dh_Menubar:init self.w : " .. tostring(self.w))        
 
-    -- Draw the background + shadow
+    -- # Draw the background + shadow
     gfx.setimgdim(self.buff, self.w, self.h * 2)
 
     GUI.color(self.col_bg)
@@ -159,6 +158,49 @@ function GUI.dh_Menubar:init()
     self.did_init = true
 
     gfx.dest = dest
+    
+    -- # Highlighting calculations.
+    
+    local high_threshhold = 0.86
+    
+    -- # Determine luminance of col_bg.
+    --   Necessary because high lum bg needs to be darkened. 
+          
+    local tmp_color = GUI.colors[self.col_bg]    
+    local lum_bg = ( math.min(tmp_color[1], tmp_color[2], tmp_color[3]) + 
+                         math.max(tmp_color[1], tmp_color[2], tmp_color[3]) ) / 2
+                         
+    --self.lum_bg = lum_bg --!!! Needed only for testing.                     
+    --GUI.Msg("    lum_bg : " .. lum_bg)
+   
+    --self.highlight_color = "white"  
+       
+    if lum_bg > high_threshhold then
+        self.hover_a = -0.15    
+        self.click_a = -0.25
+    else
+        self.hover_a = math.max((1 - lum_bg) / 2, 0.15) -- 0.15 min seems good. 
+        --self.click_a = math.min(self.hover_a * 1.5, self.hover_a + 0.2)
+        
+        self.click_a = self.hover_a + 0.15  -- 0.15 seems like good compromise.
+
+        --[==[
+        -- lum_bg    hover_a   click_a
+        --  0.00      0.50      0.7
+        --  0.50      0.25      0.4            
+        --  0.71      0.15      0.3
+        --  0.78      0.15      0.3
+        --  0.84      0.15      0.3
+
+        I've made comprises up to this point that work quite well.
+        It could use some more tweaking, esp. at the high lum colors.
+        It appears that maybe the higher chroma colors act differently
+        than their monochrome counterparts. But getting them to behave
+        exquisitely is turning out to be a chore. 
+        And, anyway, compromise is good.
+        --]==]           
+                            
+    end
 
 end
 
@@ -168,7 +210,6 @@ function GUI.dh_Menubar:ondelete()
 	GUI.FreeBuffer(self.buff)
 
 end
-
 
 
 function GUI.dh_Menubar:draw()
@@ -227,11 +268,9 @@ function GUI.dh_Menubar:onresize()
 
 end
 
-
 ------------------------------------
 -------- Drawing methods -----------
 ------------------------------------
-
 
 function GUI.dh_Menubar:drawtitles()
 
@@ -274,24 +313,29 @@ function GUI.dh_Menubar:drawtitles()
 
 end
 
-
+--zzz
 function GUI.dh_Menubar:drawhighlight()
 
     if self.menus[self.mousemnu].title == "" then return end
+    
+    --GUI.Msg("\n## dh_Menubar:drawhighlight ##")
+    --GUI.Msg("    self.lum_bg : " .. self.lum_bg)         
+    --GUI.Msg("    self.hover_a : " .. self.hover_a)
+    --GUI.Msg("    self.click_a : " .. self.click_a)     
 
-    GUI.color(self.col_over)
-    gfx.mode = 1
-    --                                Hover  Click
-    gfx.a = GUI.mouse.cap & 1 ~= 1 and 0.3 or 0.5
-
+    --GUI.color(self.highlight_color)
+    GUI.color("white")
+    
+    gfx.mode = 1    
+    gfx.a = (GUI.mouse.cap & 1 ~= 1) and self.hover_a or self.click_a
+    
     gfx.rect(self.x + self.mousemnu_x, self.y, self.menus[self.mousemnu].width + self.tab + self.pad, self.h, true)
-
+    
+    -- Reset.
     gfx.a = 1
     gfx.mode = 0
 
 end
-
-
 
 
 ------------------------------------
