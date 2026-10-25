@@ -1,7 +1,7 @@
 --dh_ThemeDesigner.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20261009
+-- Date: 20261009a
 
 ------------------------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -1735,7 +1735,7 @@ GUI.New("menu_Tab3_Toolkit", "dh_Menubar", {
     shadow = true,
     font = "sans22",  
     col_bg = "btn_face", 
-    col_over = "elm_fill",  --"sel_txt",
+    --col_over = "elm_fill",  --"sel_txt",
     col_text = "btn_txt",
      
 --zzmenu3  
@@ -1756,9 +1756,9 @@ GUI.New("menu_Tab3_Toolkit", "dh_Menubar", {
           {"panel_txt", update_tab3_elms, {"menu_Tab3_Toolkit", "col_text", "panel_txt", "menubar_text"}, 2},          
           {"<txt", update_tab3_elms, {"menu_Tab3_Toolkit", "col_text", "txt", "menubar_text"}, 2},
 
-        {">Highlight color"},
-          {"elm_fill", update_tab3_elms, {"menu_Tab3_Toolkit", "col_over", "elm_fill", "menubar_over"}, 3},
-          {"<sel_txt", update_tab3_elms, {"menu_Tab3_Toolkit", "col_over", "sel_txt", "menubar_over"}, 3},        
+        --{">Highlight color"},
+        --  {"elm_fill", update_tab3_elms, {"menu_Tab3_Toolkit", "col_over", "elm_fill", "menubar_over"}, 3},
+        --  {"<sel_txt", update_tab3_elms, {"menu_Tab3_Toolkit", "col_over", "sel_txt", "menubar_over"}, 3},        
 
         {">Font size"},      
           {"sans22", update_tab3_elms, {"menu_Tab3_Toolkit", "font", "sans22", "menubar_font"}, 4},
@@ -3592,7 +3592,7 @@ end
 local function setTab3ElmsProperties(state)
     GUI.elms.menu_Tab3_Toolkit.col_bg = tab3_property_assignments.menubar_bg[state]
     GUI.elms.menu_Tab3_Toolkit.col_text = tab3_property_assignments.menubar_text[state]
-    GUI.elms.menu_Tab3_Toolkit.col_over = tab3_property_assignments.menubar_over[state]
+    --GUI.elms.menu_Tab3_Toolkit.col_over = tab3_property_assignments.menubar_over[state]
     GUI.elms.menu_Tab3_Toolkit.font = tab3_property_assignments.menubar_font[state]
         	
 	GUI.elms.radio_Tab3_BG.col_border = tab3_property_assignments.panel_border[state]        	
