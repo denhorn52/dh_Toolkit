@@ -611,7 +611,7 @@ end  --< Export.load_project_file >
 function Export.load_project(content)
 
 --!!! Disable xpcall for debugging.
---  xpcall(function()
+  xpcall(function()
   
     --GUI.Msg("\n## Export.load_project")
     --GUI.Msg("< loaded content: > \n" .. content .. "\n")
@@ -817,7 +817,7 @@ function Export.load_project(content)
     GB_TEMPLATE_load_elm = nil
     
 
---  end, Export.import_error_handler)
+  end, Export.import_error_handler)
   
 end  --< Export.load_project >
 
