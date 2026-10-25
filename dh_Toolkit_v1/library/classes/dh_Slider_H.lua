@@ -1409,9 +1409,9 @@ end
 
 
 function GUI.dh_Slider_H:onmouser_up()
-    GUI.Msg("\n# dh_Slider_H:onmouser_up : ")
-    GUI.Msg("    GUI.mouse.x : " .. tostring(GUI.mouse.x))
-    GUI.Msg("    self.x      : " .. tostring(self.x))    
+    --GUI.Msg("\n# dh_Slider_H:onmouser_up : ")
+    --GUI.Msg("    GUI.mouse.x : " .. tostring(GUI.mouse.x))
+    --GUI.Msg("    self.x      : " .. tostring(self.x))    
     
     -- Ctrl + right-click - reset the slider to the default.
     if GUI.mouse.cap & 4 == 4 then
