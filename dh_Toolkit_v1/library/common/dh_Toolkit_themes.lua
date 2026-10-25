@@ -37,13 +37,16 @@ dh_Toolkit_themes.DH_THEME_NAMES = {
   "Aqua",
   "Black",
   "Desert",
+  "Grape",  
   "Gray",
   "Magenta",
   "Mocha",
+  "Mocha2",  
   "Neon",
   "Pastel",
   "Sepia",
   "Silver",
+  "Slate",  
   "User",
 }
 
@@ -176,7 +179,36 @@ dh_Toolkit_themes.DH_THEMES = {
         
         elm_active = {255, 0, 255, 255},
         metadata = {0, 0, 0, 255},
-    },        
+    },
+    
+    Grape = {
+        wnd_bg = {99, 69, 141, 255},
+        txt = {228, 210, 255, 255},
+        elm_bg = {48, 40, 66, 255},
+        elm_fill = {209, 135, 209, 255},
+        elm_frame = {200, 103, 182, 255},
+        elm_outline = {209, 130, 209, 255},
+        tab_bg = {136, 9, 83, 255},
+        
+        btn_face = {190, 171, 233, 255},
+        btn_outline = {95, 0, 98, 255},
+        btn_txt = {11, 0, 38, 255},
+        aux_bg = {173, 54, 146, 255},
+        aux_txt = {219, 210, 219, 255},
+        thumb_body = {130, 69, 173, 255},
+        track_fill = {164, 72, 146, 255},
+        
+        panel_bg = {90, 60, 112, 255},
+        panel_border = {161, 103, 185, 255},
+        panel_txt = {226, 226, 226, 255},
+        elm_txt = {226, 226, 226, 255},
+        sel_txt = {165, 30, 140, 128},
+        tab_active = {121, 85, 169, 255},
+        tab_inactive = {81, 58, 106, 255},
+        
+        elm_active = {237, 129, 200, 255},
+        metadata = {0, 0, 0, 255},
+    },            
             
     Gray = {
         wnd_bg = {81, 90, 90, 255},
@@ -268,7 +300,36 @@ dh_Toolkit_themes.DH_THEMES = {
         
         elm_active = {255, 248, 240, 255},
         metadata = {0, 0, 0, 255},
-    },    
+    },
+    
+    Mocha2 = {
+        wnd_bg = {144, 87, 81, 255},
+        txt = {245, 225, 221, 255},
+        elm_bg = {48, 48, 48, 255},
+        elm_fill = {128, 99, 68, 255},
+        elm_frame = {225, 181, 167, 255},
+        elm_outline = {32, 32, 32, 255},
+        tab_bg = {207, 145, 140, 255},
+        
+        btn_face = {224, 184, 176, 255},
+        btn_outline = {96, 59, 51, 255},
+        btn_txt = {57, 38, 19, 255},
+        aux_bg = {224, 184, 176, 255},
+        aux_txt = {57, 38, 19, 255},
+        thumb_body = {215, 166, 158, 255},
+        track_fill = {196, 128, 116, 255},
+        
+        panel_bg = {234, 207, 204, 255},
+        panel_border = {224, 171, 167, 255},
+        panel_txt = {85, 48, 20, 255},
+        elm_txt = {254, 243, 239, 255},
+        sel_txt = {226, 147, 153, 128},
+        tab_active = {234, 198, 180, 255},
+        tab_inactive = {208, 162, 148, 255},
+        
+        elm_active = {201, 72, 39, 255},
+        metadata = {0, 0, 0, 255},
+    },        
 
     Neon = {
         wnd_bg = {36, 36, 36, 255},
@@ -393,7 +454,36 @@ dh_Toolkit_themes.DH_THEMES = {
         
         --elm_thumb = {99, 99, 99, 255},
         --elm_track = {198, 198, 198, 255},        
-    },            
+    },
+    
+    Slate = {
+        wnd_bg = {100, 86, 154, 255},
+        txt = {228, 210, 255, 255},
+        elm_bg = {48, 40, 66, 255},
+        elm_fill = {209, 135, 209, 255},
+        elm_frame = {200, 103, 182, 255},
+        elm_outline = {209, 130, 209, 255},
+        tab_bg = {136, 9, 83, 255},
+        
+        btn_face = {190, 171, 233, 255},
+        btn_outline = {95, 0, 98, 255},
+        btn_txt = {11, 0, 38, 255},
+        aux_bg = {173, 54, 146, 255},
+        aux_txt = {219, 210, 219, 255},
+        thumb_body = {130, 69, 173, 255},
+        track_fill = {164, 72, 146, 255},
+        
+        panel_bg = {89, 73, 129, 255},
+        panel_border = {161, 103, 185, 255},
+        panel_txt = {226, 226, 226, 255},
+        elm_txt = {226, 226, 226, 255},
+        sel_txt = {147, 39, 122, 128},
+        tab_active = {121, 85, 169, 255},
+        tab_inactive = {81, 58, 106, 255},
+        
+        elm_active = {237, 129, 200, 255},
+        metadata = {0, 0, 0, 255},
+    },                
 }
 
 ----------------------------------
