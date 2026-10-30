@@ -6,13 +6,13 @@ For greater details see the **[project documentation](https://denhorn52.github.i
 
 ## **Main Scripts:** (in /scripts directory)
 
-**dh_ArrangeViews.lua:** To quickly navigate to areas of the arrange view window, or to regions. Views are saved per project to project ext state. When changing project tabs the script updates with the new tab's project saved views.
+**dh_ArrangeViews.lua:** To quickly navigate to areas of the arrange view window or to regions. Views are saved per project to project ext state. When changing project tabs the script updates with the new tab's project saved views.
 
 **dh_Snapshots.lua:** Save and restore snapshots of the Mixer Control Panel including visible tracks, solo, pan, mute, volume, etc. Snapshots are saved per project to project ext state. When changing project tabs the script updates with the new tab's project saved snapshots.
 
 ## **Auxillary scripts:** (in /scripts directory)
 
-**GUI Builder:** Design GUIs for your dcripts.
+**dh_GUI_Builder:** Design GUIs for your scripts. Start by setting your project's name, width, height, etc. Then add element's from a popup menu. You can then change an element's properties in the Properties sidebar. The workspace can then be saved to a file which can then be loaded into your script. If you make any changes to your project, just resave it and those changes are reflected in your script. (This script is in the dh_GUI_Builder directory.)
 
 **dh_ThemeDesigner.lua:** Use to design user themes for your scripts. Themes can be used with any scripts that utilize both Lokasenna GUI and dh_Toolkit.
 
@@ -20,11 +20,16 @@ For greater details see the **[project documentation](https://denhorn52.github.i
 
 **dh_Template-mult.lua:** Same as previous but allows for multiple window heights (minimized, expanded, and Preferences); as used in dh_ArrangeViews. 
 
+**dh_HearingTest:** dh_HearingTest is a script to test one's perception of loudness of a series of tones to a calibrated test tone. Say, an individual has hearing loss at a particular frequency. While mixing a song that person may tend to boost the gain at that frequency so it sounds good to him or her. But for a person with "normal" hearing that boost may not be so pleasing. dh_HearingTest can be used to test for differences in that individual's perceived loudness at different frequencies.
+
+The tests produce a dataset of the perceived loudness differences to a set of tones. The test results are compared 
+to a Fletcher-Munson curve of equal loudness (to what is considered normal hearing). The data can then be used with an equalizer to compensate your mix for any hearing loss. Use the equalizer as the last fx on your master track. Enable the equalizer to approximate how someone with normal hearing hears your music. Disable the equalizer when rendering to remove your adjusted bias from the mix.
+
 ## **dh_Toolkit scripts:** (in /common directory)
 
 **dh_Toolkit_core.lua:** A module containing the code that provides app scaling, theming, and saving and loading of window settings and preferences. It provides a "Preferences" window for choosing your options.
 
-**dh_Toolkit_themes.lua:** A module providing several predefined themes, and functions for handling loading them. It also adds additional GUI colors.
+**dh_Toolkit_themes.lua:** A module providing several predefined themes, and functions for handling loading them. It also adds additional GUI colors and font sizes.
 
 ## **Custom or modified Lokasenna classes:** (in /classes directory)
 
