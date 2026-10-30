@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=2592000, must-revalidate" />
     
     <title>dh_GUI_Builder</title>
     
@@ -59,7 +59,7 @@ stored. This allows it to be easily imported into the main
 script:
 </p>
 
-<div class="preCont left050 text110">
+<div class="preCont left050">
 <pre>
 loadfile(GUI.script_path .. "dh_HearingTest_ELMS.lua")()
 </pre>
@@ -431,7 +431,8 @@ with the following options:
 
 <div class="hanging050 top075"> 
 <span class="textEmphasis105">Sets: </span> 
-The first eight items allow you to toggle a layerset's visibility. 
+The first eight items allow you to toggle a layerset's visibility. A "$" at the left signifies 
+that the layerset is active (visible). 
 </div>
 
 <div class="hanging050 top075"> 
@@ -454,6 +455,9 @@ This option returns the layout to the default (no layer set
 selected).
 </div>
 -->
+
+<div class="imgTitle110 top150">Layer Sets Menu (showing Mocha theme)</div>
+<div class="imgContainer top050"><img src="../images/layersets-menu.png" border="0" alt="Layer Sets Menu"></div>
 
 </div> <!-- end # Layer sets -->
 
@@ -529,10 +533,7 @@ the visibility of the common layers (those which are not in
 any layerset).
 </p>
 
-<div class="imgTitle110 top150">Layer Sets Menu (showing Mocha theme)</div>
-<div class="imgContainer top050"><img src="../images/layersets-menu.png" border="0" alt="Layer Sets Menu"></div>
-<br>
-<div class="imgTitle110 top100">Layer Sets Editor (showing Mocha theme)</div>
+<div class="imgTitle110 top150">Layer Sets Editor (showing Mocha theme)</div>
 <div class="imgContainer top050"><img src="../images/layersets-editor.png" border="0" alt="Layer Sets Editor"></div> 
 
 </div> <!-- end # Layer Sets Editor -->

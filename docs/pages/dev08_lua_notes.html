@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=2592000, must-revalidate" />
     
     <title>Lua Notes</title>
     
@@ -75,7 +75,7 @@ Assigning a variable with a value type to another variable
 COPIES the value.<br>
 </p>
 
-<div class="preCont left100 text110">    
+<div class="preCont left100">    
 <pre>
 a = 25   -- a holds the value 25
 b = a    -- b now has the value 25
@@ -94,11 +94,13 @@ Assigning a variable of reference type to another variable
 COPIES the reference.
 </p>
 
-<div class="preCont left100 text110">    
-<pre>a = {1,2,3,4}  -- 'a' holds the memory address where the value {1,2,3,4} is located. 
+<div class="preCont left100">    
+<pre>
+a = {1,2,3,4}  -- 'a' holds the memory address where the value {1,2,3,4} is located. 
 b = a          -- 'b' now holds the memory address where {1,2,3,4} is located. 
 a = {5,6,7,8}  -- the memory address that 'a' references now holds the value {5,6,7,8}  
-               -- the memory address that 'b' references has the value {5,6,7,8}  </pre>
+               -- the memory address that 'b' references has the value {5,6,7,8}  
+</pre>
 </div>         
 
 </div> <!-- #Lua types -->
@@ -116,7 +118,7 @@ is false. It is a concise form of the logic achieved by
 using an if-then_else statement.
 </p>
 
-<div class="preCont text110">  
+<div class="preCont">  
 <pre>
 if condition then
     return value_if_true
@@ -161,7 +163,7 @@ It's important to remember that in Lua all
 values except for nil and false are considered to be true.
 </div>
 
-<div class="preCont text110">  
+<div class="preCont">  
 <pre>
  local x = 30
  local A      -- is nil, evaluates to false.
@@ -181,7 +183,7 @@ result to be true. Stops evaluating when a false operand is
 encountered then returns false.
 </p>
 
-<div class="preCont text110">  
+<div class="preCont">  
 <pre>
   -- cond is a variable or expression that evaluates to true or false.
   -- exp_B is a value an expression that returns a value.
@@ -215,7 +217,7 @@ Consider next the logical 'or' operator:
 If any operand of an 'or' operation is true the result is true.
 </p>
 
-<div class="preCont text110">  
+<div class="preCont">  
 <pre>
   result = cond or exp_B
   
@@ -231,7 +233,7 @@ If any operand of an 'or' operation is true the result is true.
 Now combine them:
 </p> 
 
-<div class="preCont text110">  
+<div class="preCont">  
 <pre> 
   result = (cond and exp_B) or exp_C
   

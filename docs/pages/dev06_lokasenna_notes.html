@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=2592000, must-revalidate" />
     
     <title>Lokasenna Notes</title>
     
@@ -42,8 +42,8 @@ If called from within another function they must be global (no 'local') or it cr
 Example: my_function called from a button click.
 </p>
            
-<div class="preCont">                
-<pre class="padLeft100">
+<div class="preCont left050">                
+<pre>
 local function Button01_Click()
     my_function()
 end
@@ -60,8 +60,8 @@ What I have found is that "local my_function( )" works
 if it is defined before the "Button01_Click" function definition.
 </p>
 
-<div class="preCont">    
-<pre class="padLeft100">
+<div class="preCont left050">    
+<pre>
 local function my_function()
     -- do stuff --
 end

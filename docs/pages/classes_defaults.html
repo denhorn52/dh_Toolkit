@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=2592000, must-revalidate" />
     
     <title>Classes-defaults</title>
     
@@ -225,7 +225,7 @@ scrollbar outline: [elm_outline]                    col_sb_outline *   "elm_outl
 elm sel.outline:    n/a             n/a             col_active         "elm_active"
 backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
 
-* Maybe automated using track color as basis. 
+* Removed col_sb_outline. Now automatically calculated using track color as basis. 
 
 ----------------------------------------------------------------------------------------
 Menubar:  
@@ -247,11 +247,12 @@ background:         col_bg         "elm_frame"      col_bg             "btn_face
 text:               col_txt        "txt"            col_text           "btn_txt"
 mouse over:         col_over       "elm_fill"       col_over **        "elm_fill"
 
-* Titles normally centered vertically. Use these to override.
-If width and height are not specified they will be determined
-  by text size. Probably best to specify. Default height is 28px.
+*  Titles normally centered vertically. Use these to override.
+   If width and height are not specified they will be determined
+   by text size. Probably best to specify. Default height is 28px.
 
-** 20261009 Removed dh_Menubar col_over. Keeping it here just in case.
+** 20261009 Removed dh_Menubar col_over. It is now automatically calculated.
+   Keeping it here just in case.
 ----------------------------------------------------------------------------------------
 Menubox:  
 ----------------------------------------------------------------------------------------
@@ -281,7 +282,7 @@ allow sel.outline:  n/a             n/a             allow_sel_outline   false
 box frame:         [elm_frame]                      col_frame          "elm_frame"
 box bg:            [elm_bg]                         col_bg             "elm_bg"
 box text:           col_txt        "txt"            col_text           "elm_txt"
-box face:           n/a             n/a             col_face           "btn_face"
+button face:        n/a             n/a             col_face           "btn_face"
 caption text:       col_cap        "txt"            col_cap_text       "txt"
 
 elm sel.outline:    n/a             n/a             col_active         "elm_active"
@@ -420,9 +421,10 @@ pad between tabs:   pad             8               pad                 8
 
 -- colors --
 background:         bg             "elm_bg"         col_bg             "elm_bg"   
-text:               col_ txt       "txt"            col_text           "txt"
-active tab:         col_tab_a      "wng_bg"         col_tab_active     "tab_active" 
-inactive tab:       col_tab_b      "tab_bg"         col_tab_inactive   "tab_inactive"
+tab active:         col_tab_a      "wng_bg"         col_tab_active     "tab_active" 
+tab inactive:       col_tab_b      "tab_bg"         col_tab_inactive   "tab_inactive"
+text active:        col_txt        "txt"            col_text_active    "tab_txt_active"
+text (inactive):    n/a            "txt"            col_text_inactive  "tab_txt_inactive"
 
 * See note at end regarding "opts".
 
@@ -509,7 +511,7 @@ elm sel.outline:    n/a             n/a             col_active         "elm_acti
 backdrop:           n/a             n/a             col_backdrop       "wnd_bg"
 
 *  Can set text using GUI.Val
-** Maybe automated using track color as basis. 
+** Removed col_sb_outline. Now automatically calculated using track color as basis. 
 
 ----------------------------------------------------------------------------------------
 Window:

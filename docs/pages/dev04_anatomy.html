@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=2592000, must-revalidate" />
     
     <title>Anatomy of a script</title>
     
@@ -43,7 +43,7 @@ That is a highly commented bare-bones script that can also be considered as a tu
 <div class="sectionIndent050"><!-- sectiom #1 -->
          
 <!-- <div class="chartCont left050 top000 text110"> -->
-<div class="left050 text110">    
+<div class="left050">    
 <pre>
 Load Lokasenna GUI:
     Set the name to appear in the script's title bar.
@@ -149,11 +149,13 @@ Alternatively you can use the following, as long as it appears before GUI.Init( 
 </p>
 
 <div class="preCont left050">
-<pre>local function Exit()
+<pre>
+local function Exit()
     -- Your exit code --
 end
 
-GUI.exit = Exit</pre>
+GUI.exit = Exit
+</pre>
 </div>
 
 <p class="left050">

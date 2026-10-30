@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=2592000, must-revalidate" />
     
     <title>Theme Designer</title>
     
@@ -74,34 +74,6 @@ of other classes such as button face is also used for knob face, slider thumb, a
 </p>
 
 <p>
-<span class="textEmphasis">"aux_bg" and "aux_text" </span> 
-are included as an alternative 'sub-theme'. They may be used 
-to color buttons (and maybe knobs and slider thumbs) when the  
-backdrop color doesn't provide the proper contrast. 
-As of 03-15-2026 I haven't found a need for them. 
-I consider them experimental and I am thinking of maybe 
-eliminating them. 
-</p>
-
-<p>    
-<span class="textEmphasis">"Slider Thumb" </span> 
-is used to style the slider's thumb color.
-I have sometimes found that using the button face color wasn't 
-sufficient so I gave it a dedicated color. 
-</p>
-
-<p>    
-<span class="textEmphasis">"Track_fill" </span> 
-is used to style the track fill color of the Slider element.
-</p>
-
-<p>
-<span class="textEmphasis">"Panel background", "Panel border", and "Panel text" </span> 
-can be used for panels and option boxes (and sometimes slider background) 
-to add an extra level of interest to the GUI.
-</p>
-
-<p>
 <span class="textEmphasis">"Element text" </span> 
 is used for the text elements: dh_Listbox, dh_Menubox, 
 dh_Textbox, and dh_TextEditor. It is necessary because the 
@@ -133,9 +105,32 @@ Note: The default for highlight is "elm_fill".
 If the default is used then the default alpha of 0.5 will be used.
 </div>
 
+<p>    
+<span class="textEmphasis">"Slider Thumb" </span> 
+is used to style the slider's thumb color.
+I have sometimes found that using the button face color wasn't 
+sufficient so I gave it a dedicated color. 
+</p>
+
+<p>    
+<span class="textEmphasis">"Track_fill" </span> 
+is used to style the track fill color of the Slider element.
+</p>
+
 <p>
-<span class="textEmphasis">"Tab_active" and "Tab_inactive" </span> 
+<span class="textEmphasis">"Panel background", "Panel border", and "Panel text" </span> 
+can be used for panels and option boxes (and sometimes slider background) 
+to add an extra level of interest to the GUI.
+</p>
+
+<p>
+<span class="textEmphasis">"Tab active" and "Tab inactive" </span> 
 is used to style the tab colors of the Tab element.
+</p>
+
+<p>
+<span class="textEmphasis">"Tab text active" and "Tab text inactive" </span> 
+is used to style the tab colors of the Tab element's text.
 </p>
 
 <p>
@@ -149,9 +144,19 @@ from the visual cue that the element is selected and ready for editing.
 Although it doesn't appear on the 'Colors' tab it can still be 
 accessed (as are all the colors) from the 'Color Uses' menubox 
 in the 'Tool' panel.
-<br><br>
-Note: As of 2026-02-04 tabbing is not implemented although the Lokasenna 
+Note: As of 2026-02-04 tabbing has not been implemented although the Lokasenna 
 GUI appears to have provisions for tabbing. 
+</p>
+
+<p>
+<span class="textEmphasis">"aux_bg" and "aux_text" </span> 
+are included as an alternative 'sub-theme'. They may be used 
+to color buttons (and maybe knobs and slider thumbs) when the  
+backdrop color doesn't provide the proper contrast. 
+As of 03-15-2026 I haven't found a need for them. 
+I consider them experimental and I am thinking of maybe 
+eliminating them. Although these do not appear on the Colors tab 
+they are accessible in the Tools panel Color Uses menubox.  
 </p>
 
 <p>
@@ -190,22 +195,28 @@ the dh_Toolkit defined color and its Lokasenna counterpart the same.
 
 
 <div class="chartCont top000">                
-<pre>-----------------------------------------------------------
- dh_Toolkit Color Name:            Lokasenna Counterpart:
+<pre>
+Color names defaults assigned to class color properties:
 -----------------------------------------------------------
-  Button face      (btn_face)      Elm frame   (elm_frame)
-  Button text      (btn_txt)       Text        (txt)
-  Button outline   (btn_outline)   Elm outline (elm_oultine)
-  Element active   (elm_active)    Elm fill    (elm_fill)
-  Element text     (elm_txt)       Text        (txt)
-  Panel background (panel_bg)      Elm frame   (elm_frame)   
-  Panel border     (panel_border)  Elm frame   (elm_frame)
-  Panel text       (panel_txt)     Text        (txt)
-  Selected text    (sel_txt)       Elm fill    (elm_fill)
-  Tab_active       (tab_active)    Window BG   (wnd_bg)
-  Tab_inactive     (tab_inactive)  Tab BG      (tab_bg)
-  Track_fill       (track_fill)    Elm fill    (elm_fill)
------------------------------------------------------------</pre>
+  Color property     dh_Toolkit:        Lokasenna:
+-----------------------------------------------------------
+  Button face        btn_face           elm_frame
+  Button text        btn_txt            txt
+  Button outline     btn_outline        elm_oultine
+  Element active     elm_active         elm_fill
+  Element text       elm_txt            txt
+  Panel/frame bg     panel_bg           elm_frame   
+  Panel/frame border panel_border       elm_frame
+  Panel text         panel_txt          txt
+  Selected text      sel_txt            elm_fill
+  Tab active         tab_active         wnd_bg
+  Tab inactive       tab_inactive       tab_bg
+  Tab text active    tab_txt_active     txt
+  Tab text inactive  tab_txt_inactive   txt
+  Track thumb        thumb_body         elm_frame    
+  Track_fill         track_fill         elm_fill
+-----------------------------------------------------------
+</pre>
 </div>
 
 </div> <!-- end section # 3.04 -->

@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=2592000, must-revalidate" />
     
     <title>Caveats and Cautions</title>
     
@@ -69,10 +69,10 @@ Say a script contains the following code:
 
 <div class="preCont left050">    
 <pre>
-  if self.cap_centered then
-      gfx = self.x + (self.w - str_w) / 2
-  else
-      gfx.x = self.x + self.cap_pad_x
+if self.cap_centered then
+    gfx = self.x + (self.w - str_w) / 2
+else
+    gfx.x = self.x + self.cap_pad_x
 </pre>
 </div>
 

@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=2592000, must-revalidate" />
     
     <title>dh_GUI_Builder</title>
     
@@ -103,7 +103,7 @@ In "MyScript.lua" insert the following code in the "Elements"
 section:
 </p>
 
-<div class="preCont text110"> 
+<div class="preCont"> 
 <pre>
 load(GUI.script_path .. "MyScript_ELMS.lua")()
 </pre>
@@ -160,7 +160,7 @@ Note: There is an order to where these components are placed.
 Say:
 </p>
 
-<div class="preCont text110">
+<div class="preCont">
 <pre>
 button.func = MyButtonFunc,
 </pre>
@@ -189,7 +189,7 @@ Next is property assignments. This obviously needs to be
 after element creation. 
 </p>
 
-<div class="preCont text110">
+<div class="preCont">
 <pre>
 GUI.elms["MyButtonName"].func = MyButtonFunc
 GUI.elms["MyButtonName"].params = {...}
@@ -209,7 +209,7 @@ to be placed after the element is declared (or imported).
 I place mine in the main script section "Method Overrides".
 </p>
 
-<div class="preCont text110"> <!-- Method overrides -->
+<div class="preCont"> <!-- Method overrides -->
 <pre>
 -- Example mouseup override:
 
@@ -245,7 +245,7 @@ menus in the main script then later assign them to the
 appropriate element (after the element is declared or imported).
 </p>
 
-<div class="preCont text110">
+<div class="preCont">
 <pre>
 -- Example: assigning menu to menubar element: 
 -- MyMenubar previously declared.
@@ -264,7 +264,7 @@ GUI.elms["MyMenubar"].menus = {
 You can also define the menu earlier, and then assign it.
 </p>
 
-<div class="preCont text110">
+<div class="preCont">
 <pre>
 -- Define the menu in "My Data" section.
 
@@ -297,7 +297,7 @@ GB_Project_Layer_Sets[1]. You can use this imported vatiable
 as is, assign it to another variable, or just create a new variable. 
 </p>
 
-<div class="preCont text110">
+<div class="preCont">
 <pre>
 -- Assign the layer set.
 local my_layer_set = {45, 46, 47}
@@ -309,7 +309,7 @@ Hide the layers in the layer set. This, obviously, has to
 be after the elements are loaded.
 </p>
 
-<div class="preCont text110">
+<div class="preCont">
 <pre>
 -- Hide the layers
 for _, lyr in ipairs(my_layer_set) do
@@ -324,7 +324,7 @@ override a button mouseup event. You can also use, perhaps,
 a function assigned to a menu item. 
 </p>
 
-<div class="preCont text110">
+<div class="preCont">
 <pre>
 function GUI.elms.btn_ShowLayerSet:onmouseup()
 
@@ -357,7 +357,7 @@ end
 You also need to be able to restore the previous state.
 </p>
 
-<div class="preCont text110">
+<div class="preCont">
 <pre>
 function GUI.elms.btn_RestoreLayers:onmouseup()
 
