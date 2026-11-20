@@ -485,7 +485,7 @@ function Export.table2str(tbl, elm_type, prop_name)
     
 end
 
--- Maybe future use.
+--[[ Maybe future use. OBSOLETE
 function Export.export_elements()
 
     local header = "-- GUI_Builder exported GUI elements : " .. Project.proj_settings.name .. "\n\n"
@@ -499,6 +499,7 @@ function Export.export_elements()
     Export.save_file(content, "_ELMS", "lua")
 
 end
+--]]
 
 -----------------------------------
 ---------    IMPORT   ----------
