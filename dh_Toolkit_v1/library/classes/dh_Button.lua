@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Button.lua
--- Date: 20260330
+-- Date: 20261110
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Button class
@@ -60,7 +60,9 @@ function GUI.dh_Button:new(name, z, x, y, w, h, text, func, ...)
 
 	Button.func = Button.func or func or GUI.dh_Button.defaults.func
 	Button.params = Button.params or GUI.dh_Button.defaults.params	
-	
+	Button.r_func = Button.r_func or GUI.dh_Button.defaults.r_func
+	Button.r_params = Button.r_params or GUI.dh_Button.defaults.r_params
+		
 	Button.state = 0
 
 	GUI.redraw_z[Button.z] = true
@@ -80,6 +82,8 @@ GUI.dh_Button.defaults = {
     allow_sel_outline = false,
     func = function () end,
     params = {...},
+    r_func = function () end,
+    r_params = {...},    
 	col_bg = "btn_face",    
 	col_outline = "btn_outline",
 	col_text = "btn_txt",
@@ -201,7 +205,7 @@ end
 -- dh_Button - Mouse up.
 function GUI.dh_Button:onmouseup()
 
-    --GUI.Msg("** dh_Button:onmouseup: self.focus is: " .. tostring(self.focus))
+    --GUI.Msg("\n** dh_Button:onmouseup: NORMAL ")
     
 	self.state = 0
 
@@ -226,26 +230,15 @@ function GUI.dh_Button:ondoubleclick()
 -- dh_Button - Right mouse up
 function GUI.dh_Button:onmouser_up()
 
-	if GUI.IsInside(self, GUI.mouse.x, GUI.mouse.y) and self.r_func then
+    --GUI.Msg("\n** dh_Button:onmouser_up: RIGHT ")
+    
+	self.state = 0
 
+	if GUI.IsInside(self, GUI.mouse.x, GUI.mouse.y) and self.r_func then
 		self.r_func(table.unpack(self.r_params))
-
 	end
 end
 
---[[ !!! Proposed change by Dennis Horn 20220220. Would eliminate need to declare r_params in element definition.
--- dh_Button - Right mouse up
-function GUI.dh_Button:onmouser_up()
-
-	if GUI.IsInside(self, GUI.mouse.x, GUI.mouse.y) and self.r_func then
-		if self.r_params then
-			self.r_func(table.unpack(self.r_params))
-		else
-			self.r_func()
-		end
-	end
-end
---]]
 
 -- Make sure the box highlight goes away
 function GUI.dh_Button:lostfocus()
