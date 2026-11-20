@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- wnd_Prefs.lua
--- Modified 20261009
+-- Modified 20261116
 
 
 local Prefs = GUI.req(GUI.script_path .. "modules/func_Prefs.lua")()
@@ -12,7 +12,7 @@ GUI.New("GB_wnd_prefs", "dh_Window", {
     x = 0, 
     y = 0, 
     w = 360, 
-    h = 270, 
+    h = 320, 
     caption = "Preferences",
     --z_set = {495, 496, 497},
     z_set = {496, 497},    
@@ -45,7 +45,7 @@ GUI.New("GB_wnd_prefs_grid_show", "dh_Checklist", {
 GUI.New("GB_wnd_prefs_grid_size", "dh_Textbox", {
     z = 496,
     x = 128, 
-    y = 72, --88, 
+    y = 88, 
     w = 64, 
     h = 24, 
     caption = "Grid size:",
@@ -58,8 +58,8 @@ GUI.New("GB_wnd_prefs_grid_size", "dh_Textbox", {
 GUI.New("GB_wnd_prefs_grid_color", "dh_Menubox", {
     z = 496,
     x = 128, 
-    y = 104, --120, 
-    w = 96, 
+    y = 124, 
+    w = 128, 
     h = 24, 
     caption = "Grid color:",
     cap_pos = "left",
@@ -78,8 +78,8 @@ GUI.New("GB_wnd_prefs_grid_color", "dh_Menubox", {
 GUI.New("GB_wnd_prefs_grid_font", "dh_Menubox", {
     z = 496,
     x = 128, 
-    y = 136, --152, 
-    w = 96, 
+    y = 160, 
+    w = 128, 
     h = 24, 
     caption = "Grid font:",
     cap_pos = "left",
@@ -99,8 +99,8 @@ GUI.New("GB_wnd_prefs_grid_font", "dh_Menubox", {
 GUI.New("GB_wnd_prefs_font_scale", "dh_Menubox", {
     z = 496,
     x = 128, 
-    y = 168, 
-    w = 96, 
+    y = 196, 
+    w = 128, 
     h = 24, 
     caption = "Font scale:",
     cap_pos = "left",
