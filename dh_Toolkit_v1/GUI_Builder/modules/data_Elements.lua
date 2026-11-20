@@ -3,7 +3,7 @@
 -- data_Elements.lua
 
 --[[
-    Modified 20261009
+    Modified 20261116b
 
     20251001 - added dh_ classes.
     20251001 - changed some property display orders.
@@ -14,7 +14,11 @@
                Added dh_Slider_H and dh_Slider_V
     20260420 - Revised some properties.
     20260506 - Added dh_Graph.
-    20261009 - Eliminated dh_Menubar property col_over.             
+    20261009 - Eliminated dh_Menubar property col_over.
+    20261026 - Added col_text_inactive to dh_Tabs.
+               Renamed col_text to col_text_active.
+    20261116 - Added property dec_places to dh_Knob, dh_Slider_H, and dh_SliderV.  
+               Added property no_default to dh_Sliders.                     
 --]]
 
 --[===[
@@ -479,7 +483,7 @@ classes.Knob = {
 classes.dh_Knob = {
     defaults = {40, "dh_Knob", true, 0, 10, 5, 1, false},
     creation = {"w", "caption", "centered", "min", "max", "default", "inc", "show_values", "", 
-                "knob_style", "pad_values", "travel",
+                "knob_style", "pad_values", "travel", "dec_places",
                 "font_caption", "cap_pos", "font_values", --"output",
                 "cap_pad", --"cap_pad_x", "cap_pad_y", 
                 "shadow_caption", "shadow",
@@ -522,7 +526,7 @@ classes.dh_Knob = {
         {prop = "font_values",    caption = "Values Font",  class = "Font",     needs_init = false},
         {prop = "pad_values",     caption = "Values Pad",   class = "Integer",  needs_init = false},
         "",
-        --{prop = "output",         caption = "Output",     class = "Table"},
+        --{prop = "output",         caption = "Output",         class = "Table"},
                                 
 --zzcolors
         "3",
@@ -561,6 +565,7 @@ classes.dh_Knob = {
         {prop = "display_pad_y",    caption = "Disp. Box Pad Y",  class = "Integer",   needs_init = true},
         props.font_display,
         {prop = "display_align",    caption = "Align",            class = "Align",     needs_init = false, noscale = true},
+        {prop = "dec_places",       caption = "Decimal places",   class = "Integer",   needs_init = false},
         "",
         {prop = "col_display_bg",   caption = "Display BG Col",   class = "Color",     needs_init = true},        
         {prop = "col_display_text", caption = "Display Text Col", class = "Color",     needs_init = true}, 
@@ -1025,7 +1030,7 @@ classes.Slider = {
 classes.dh_Slider_H = {
     defaults = {256, 64, "dh_Slider_H", 0, 10, 5},
     creation = {"w", "h", "caption", "min", "max", "default", "inc", "", 
-                "track_thk", "thumb_style", "fill_from_default",
+                "track_thk", "thumb_style", "fill_from_default", "no_default",
                 "font_caption", "cap_pos", "cap_pad_x", "cap_pad_y", "cap_centered", 
                 "shadow_caption", "shadow", 
                 "font_values", "font_display", -- "output",  
@@ -1035,7 +1040,7 @@ classes.dh_Slider_H = {
                 "col_thumb", "col_thumb_outline", "col_fill", 
                 "frame_use_outline", "frame_thk", "allow_sel_outline", "col_active",
                 "show_tickmarks", "tickmark_steps", "show_default_tickmarks", "default_tickmarks", 
-                "show_min_max", "min_max_values", "show_values", "pad_values", 
+                "show_min_max", "min_max_values", "show_values", "pad_values", "dec_places",
                 "track_offset", "tickmarks_offset", 
                 "display_style", "display_w", "display_h", "display_pos", "display_pad_x", "display_pad_y",
                 "display_align", "col_display_bg", "col_display_text",                   
@@ -1052,7 +1057,6 @@ classes.dh_Slider_H = {
         --!!! Must not recreate!      
         {prop = "track_thk",         caption = "Thickness",         class = "Integer", needs_init = true},
         {prop = "thumb_style",       caption = "Thumb Style",       class = "List",    needs_init = true}, -- do not recreate
-        {prop = "fill_from_default", caption = "Fill from Default", class = "Boolean", needs_init = false},
         {prop = "min",               caption = "Min.",              class = "Number",  recreate = true, noscale = true},
         {prop = "max",               caption = "Max.",              class = "Number",  recreate = true, noscale = true},
         {prop = "default",           caption = "Default",           class = "Integer", recreate = true, noscale = true},
@@ -1070,7 +1074,10 @@ classes.dh_Slider_H = {
         "",                       
         {prop = "border_width",      caption = "Border Width",      class = "Integer",  needs_init = true},
         {prop = "radius",            caption = "Rad. Corners",      class = "Integer",  needs_init = true},
+        {prop = "fill_from_default", caption = "Fill from Default", class = "Boolean",  needs_init = false},
+        {prop = "no_default",        caption = "No Default",        class = "Boolean",  recreate = true,},
         props.shadow,
+        
 --zzcolors 
         "3",
         props.col_bg,
@@ -1116,6 +1123,7 @@ classes.dh_Slider_H = {
         {prop = "display_pad_y",          caption = "Disp. Box Pad Y",  class = "Integer",     needs_init = true},
         props.font_display,
         {prop = "display_align",          caption = "Align",            class = "Align",       needs_init = false, noscale = true},
+        {prop = "dec_places",             caption = "Decimal places",   class = "Integer",     needs_init = false},        
         "",
         {prop = "col_display_bg",         caption = "Display BG Col",   class = "Color",       needs_init = true},
         {prop = "col_display_text",       caption = "Display Text Col", class = "Color",       needs_init = false},
@@ -1129,7 +1137,7 @@ classes.dh_Slider_H = {
 classes.dh_Slider_V = {
     defaults = {24, 128, "dh_Slider_V", 0, 10, 5},
     creation = {"w", "h", "caption", "min", "max", "default", "inc", "", 
-                "track_thk", "thumb_style", "fill_from_default",
+                "track_thk", "thumb_style", "fill_from_default", "no_default",
                 "font_caption", "cap_pos", "cap_pad_x", "cap_pad_y", "cap_centered", 
                 "shadow_caption", "shadow", 
                 "font_values", "font_display", -- "output", 
@@ -1139,7 +1147,7 @@ classes.dh_Slider_V = {
                 "col_thumb", "col_thumb_outline", 
                 "frame_use_outline", "frame_thk", "allow_sel_outline", "col_active",
                 "show_tickmarks", "tickmark_steps", "show_default_tickmarks", "default_tickmarks", 
-                "show_min_max", "min_max_values", "show_values", "pad_values", 
+                "show_min_max", "min_max_values", "show_values", "pad_values", "dec_places",
                 "track_offset", "tickmarks_offset",   
                 "display_style", "display_w", "display_h", "display_pos", "display_pad_x", "display_pad_y",
                 "display_align", "col_display_bg", "col_display_text", 
@@ -1157,7 +1165,6 @@ classes.dh_Slider_V = {
         --!!! Must not recreate!      
         {prop = "track_thk",         caption = "Thickness",    class = "Integer",      needs_init = true},
         {prop = "thumb_style",       caption = "Thumb Style",  class = "List",         needs_init = true},        -- recreate?                
-        {prop = "fill_from_default", caption = "Fill from Default", class = "Boolean", needs_init = false},
         {prop = "min",               caption = "Min.",         class = "Number",       recreate = true, noscale = true},
         {prop = "max",               caption = "Max.",         class = "Number",       recreate = true, noscale = true},
         {prop = "default",           caption = "Default",      class = "Integer",      recreate = true, noscale = true},
@@ -1173,9 +1180,12 @@ classes.dh_Slider_V = {
         props.cap_centered,         
         props.shadow_caption,
         "",
-        {prop = "border_width",           caption = "Border Width",      class = "Integer",     needs_init = true},
-        {prop = "radius",                 caption = "Rad. Corners",      class = "Integer",     needs_init = true},
+        {prop = "border_width",      caption = "Border Width",      class = "Integer",  needs_init = true},
+        {prop = "radius",            caption = "Rad. Corners",      class = "Integer",  needs_init = true},
+        {prop = "fill_from_default", caption = "Fill from Default", class = "Boolean",  needs_init = false},
+        {prop = "no_default",        caption = "No Default",        class = "Boolean",  recreate = true,},
         props.shadow,
+        
 --zzcolors  
         "3",
         props.col_bg,
@@ -1221,8 +1231,9 @@ classes.dh_Slider_V = {
         {prop = "display_pad_y",          caption = "Disp. Box Pad Y",  class = "Integer",     needs_init = true},
         props.font_display,
         {prop = "display_align",          caption = "Align",            class = "Align",       needs_init = false, noscale = true},
+        {prop = "dec_places",             caption = "Decimal places",   class = "Integer",     needs_init = false},                
         "",
-        {prop = "col_display_bg",         caption = "Display BG Col", class = "Color",         needs_init = true},
+        {prop = "col_display_bg",         caption = "Display BG Col",   class = "Color",       needs_init = true},
         {prop = "col_display_text",       caption = "Display Text Col", class = "Color",       needs_init = false},
 
     },
@@ -1269,7 +1280,7 @@ classes.dh_Tabs = {
     defaults = {48, 20, "Tab 1,Tab 2,Tab 3"},
     creation = {"tab_w", "tab_h", "optarray", "", "pad", 
                 " fullwidth", "limit_w", "font_tab_active", "font_tab_inactive", 
-                "col_bg", "col_text", "col_tab_acive", "col_tab_inactive",
+                "col_bg", "col_text", "col_text_inactive", "col_tab_acive", "col_tab_inactive",
                 "z_sets",
     },
     properties = {
@@ -1293,9 +1304,11 @@ classes.dh_Tabs = {
         {prop = "font_tab_inactive", caption = "Inact. Font",    class = "Font",       needs_init = false},
         "",
         props.col_bg,
-        props.col_text,
         {prop = "col_tab_active",    caption = "Active Tab Color",  class = "Color",   needs_init = false},
         {prop = "col_tab_inactive",  caption = "Inact. Tab Color",  class = "Color",   needs_init = false},
+        {prop = "col_text_active",   caption = "Active Text Color", class = "Color",   needs_init = false},        
+        {prop = "col_text_inactive", caption = "Inact. Text Color", class = "Color",   needs_init = false},        
+        
 
     }
 }
@@ -1649,5 +1662,3 @@ editors - have to do inits in editor save()
     ** why no redraw?
     
 --]===]
-
-
