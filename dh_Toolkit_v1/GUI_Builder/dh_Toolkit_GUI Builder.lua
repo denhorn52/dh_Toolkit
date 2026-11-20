@@ -4,7 +4,7 @@
 -- version 1.0 
 -- Author: Dennis R. Horn
 -- Enhanced GUI Builder for Lokasenna_GUI v2.9
--- Modified 20261009
+-- Modified 20261110
 
 --[[
     2025-04-09. 
@@ -83,9 +83,12 @@ package.path = package.path .. ";" .. dhtk_path .. "?.lua"
 -- !!! Load GUI.overrides.
 require "common/GUI_overrides"
 
-------------------------------------------
+-----------------------------------------
+--!!! IMPORTANT
 DHTK = require "common/dh_Toolkit_core"
-------------------------------------------
+DHTK.PATH = dhtk_path  -- needed if save destination is "file"
+-----------------------------------------
+
 -- Set to true if script uses dh_Toolkit Prefs window.
 -- Set to false if script handles Prefs in its own way (as with GUI Builder).)
 DHTK.USE_DHTK_PREFS = false
