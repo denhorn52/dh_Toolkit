@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- wnd_Project.lua
--- Modified 20260330
+-- Modified 20261116
 
 local Project = GUI.req(GUI.script_path .. "modules/func_Project.lua")()
 
@@ -22,7 +22,7 @@ GUI.New("GB_wnd_proj_name", "dh_Textbox", {
     z = 498,
     x = ref_wnd_proj.x, 
     y = ref_wnd_proj.y, 
-    w = 192, 
+    w = 208, 
     h = ref_wnd_proj.tbx_h, 
     caption = "Name:",
     font_caption = "sans22",
