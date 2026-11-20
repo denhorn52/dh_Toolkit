@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- tab_Properties.lua
--- Modified 20260920
+-- Modified 20261116
 
 local Property = GUI.req(GUI.script_path .. "modules/class_Properties.lua")()
 --local Element = require("func_Elements")
@@ -353,7 +353,8 @@ function Properties.new_property(property, elm, pos)
         elm = elm.name,
         subclass = property.subclass,
         recreate = property.recreate, 
-        needs_init = property.needs_init, 
+        needs_init = property.needs_init,
+        numbers_only = property.numbers_only, 
     })
     
     --GUI.Msg("    Properties.new_property after GUI.New : self.curr_opt : " .. tostring(self.curr_opt) or "no curr_opt")
