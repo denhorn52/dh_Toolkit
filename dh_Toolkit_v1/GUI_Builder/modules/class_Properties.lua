@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- class_Properties.lua
--- Modified 20261009
+-- Modified 20261116
 
 
 --[===[
@@ -99,13 +99,22 @@ local function apply_value(self)
     --GUI.Msg("  self.value is : " .. tostring(val))
 
     if val then
-    
-        --local elm_val = val
         
-        --sel_elm.props_norm[self.prop] = val
-    
-        --GUI.Msg("    if val prop  : " .. self.prop)
-        --GUI.Msg("    if val value : " .. tostring(val))
+        -- ## val represents the requested normal 
+        --        [ 1x design size ] values.
+        -- sel_elm.props_norm holds the current
+        --         design values.
+        -- sel_elm has GUI adjusted values.           
+        -- val special cases may get adjusted downstream,
+        --   but they are still design values.
+        -- props_norm will store the val / adjusted value.
+        -- BUT they may get adjusted again for GUI display.
+        -- That will be elm_val.
+        
+        -- ## They start the same ##
+        
+        local elm_val = val
+        --GUI.Msg("    START elm_val = val  : " .. elm_val)
 
         if (self.class == "Number") or (self.class == "Integer") then
             
@@ -115,15 +124,19 @@ local function apply_value(self)
             --GUI.Msg("    if Number : type val  : " .. type(val))
             
 --zzknob
-            -- !!! Special cases.
+            -- ## Special cases ##
             
             -- Since knob is already created its x,y is top-left.
+            --   That is required by the GUI.
+            --   'centered' is only relevant at element creation,
+            --    but we need to retain design values.
             -- Adjust centered x,y to sel_elm x or y for calculations.
             
-            if  (sel_elm.type == "dh_Knob") and sel_elm.centered then
+            if (sel_elm.type == "dh_Knob") and sel_elm.centered then
             
                 if ((self.prop == "x") or (self.prop == "y")) then            
-                    val = (val - (sel_elm.props_norm.w // 2)) 
+                    elm_val = (val - (sel_elm.props_norm.w // 2))
+                    --GUI.Msg("    ADJ KNOB elm_val  : " .. elm_val)
                 end
                 
                 if (self.prop == "w") then
@@ -162,7 +175,7 @@ local function apply_value(self)
             if self.prop == "scrollbar_width" then
                 if val < 8 then val = 8 end
             end
---zzz
+
 --zzlabel  
             if (sel_elm.type == "dh_Label") and (self.prop == "x") then
             --and sel_elm.props_norm.text_pos ~= "left" then
@@ -188,15 +201,17 @@ local function apply_value(self)
                 
                 --GUI.Msg("    val calc is: " .. val)                
                 
-            end            
+            end
+
+            -- # Up to this point val is sometimes adjusted norm value,
+            --   but need to assign to props_norm outside of this block.
+            --   elm_val may have adjusted norm value.
             
-            -- Store normalized adjusted value.
-            sel_elm.props_norm[self.prop] = val
-            
-            --GUI.Msg("    sel_elm.props_norm : " .. tostring(sel_elm.props_norm[self.prop]))
+            --IMPORTANT! Don't want to change val after here.                        
             
             if self.prop == "y" then
-                val = val + MENUBAR_HEIGHT
+                elm_val = elm_val + MENUBAR_HEIGHT
+                --GUI.Msg("    ADJ elm_val + MENUBAR_HEIGHT : " .. elm_val)
             end            
 
             -- Scale it to current app scale.
@@ -204,25 +219,34 @@ local function apply_value(self)
             
             if not self.noscale then
                 if self.class == "Integer" then
-                    val = math.floor(val * DHTK.APP_SCALE + 0.5)
+                    elm_val = math.floor(elm_val * DHTK.APP_SCALE + 0.5)                    
                 else
-                    val = val * DHTK.APP_SCALE                
+                    elm_val = elm_val * DHTK.APP_SCALE                                    
                 end
             end
                        
-            --GUI.Msg("    scaled value is : " .. tostring(val)) 
+            --GUI.Msg("    SCALED elm_val : " .. elm_val) 
         
-        end  -- if number
+        end  -- < # end if number >
+        
 
         --GUI.Msg("    after if Number : prop  : " .. self.prop)
         --GUI.Msg("    after if Number : val  : " .. val)             
         --GUI.Msg("    after if Number : type val  : " .. type(val))
         --if type(val) == "table" then
         --    GUI.Msg("    after if Number : val[1]  : ") -- .. val[1])
-        --end        
-       
-        sel_elm[self.prop] = val
-
+        --end
+        
+        --####  Finish up  #### 
+--zzz        
+        -- Store normalized adjusted value.
+        sel_elm.props_norm[self.prop] = val               
+        --GUI.Msg("\n    props_norm val : " .. val) 
+            
+        -- Update the element with GUI adjusted values.
+        sel_elm[self.prop] = elm_val
+        --GUI.Msg("    sel_elm elm_val : " .. elm_val) 
+        
         -- INIT, RECREATE, OR REDRAW?
         -- Will recreate init? Yes
         
@@ -386,9 +410,10 @@ function Property.Font:validate()
         return val
     end
 end
-
+--zzz
 function Property.Color:validate()
     local val = self:val()
+    
     if GUI.colors[val] then
         return val
     elseif GUI.colors[tonumber(val)] then
@@ -765,16 +790,27 @@ function Property.Table:val(newval)
         local vals = {}
         for v in string.gmatch(self.retval, "[^,]*") do
         
-            --GUI.Msg("    type of val : " .. type(v))
+            --GUI.Msg("\n    BEFORE type of val : " .. type(v))
             --GUI.Msg("            val : " .. tostring(v))
+            --GUI.Msg("            self.prop : " .. self.prop)
+            --GUI.Msg("            self.caption : " .. self.caption)
+            --GUI.Msg("            self.class : " .. self.class)
+            --GUI.Msg("            self.needs_init : " .. tostring(self.needs_init))
+            
+                        
+            --GUI.Msg("            self.numbers_only : " .. tostring(self.numbers_only))  -- nil ???          
         
             if self.numbers_only then
+            
+                --GUI.Msg("    ## in self.numbers_only ## ")            
                 if tonumber(v) then
                     v = tonumber(v)
                 else
                     return nil
                 end
-            end    
+            end
+            
+            --GUI.Msg("    AFTER type of val : " .. type(v))                
         
             table.insert(vals, v)
             
@@ -1143,7 +1179,7 @@ function Property.Cap_Pos:apply_value()
         --GUI.Msg("    sel_elm.props_norm.x is: " .. tostring(sel_elm.props_norm.x))
         --GUI.Msg("    sel_elm.x is: " .. tostring(sel_elm.x))
         --GUI.Msg("    sel_elm.w is: " .. tostring(sel_elm.w))                
---zzz        
+        
         if sel_elm.type == "dh_Label" then
             GUI.Msg("    type is dh label, props_norm.x : " .. sel_elm.props_norm.x)
             sel_elm.x = (sel_elm.props_norm.x * DHTK.APP_SCALE)
@@ -1408,7 +1444,7 @@ function Property.List:onmouseup()
     self:apply_value()
 end
 
-
+--zzz
 function Property.List:apply_value()
 
     --GUI.Msg("\n** Property.Thumb_Type:apply_value **")
