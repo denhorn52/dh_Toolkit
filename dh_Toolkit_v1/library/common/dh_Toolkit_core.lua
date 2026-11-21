@@ -1,7 +1,7 @@
 --dh_Toolkit_core.lua
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20261009
+-- Date: 20261110a
 
 ------------------------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -36,6 +36,8 @@
 
 -- 20260116: Added color functions (used for nighlighting).
 -- 20261009: Fixed wasn't redrawing hidden layers on theme change.
+-- 20261030: Added ability to load user themes from file.
+--           Added window_settings.save_destination.
 
 ------------------------------------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
@@ -97,6 +99,7 @@ DHTK.window_settings = {
   use_outlines = false,
   frame_thk = 2,
   is_window_expanded = false, -- This is used for multiple window height scripts.
+  save_destination = "ext_state", -- ext_state | file
 }
 
 DHTK.APP_SCALE_FACTORS = {
@@ -240,8 +243,6 @@ local function getWindowSettings()
         if saved_settings.use_outlines then DHTK.window_settings.use_outlines = saved_settings.use_outlines end
        
         if saved_settings.frame_thk then DHTK.window_settings.frame_thk = saved_settings.frame_thk end
-        
-        --GUI.Msg("\n#  getWindowSettings DHTK.window_settings.use_outlines : " .. tostring(DHTK.window_settings.use_outlines))
 
         -- If App uses changing window heights get state.
         if saved_settings.is_window_expanded then 
@@ -250,7 +251,8 @@ local function getWindowSettings()
         
         if saved_settings.theme then DHTK.window_settings.theme = saved_settings.theme end
         if saved_settings.user_theme then DHTK.window_settings.user_theme = saved_settings.user_theme end
-
+        if saved_settings.save_destination then DHTK.window_settings.save_destination = saved_settings.save_destination end
+        --GUI.Msg("\n#  getWindowSettings saved_settings.save_destination : " .. tostring(saved_settings.save_destination))
     end
 end
 
@@ -264,7 +266,9 @@ DHTK.saveWindowSettings = function ()
 	DHTK.window_settings.top = cur_y
 
     local json_string = json.encode(DHTK.window_settings)
-	--GUI.Msg("json_string at exit is\n " .. json_string  .. "\n")
+    
+	--GUI.Msg("\nEXIT : json_string at exit is\n " .. json_string  .. "\n")
+	
 	reaper.SetExtState(section_name, 'window_settings', json_string, true)
 
     -- No longer need json_string. Maybe unnecessary as it is local.    
@@ -282,42 +286,71 @@ end
 
 local function getUserThemes()
 
-    --GUI.Msg("**** in getUserThemes ****")
-             
-    if reaper.HasExtState("dh_Toolkit", "user-themes") then
-    
-    --xxx TESTING: Mimic no saved ext state.
-    --if reaper.HasExtState("dh_Toolkit", "user-themes-test") then    
-    
-        --GUI.Msg("     getUserThemes extstate has user-themes****")
-    
-        --xxx TESTING: Mimic no extstate.
-        --goto skip
+    --GUI.Msg("**** in getUserThemes : " .. DHTK.window_settings.save_destination)
         
-        json_string = reaper.GetExtState("dh_Toolkit", "user-themes")
+    if DHTK.window_settings.save_destination == "ext_state" then
+    
+        -- #### IF LOADING FROM EXT STATE #### --
         
-        fetched_themes = json.decode(json_string)
+        if reaper.HasExtState("dh_Toolkit", "user-themes") then
         
-        if type(fetched_themes) == "table" and
-            DHTK.hash_table_length(fetched_themes) > 0 then
-            DHTK.USER_THEMES = fetched_themes
-          
-            for name, _ in pairs(DHTK.USER_THEMES) do
-                table.insert(DHTK.USER_THEME_NAMES, name)
-                table.sort(DHTK.USER_THEME_NAMES)
+        --xxx TESTING: Mimic no saved ext state.
+        --if reaper.HasExtState("dh_Toolkit", "user-themes-test") then    
+            --goto skip
+    
+            --GUI.Msg("     getUserThemes extstate has user-themes****")
+    
+            json_string = reaper.GetExtState("dh_Toolkit", "user-themes")
+            
+            fetched_themes = json.decode(json_string)
+            
+            if type(fetched_themes) == "table" and
+                DHTK.hash_table_length(fetched_themes) > 0 then
+                DHTK.USER_THEMES = fetched_themes
             end
-                   
+            
+            --xxx TESTING: Mimic no saved ext state.
+            --::skip::
         end
+
+    else
+    
+        -- #### IF LOADING FROM FILE #### --
         
-        --xxx TESTING: Mimic no extstate.
-        --::skip::
+        local file_path = DHTK.PATH .. "common" .. package.config:sub(1, 1) .. "dh_Toolkit_user_themes.lua"
+        
+        --local file_path = "E:/Reaper6/Scripts/dh_Toolkit\library/common/dh_Toolkit_user_themes.lua"
+        
+        --GUI.Msg("file_path : " .. file_path)
+    
+        -- # This works.
+        
+        -- Loads the user themes from the file.
+        
+        local run_script, err = loadfile(file_path)
+        run_script()
+        
+        -- They are now available as a table.
+        
+        if dh_Toolkit_user_themes then
+            DHTK.USER_THEMES = GUI.table_copy(dh_Toolkit_user_themes)
+        end
+    
+    end
+    
+    -- # Populate names table.
+    
+    for name, _ in pairs(DHTK.USER_THEMES) do
+        table.insert(DHTK.USER_THEME_NAMES, name)
+        table.sort(DHTK.USER_THEME_NAMES)
     end
     
 --zzz
+    -- # Set theme.
 
     local user_theme_name = DHTK.window_settings.user_theme     
 
-    --[=[ xxx TESTING: 
+    --[-[ xxx FOR TESTING: 
     --GUI.Msg("     getUserThemes #DHTK.USER_THEME_NAMES : " .. #DHTK.USER_THEME_NAMES) 
     -- Mimic invalid user theme name.
     --user_theme_name = "Magenta-4xyz"
@@ -334,7 +367,7 @@ local function getUserThemes()
         
         if not DHTK.USER_THEMES[user_theme_name] then
             
-            --GUI.Msg(" if not DHTK.USER_THEMES[user_theme_name]") 
+            --GUI.Msg("UT: if not DHTK.USER_THEMES[user_theme_name]") 
             --GUI.Msg("  getUserThemes window_settings.user_theme : " .. (user_theme_name or 'nil'))        
             --GUI.Msg("  getUserThemes  user-theme :\n " .. user_theme_name .. " \ndoes not exist!\nLoading Default theme.")        
                              
@@ -345,7 +378,7 @@ local function getUserThemes()
 
             dhth.set_theme(dhth.DH_THEMES["Default"], false)
         else
-            --GUI.Msg(" else not DHTK.USER_THEMES[user_theme_name]")         
+            --GUI.Msg("UT: else not DHTK.USER_THEMES[user_theme_name]")         
             -- Should set to USER THEME if exists.
             dhth.set_theme(DHTK.USER_THEMES[user_theme_name], false)
         end
