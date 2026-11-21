@@ -2,7 +2,7 @@
 
 -- version 1.0 
 -- Author: Dennis R. Horn
--- Modified Date: 20261009
+-- Modified Date: 20261110
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -60,7 +60,8 @@ function dh_log(msg)
 	end
 end
 
-reaper.ClearConsole()
+--!!! Disable for deployment.
+--reaper.ClearConsole()
 --======================================
 -- Lokasenna's GUI requirements.
 --======================================
@@ -100,9 +101,11 @@ package.path = package.path .. ";" .. dhtk_path .. "?.lua"
 
 require "common/GUI_overrides"
 
-----------------------------------------
+-----------------------------------------
+--!!! IMPORTANT
 DHTK = require "common/dh_Toolkit_core"
-----------------------------------------
+DHTK.PATH = dhtk_path  -- needed if save destination is "file"
+-----------------------------------------
 
 DHTK.USE_DHTK_PREFS = true
 
