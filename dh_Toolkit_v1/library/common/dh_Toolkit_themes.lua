@@ -1,7 +1,7 @@
 -- dh_Toolkit_themes.lua
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20261009
+-- Date: 20261009a
 
 
 -----------------------------------
@@ -69,20 +69,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {96, 96, 96, 255},
         btn_outline = {32, 32, 32, 255},
         btn_txt = {192, 192, 192, 255},
-        aux_bg = {96, 96, 96, 255},
-        aux_txt = {192, 192, 192, 255},
+        elm_txt = {192, 192, 192, 255},        
+        sel_txt = {120, 120, 120, 128},
         thumb_body = {96, 96, 96, 255},
         track_fill = {148, 148, 148, 255},
 
         panel_bg = {64, 64, 64, 255},
         panel_border = {96, 96, 96, 255},
         panel_txt = {192, 192, 192, 255},
-        
-        elm_txt = {192, 192, 192, 255},        
-        sel_txt = {120, 120, 120, 128},
         tab_active = {96, 96, 96, 255},
         tab_inactive = {56, 56, 56, 255},
-        
+        tab_txt_active = {192, 192, 192, 255},        
+        tab_txt_inactive = {192, 192, 192, 255},        
+
+        aux_bg = {96, 96, 96, 255},
+        aux_txt = {192, 192, 192, 255},
         elm_active = {192, 192, 192, 255},        
         metadata = {0, 0, 0, 255},
         
@@ -101,19 +102,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {85, 224, 207, 255},
         btn_outline = {57, 138, 144, 255},
         btn_txt = {0, 64, 64, 255},
-        aux_bg = {85, 224, 207, 255},
-        aux_txt = {0, 64, 64, 255},
+        elm_txt = {216, 216, 216, 255},        
+        sel_txt = {51, 175, 147, 128},        
         thumb_body = {48, 183, 144, 255},
         track_fill = {36, 165, 126, 255},
 
         panel_bg = {164, 228, 236, 255},
         panel_border = {66, 192, 153, 255},
         panel_txt = {0, 64, 64, 255},
-        elm_txt = {216, 216, 216, 255},        
-        sel_txt = {51, 175, 147, 128},
         tab_active = {155, 237, 245, 255},
         tab_inactive = {132, 220, 228, 255},
-        
+        tab_txt_active = {0, 64, 64, 255},        
+        tab_txt_inactive = {0, 64, 64, 255},        
+
+        aux_bg = {85, 224, 207, 255},
+        aux_txt = {0, 64, 64, 255},                        
         elm_active = {255, 0, 255, 255},        
         metadata = {0, 0, 0, 255},
         
@@ -132,19 +135,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {180, 180, 180, 255},
         btn_outline = {27, 27, 27, 255},
         btn_txt = {0, 0, 0, 255},
-        aux_bg = {180, 180, 180, 255},
-        aux_txt = {0, 0, 0, 255},
+        elm_txt = {255, 255, 255, 255},        
+        sel_txt = {128, 128, 128, 128},
         thumb_body = {162, 162, 162, 255},
         track_fill = {144, 144, 144, 255},
 
         panel_bg = {64, 64, 64, 255},
         panel_border = {162, 162, 162, 255},
         panel_txt = {255, 255, 255, 255},
-        elm_txt = {255, 255, 255, 255},        
-        sel_txt = {128, 128, 128, 128},
         tab_active = {198, 198, 198, 255},
         tab_inactive = {160, 160, 160, 255},
-        
+        tab_txt_active = {0, 0, 0, 255},        
+        tab_txt_inactive = {0, 0, 0, 255},        
+
+        aux_bg = {180, 180, 180, 255},
+        aux_txt = {0, 0, 0, 255},                
         elm_active = {255, 255, 255, 255},        
         metadata = {0, 0, 0, 255},
         
@@ -164,19 +169,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {220, 204, 180, 255},
         btn_outline = {95, 117, 91, 255},
         btn_txt = {96, 24, 0, 255},
-        aux_bg = {220, 200, 172, 255},
-        aux_txt = {96, 24, 0, 255},
+        elm_txt = {225, 225, 225, 255},
+        sel_txt = {105, 153, 96, 128},
         thumb_body = {209, 185, 158, 255},
         track_fill = {104, 144, 100, 255},
         
         panel_bg = {234, 225, 219, 255},
         panel_border = {104, 144, 100, 255},
         panel_txt = {96, 24, 0, 255},
-        elm_txt = {225, 225, 225, 255},
-        sel_txt = {105, 153, 96, 128},
         tab_active = {223, 206, 181, 255},
         tab_inactive = {202, 192, 176, 255},
-        
+        tab_txt_active = {96, 24, 0, 255},
+        tab_txt_inactive = {96, 24, 0, 255},
+
+        aux_bg = {220, 200, 172, 255},
+        aux_txt = {96, 24, 0, 255},                
         elm_active = {255, 0, 255, 255},
         metadata = {0, 0, 0, 255},
     },
@@ -193,19 +200,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {190, 171, 233, 255},
         btn_outline = {95, 0, 98, 255},
         btn_txt = {11, 0, 38, 255},
-        aux_bg = {173, 54, 146, 255},
-        aux_txt = {219, 210, 219, 255},
+        elm_txt = {226, 226, 226, 255},
+        sel_txt = {165, 30, 140, 128},
         thumb_body = {130, 69, 173, 255},
         track_fill = {164, 72, 146, 255},
         
         panel_bg = {90, 60, 112, 255},
         panel_border = {161, 103, 185, 255},
         panel_txt = {226, 226, 226, 255},
-        elm_txt = {226, 226, 226, 255},
-        sel_txt = {165, 30, 140, 128},
         tab_active = {121, 85, 169, 255},
         tab_inactive = {81, 58, 106, 255},
-        
+        tab_txt_active = {228, 210, 255, 255},
+        tab_txt_inactive = {228, 210, 255, 255},
+
+        aux_bg = {173, 54, 146, 255},
+        aux_txt = {219, 210, 219, 255},               
         elm_active = {237, 129, 200, 255},
         metadata = {0, 0, 0, 255},
     },            
@@ -222,18 +231,18 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {208, 208, 208, 255},
         btn_outline = {63, 63, 63, 255},
         btn_txt = {0, 0, 0, 255},
-        aux_bg = {208, 208, 208, 255},
-        aux_txt = {0, 0, 0, 255},
+        elm_txt = {255, 255, 255, 255},        
+        sel_txt = {124, 124, 124, 102},
         thumb_body = {208, 208, 208, 255},
         track_fill = {144, 144, 144, 255},
 
         panel_bg = {172, 172, 172, 255},
         panel_border = {188, 188, 188, 255},
         panel_txt = {0, 0, 0, 255},
-        elm_txt = {255, 255, 255, 255},        
-        sel_txt = {124, 124, 124, 102},
         tab_active = {198, 198, 198, 255},
         tab_inactive = {168, 168, 168, 255},
+        tab_txt_active = {0, 0, 0, 255},
+        tab_txt_inactive = {0, 0, 0, 255},        
         
         elm_active = {255, 255, 255, 255},        
         metadata = {0, 0, 0, 255},
@@ -254,19 +263,21 @@ dh_Toolkit_themes.DH_THEMES = {
         --btn_outline = {221, 108, 206, 255},
         btn_outline = {95, 0, 98, 255},
         btn_txt = {219, 210, 219, 255},
-        aux_bg = {173, 54, 146, 255},
-        aux_txt = {219, 210, 219, 255},
+        elm_txt = {226, 226, 226, 255},        
+        sel_txt = {165, 30, 140, 128},
         thumb_body = {173, 54, 146, 255},
         track_fill = {164, 72, 146, 255},
 
         panel_bg = {120, 30, 102, 255},
         panel_border = {200, 103, 182, 255},
         panel_txt = {226, 226, 226, 255},
-        elm_txt = {226, 226, 226, 255},        
-        sel_txt = {165, 30, 140, 128},
         tab_active = {180, 45, 162, 255},
         tab_inactive = {136, 9, 83, 255},
-        
+        tab_txt_active = {219, 210, 219, 255},
+        tab_txt_inactive = {219, 210, 219, 255},
+
+        aux_bg = {173, 54, 146, 255},
+        aux_txt = {219, 210, 219, 255},        
         elm_active = {237, 129, 200, 255},        
         metadata = {0, 0, 0, 255},
         
@@ -285,19 +296,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {204, 178, 172, 255},
         btn_outline = {100, 82, 82, 255},
         btn_txt = {64, 36, 0, 255},
-        aux_bg = {202, 184, 162, 255},
-        aux_txt = {64, 36, 0, 255},
+        elm_txt = {255, 237, 233, 255},
+        sel_txt = {121, 94, 67, 128},
         thumb_body = {201, 170, 144, 255},
         track_fill = {166, 142, 136, 255},
         
         panel_bg = {222, 202, 192, 255},
         panel_border = {202, 162, 144, 255},
         panel_txt = {0, 0, 0, 255},
-        elm_txt = {255, 237, 233, 255},
-        sel_txt = {121, 94, 67, 128},
         tab_active = {218, 202, 180, 255},
         tab_inactive = {192, 172, 152, 255},
-        
+        tab_txt_active = {64, 36, 0, 255},
+        tab_txt_inactive = {64, 36, 0, 255},
+
+        aux_bg = {202, 184, 162, 255},
+        aux_txt = {64, 36, 0, 255},        
         elm_active = {255, 248, 240, 255},
         metadata = {0, 0, 0, 255},
     },
@@ -314,19 +327,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {224, 184, 176, 255},
         btn_outline = {96, 59, 51, 255},
         btn_txt = {57, 38, 19, 255},
-        aux_bg = {224, 184, 176, 255},
-        aux_txt = {57, 38, 19, 255},
+        elm_txt = {254, 243, 239, 255},
+        sel_txt = {226, 147, 153, 128},
         thumb_body = {215, 166, 158, 255},
         track_fill = {196, 128, 116, 255},
         
         panel_bg = {234, 207, 204, 255},
         panel_border = {224, 171, 167, 255},
         panel_txt = {85, 48, 20, 255},
-        elm_txt = {254, 243, 239, 255},
-        sel_txt = {226, 147, 153, 128},
         tab_active = {234, 198, 180, 255},
         tab_inactive = {208, 162, 148, 255},
-        
+        tab_txt_active = {57, 38, 19, 255},
+        tab_txt_inactive = {57, 38, 19, 255},
+
+        aux_bg = {224, 184, 176, 255},
+        aux_txt = {57, 38, 19, 255},        
         elm_active = {201, 72, 39, 255},
         metadata = {0, 0, 0, 255},
     },        
@@ -344,19 +359,21 @@ dh_Toolkit_themes.DH_THEMES = {
         --btn_outline = {224, 135, 224, 255},
         btn_outline = {64, 0, 64, 255},
         btn_txt = {75, 237, 75, 255},
-        aux_bg = {162, 57, 166, 255},
-        aux_txt = {75, 255, 75, 255},
+        elm_txt = {75, 237, 75, 255},        
+        sel_txt = {221, 99, 206, 153},
         thumb_body = {162, 57, 166, 255},
         track_fill = {156, 70, 156, 255},
 
         panel_bg = {18, 18, 18, 255},
         panel_border = {216, 148, 216, 255},
         panel_txt = {75, 237, 75, 255},
-        elm_txt = {75, 237, 75, 255},        
-        sel_txt = {221, 99, 206, 153},
         tab_active = {138, 52, 138, 255},
         tab_inactive = {38, 38, 38, 255},
-        
+        tab_txt_active = {75, 237, 75, 255},
+        tab_txt_inactive = {75, 237, 75, 255},
+
+        aux_bg = {162, 57, 166, 255},
+        aux_txt = {75, 255, 75, 255},        
         elm_active = {255, 111, 110, 255},        
         metadata = {0, 0, 0, 0},
         
@@ -375,19 +392,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {121, 224, 211, 255},
         btn_outline = {48, 138, 117, 255},
         btn_txt = {0, 64, 64, 255},
-        aux_bg = {121, 224, 211, 255},
-        aux_txt = {0, 64, 64, 255},
+        elm_txt = {216, 216, 216, 255},        
+        sel_txt = {212, 178, 212, 128},
         thumb_body = {65, 168, 146, 255},
         track_fill = {48, 192, 144, 255},
 
         panel_bg = {228, 211, 246, 255},
         panel_border = {48, 192, 144, 255},
         panel_txt = {0, 64, 64, 255},
-        elm_txt = {216, 216, 216, 255},        
-        sel_txt = {212, 178, 212, 128},
         tab_active = {182, 224, 248, 255},
         tab_inactive = {132, 220, 228, 255},
-        
+        tab_txt_active = {0, 64, 64, 255},
+        tab_txt_inactive = {0, 64, 64, 255},
+
+        aux_bg = {121, 224, 211, 255},
+        aux_txt = {0, 64, 64, 255},        
         elm_active = {255, 54, 216, 255},        
         metadata = {0, 0, 0, 255},
         
@@ -406,19 +425,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {224, 184, 176, 255},
         btn_outline = {96, 59, 51, 255},
         btn_txt = {57, 38, 19, 255},
-        aux_bg = {224, 184, 176, 255},
-        aux_txt = {57, 38, 19, 255},
+        elm_txt = {254, 243, 239, 255},        
+        sel_txt = {226, 147, 153, 128},
         thumb_body = {215, 166, 158, 255},
         track_fill = {196, 128, 116, 255},        
 
         panel_bg = {234, 207, 204, 255},
         panel_border = {224, 171, 167, 255},
         panel_txt = {85, 48, 20, 255},
-        elm_txt = {254, 243, 239, 255},        
-        sel_txt = {226, 147, 153, 128},
         tab_active = {234, 198, 180, 255},
         tab_inactive = {208, 162, 148, 255},
-        
+        tab_txt_active = {57, 38, 19, 255},
+        tab_txt_inactive = {57, 38, 19, 255},
+
+        aux_bg = {224, 184, 176, 255},
+        aux_txt = {57, 38, 19, 255},        
         elm_active = {201, 72, 39, 255},        
         metadata = {0, 0, 0, 255},
         
@@ -437,18 +458,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {208, 208, 208, 255},
         btn_outline = {88, 88, 88, 255},
         btn_txt = {0, 0, 0, 255},
-        aux_bg = {208, 208, 208, 255},
-        aux_txt = {0, 0, 0, 255},
+        elm_txt = {255, 255, 255, 255},        
+        sel_txt = {144, 144, 144, 128},
         thumb_body = {208, 208, 208, 255},
         track_fill = {144, 144, 144, 255},        
 
         panel_bg = {81, 90, 90, 255},
         panel_border = {197, 197, 197, 255},
         panel_txt = {255, 254, 255, 255},
-        elm_txt = {255, 255, 255, 255},        
-        sel_txt = {144, 144, 144, 128},
         tab_active = {208, 208, 208, 255},
         tab_inactive = {180, 189, 189, 255},
+        tab_txt_active = {0, 0, 0, 255},
+        tab_txt_inactive = {0, 0, 0, 255},
+
+        aux_bg = {208, 208, 208, 255},
+        aux_txt = {0, 0, 0, 255},        
         elm_active = {255, 255, 255, 255},        
         metadata = {0, 0, 0, 255},
         
@@ -468,19 +492,21 @@ dh_Toolkit_themes.DH_THEMES = {
         btn_face = {190, 171, 233, 255},
         btn_outline = {95, 0, 98, 255},
         btn_txt = {11, 0, 38, 255},
-        aux_bg = {173, 54, 146, 255},
-        aux_txt = {219, 210, 219, 255},
+        elm_txt = {226, 226, 226, 255},
+        sel_txt = {147, 39, 122, 128},
         thumb_body = {130, 69, 173, 255},
         track_fill = {164, 72, 146, 255},
         
         panel_bg = {89, 73, 129, 255},
         panel_border = {161, 103, 185, 255},
         panel_txt = {226, 226, 226, 255},
-        elm_txt = {226, 226, 226, 255},
-        sel_txt = {147, 39, 122, 128},
         tab_active = {121, 85, 169, 255},
         tab_inactive = {81, 58, 106, 255},
-        
+        tab_txt_active = {228, 210, 255, 255},
+        tab_txt_inactive = {228, 210, 255, 255},
+
+        aux_bg = {173, 54, 146, 255},
+        aux_txt = {219, 210, 219, 255},        
         elm_active = {237, 129, 200, 255},
         metadata = {0, 0, 0, 255},
     },                
@@ -508,19 +534,21 @@ dh_Toolkit_themes.COLOR_NAMES = {
     "btn_face",
     "btn_outline",
     "btn_txt",
-    "aux_bg",
-    "aux_txt",
+    "elm_txt",
+    "sel_txt",
     "thumb_body",
     "track_fill",
     
     "panel_bg",
     "panel_border",
     "panel_txt",        
-    "elm_txt",
-    "sel_txt",
     "tab_active",
     "tab_inactive",
+    "tab_txt_active",
+    "tab_txt_inactive",
     
+    "aux_bg",
+    "aux_txt",    
     "elm_active",    
     "metadata",
     --"elm_thumb",    
@@ -579,7 +607,7 @@ function dh_Toolkit_themes.set_theme(theme, isGuiInit)
     -- In case the theme lacks a color in COLOR_NAMES.
     
     for _, col_name in ipairs(dh_Toolkit_themes.COLOR_NAMES) do
-    
+         
         --GUI.Msg("set theme col_name : " .. col_name)
     
         if not GUI.colors[col_name] then
@@ -600,6 +628,12 @@ function dh_Toolkit_themes.set_theme(theme, isGuiInit)
     -- name:  wnd_bg
     -- col:   {64, 64, 64, 255}
     for col_name, col in pairs(theme) do
+    
+        --!!! For testing.
+        --if col_name == "wnd_bg" then
+        --    GUI.Msg("set theme col_name : " .. col_name)
+        --    GUI.Msg( col[1] .. " : " .. col[2] .. " : " .. col[3])
+        --end
     
         local newcolor = {}
         
