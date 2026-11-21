@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-  <!-- Modified: 20261009 -->
+  <!-- Modified: 20261116 -->
   
   <head>
     <meta charset="utf-8" />
@@ -56,8 +56,8 @@ I believe this makes user interaction easier.
 </p>
 
 <p>
-The slider can also have an integrated value display box to show 
-the current value. 
+The slider can also have an integrated value display box 
+to show the current value. 
 If display_style is "none" then a value display box will not be 
 shown. If display_style is "box" a value display box will be 
 shown with a frame and background similar to the text elements. 
@@ -89,6 +89,24 @@ color, and an optional display box. Similar to dh_Slider_H except
 the display can only be above or below the slider.
 </p>
 
+<div class="subHeading top150">Mouse events:</div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">Click </span>
+on the track to set the value to that point.
+</div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">Right-Click </span> or
+<span class="textEmphasis105">Double-Click </span> 
+on the track to reset the slider to its default value.
+</div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">Drag </span>
+the slider thumb to a different position to change the 
+slider's value.
+</div>
 
 <div class="subHeading top150">dh_Slider Properties:</div>
 
@@ -96,18 +114,18 @@ the display can only be above or below the slider.
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">w:</span>
-The width of the Slider element. 
+An integer specifying the width of the Slider element. 
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">h:</span>
-The height of the Slider element. 
+An integer specifying the height of the Slider element. 
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">track_thk:</span>
-This is actual track thickness. The track is generally 
-centered within this slider element.
+An integer specifying the actual track thickness. The track 
+is generally centered within the slider element.
 </div>
 
 <div class="hanging050 top075">
@@ -120,11 +138,13 @@ showing.
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">border_width:</span>
+An integer specifying the width of the optional border.
 If greater than 0 then a border will be drawn around the element. 
 </div> 
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">radius:</span>
+An integer specifying the ŕadiused corners of the element.
 If greater than 0 then the element will be drawn with rounded corners. 
 If showing a border then the radius is to the inside of the border.
 </div> 
@@ -136,43 +156,70 @@ If true the Slider will be drawn with a shadow.
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">min:</span>
-This is the minimum numerical value of the slider, which will be 
-when the thumb is to the left (or bottom) of the track.
+This is the minimum value of the slider, when the thumb is 
+to the left (or bottom) of the track.
+May be an integer or floating-point number.
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">max:</span>
-This is the maximum numerical value of the slider, which will be 
-when the thumb is to the right (or top) of the track.
+This is the maximum value of the slider, when the thumb is 
+to the right (or top) of the track.
+May be an integer or floating-point number.
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">inc:</span>
 This is the size of one step.
-Say a slider has min = 0, max = 100, and inc = 10. As the thumb 
-moves along the track the output will be 
+May be an integer or floating-point number.
+Say a slider has min = 0, max = 100, and inc = 10. As the 
+thumb moves along the track the output will be: 
 0,10,20,30,40,50,60,70,80,90,100. 
+</div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">steps: </span>                       
+This is used internally. It is an integer calculated by: <br>
+&nbsp;&nbsp; <span class='inlineBlock'>(max - min) / inc</span><br>
+It should not be set manually. <br>
+It is needed to determine layout of 'min_max_values'.
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">default:</span>
 The default numerical setting for the slider. 
+May be an integer or floating-point number.
 Say the above track has a default of 50, then the thumb will be 
 initially set here, and will return here when double-clicked. 
-It is also used by 'fill_from_default'.
+</div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">no_default:</span>
+Set this to true to disable double-clicking or right-clicking 
+on track to reset slider. Also, 'fill_from_default' will be 
+set to false, hence, track fill will be from slider 'min'.
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">fill_from_default:</span>
-If true the track fill color will be from the default setting to 
-the thumb position. Otherwise the fill will be from min to 
-thumb position.
+If true the track fill color will be from the 'default' 
+setting to the thumb position. Otherwise the fill will be 
+from 'min' to thumb position.
+</div>
+
+<div class="hanging050 top075">                       
+<span class="textEmphasis110">retval: </span> 
+This holds the current value as a number.                      
+It is calculated internally from slider thumb's position
+and should not be set directly. 
+Set it using GUI.Val("slider-name", val) where val is a number. 
+It can be read directly, or by using GUI.Val("slider-name")                     
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">show_values:</span>
-This is a carry-over from Lokasenna slider.
-If true, the current value will be displayed alongside the thumb.
+This is a carry-over from Lokasenna slider. If true, 
+the current value will be displayed adjacent to the thumb.
 </div>
 
 <div class="hanging050 top075">
@@ -188,25 +235,52 @@ usually set to the number of track steps or a fraction thereof.
 Set to true to show them.
 </div>
 
+<div class="hanging050 top075">                       
+<span class="textEmphasis110">tickmark_steps: </span> 
+An integer specifying how many tickmarks to show. 
+Tickmark steps should have some correspondence to slider 'steps'.
+Say, slider 'steps' is 100, 'tickmark_steps' can be set to 20. 
+Then one tickmark will be drawn for every 5 slider 'steps'.
+</div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">show_default_tickmarks:</span>
+Set to true to show the default tickmark(s).
+</div>
+
 <div class="hanging050 top075">
 <span class="textEmphasis105">default_tickmarks:</span>
-These are tickmarks that extend across the track. If only one default tickmark 
-it can be an integer. Otherwise they are specified in a table of integers 
-with each item representing the track step postition in which to display them: 
+These are tickmarks that extend across the track. 
+They are so named because it is generally used to indicate 
+the default slider position. If only one default tickmark is 
+specified it can be an integer. Otherwise they are specified 
+in a table of integers with each item representing 
+the 'tickmark_steps' postition in which to display them, e.g.,
 <span class='inlineBlock'>{0, 5, 10}.</span>
 </div>
 
 <div class="hanging050 top075">
-<span class="textEmphasis105">show_min_max:</span>
-If true then the minimum value, maximum value, and any other 
-specified value will be displayed along the track. It distance 
-from the track is determined by the 'pad_values' property. 
-The values are specified in a table with the format:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<span class='inlineBlock'>{{0,"0"}, {5,"5"}, {10,"10"}}.</span><br> 
-Each item contains the position (step) and the value to be displayed. 
-The value is a string so anything alpha-numerical is valid. 
+<span class="textEmphasis105">tickmarks_offset:</span>
+Number of pixels to offset the tickmarks relative to the track.
 </div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">show_min_max:</span>
+Set to true to display the 'min_max_values' along the track.
+</div>
+
+<div class="hanging050 top075">   
+<span class="textEmphasis110">min_max_values: </span>
+These are actually labels to be displayed at certain positions 
+along the track.
+Although the property is called 'min_max_values' it can also 
+display values beside the minimum and maximum. 
+The values are specified in a table, e.g., 
+<span class='inlineBlock'>{{0,"0"}, {5,"5"}, {10,"10"}}.</span> 
+Each item in the table contains a {position, value} pair. 
+The position is an integer corresponding to a slider step. 
+The value is a string so anything alpha-numerical is valid. 
+</div> 
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">display_style:</span>
@@ -221,99 +295,102 @@ color of where it is placed.
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">display_align:</span>
-Sets the placement of the text within the display box. Value can be 
-"left", "center", or "right".
+Sets the placement of the text within the display box. 
+Value can be "left", "center", or "right".
+</div>
+
+<div class="hanging050 top075">                       
+<span class="textEmphasis110">dec_places: </span>   
+An integer specifying how many decimal places to 
+show in displayed values.
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">track_offset:</span>
 Number of pixels to offset the track relative to its axis: 
 up - down for dh_Slider_H, or left - right for dh_Slider_V.
- 
- the 
-slider element.
-</div>
-
-<div class="hanging050 top075">
-<span class="textEmphasis105">track_offset:</span>
-Number of pixels to offset the tickmarks.
 </div>
 
 </div><!-- end Section #2 -->  
 
 <div class="chartCont">
-<pre>------------------------------------------------------------
-attribute:          property_name       default value
+<pre>
 ------------------------------------------------------------
-track thickness:    track_thk           8
-thumb style:        thumb_style        "long"
-border width:       border_width        2
-radius:             radius              0
-shadow element:     shadow              false
+attribute:           property_name       default value
+------------------------------------------------------------
+track thickness:     track_thk           8
+thumb style:         thumb_style        "long"
+border width:        border_width        2
+radius:              radius              0
+shadow element:      shadow              false
 
-min value(number):  min                 0
-max value(number):  max                 10
-increment size:     inc                 1
-default setting:    default             5
-fill from default:  fill_from_default   false
+min value(number):   min                 0
+max value(number):   max                 10
+increment size:      inc                 1
+default setting:     default             5
+fill from default:   fill_from_default   false
 
-caption (string):   caption            ""
-caption font:       font_caption       "sans22"
-caption position:   cap_pos            "top"         
-caption offset x:   cap_pad_x           4
-caption offset y:   cap_pad_y           4
-caption centered:   cap_centered        false
-shadow caption:     shadow_caption      false
+slider value: [1]    retval             [read only]
 
-show values:        show_values         false
-values font:        font_values        "sans18"
-values padding:     pad_values          4
-displayed vals:     output              nil
+caption (string):    caption            ""
+caption font:        font_caption       "sans22"
+caption position:    cap_pos            "top"         
+caption offset x:    cap_pad_x           4
+caption offset y:    cap_pad_y           4
+caption centered:    cap_centered        false
+shadow caption:      shadow_caption      false
 
-show tickmarks:     show_tickmarks      false
-tickmark steps:     tickmark_steps      10 
-show default ticks: show_default_tickmarks false
-default tickmarks:  default_tickmarks   (see above)
+show values:         show_values         false
+values font:         font_values        "sans20"
+values padding:      pad_values          4
+displayed vals:      output              nil
 
-show min-max vals:  show_min_max        false
-min-max values:     min_max_values      (see above)
+show tickmarks:      show_tickmarks      false
+tickmark steps:      tickmark_steps      10 
+show default ticks:  show_default_tickmarks false
+default tickmarks:   default_tickmarks   (see above)
+tickmarks offset:    tickmarks_offset    0 
 
-display style:      display_style      "none"
-display position:   display_pos        "top"
-display width:      display_w           48
-display height:     display_h           26
-display font:       font_display       "sans24"
-display pad x:      display_pad_x       8
-display pad y:      display_pad_y       8
-display align:      display_align      "center"
+show min-max vals:   show_min_max        false
+min-max values:      min_max_values      (see above)
 
-track offset:       track_offset        0 
-tickmarks offset:   tickmaks_offset     0 
+display style:       display_style      "none"
+display position:    display_pos        "top"
+display width:       display_w           48
+display height:      display_h           26
+display font:        font_display       "sans24"
+display pad x:       display_pad_x       8
+display pad y:       display_pad_y       8
+display align:       display_align      "center"
+decimal places:      dec_places          0
 
-frame outline: *    frame_use_outline   false
-frame thickness: ** frame_thk           2
-allow sel.outline:  allow_sel_outline   false
+track offset:        track_offset        0 
+
+frame outline: [2]   frame_use_outline   false
+frame thickness: [3] frame_thk           2
+allow sel.outline:   allow_sel_outline   false
 
 -- colors --
-background:         col_bg             "wnd_bg" 
-border:             col_border         "panel_border"
-track bg:           col_track          "elm_bg"
-track outline:      col_track_outline  "elm_frame"
-track_fill:         col_fill           "track_fill" 
-thumb body:         col_thumb          "thumb_body"
-thumb outline:      col_thumb_outline  "btn_outline"
+background:          col_bg             "wnd_bg" 
+border:              col_border         "panel_border"
+track bg:            col_track          "elm_bg"
+track outline:       col_track_outline  "elm_frame"
+track_fill:          col_fill           "track_fill" 
+thumb body:          col_thumb          "thumb_body"
+thumb outline:       col_thumb_outline  "btn_outline"
 
-caption text:       col_cap_text       "txt"
+caption text:        col_cap_text       "txt"
 
-values text:        col_values         "txt"
-display bg:         col_display_bg     "elm_bg"
-display text:       col_display_text   "elm_txt"
+values text:         col_values         "txt"
+display bg:          col_display_bg     "elm_bg"
+display text:        col_display_text   "elm_txt"
 
-elm sel.outline:    col_active         "elm_active"
-backdrop:           col_backdrop       "wnd_bg"
+elm sel.outline:     col_active         "elm_active"
+backdrop:            col_backdrop       "wnd_bg"
 
-*  affects track outline and display box.
-** affects display box
+[1] Set using GUI("slider-name", value)
+[2] affects track outline and display box.
+[3] affects display box
 -------------------------------------------------------------------------------------</pre>
 </div>
 
