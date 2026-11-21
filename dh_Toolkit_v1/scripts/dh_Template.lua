@@ -1,7 +1,7 @@
 --dh_Template.lua 
 -- version 1.0 
 -- Author: Dennis R. Horn
--- Date: 2026-03-30
+-- Date: 20261110
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -161,7 +161,9 @@ require "common/GUI_overrides"
 ----------------------------------------
 --[[ DEV NOTE: !!! Necessary. ]]--
 DHTK = require "common/dh_Toolkit_core"
-----------------------------------------
+DHTK.PATH = dhtk_path  -- needed if save destination is "file"
+-----------------------------------------
+
 --[[ DEV NOTE: 
      Set to true if script uses dh_Toolkit Prefs window.
      Set to false if script handles Prefs in its own way (as with GUI Builder). ]]--
@@ -337,7 +339,8 @@ GUI.New("btn_Prefs", "dh_Button", {
      GUI Builder can save an element file to the location where the main script (this) is located.
 --]] 
 
-loadfile(GUI.script_path .. "dh_Template_ELMS.lua")()
+-- Sample ELMS file. May delete safely delete this.
+--loadfile(GUI.script_path .. "dh_Template_ELMS.lua")()
 
 --[[ DEV NOTE: After elements are loaded assign any additional data or func to the loaded elements. ]]--
 
