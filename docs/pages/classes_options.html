@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-  <!-- Modified: 20261009 -->
+  <!-- Modified: 20261116 -->
   
   <head>
     <meta charset="utf-8" />
@@ -115,6 +115,12 @@ Horizontal space between element edge and option bubble.
 Vertical space between options.
 </div> 
 
+<div class="hanging050 top075">
+<span class="textEmphasis105">allow_wheel:</span>
+dh_Radio only. Set to true to allow the mouse wheel to change 
+the selected option.
+</div> 
+
 </div><!-- # end Properties --> 
 
 <div class="chartCont">
@@ -145,6 +151,8 @@ option padding y:   pad_y               6
 options font:       font_text          "sans22"
 shadow text:        shadow_text         false
 
+allow wheel:        allow_wheel *       false
+
 allow sel.outline:  allow_sel_outline   false
 
 -- colors --
@@ -155,6 +163,8 @@ caption text:       col_cap_text       "txt"
 
 elm sel.outline:    col_active         "elm_active"
 backdrop:           col_backdrop       "wnd_bg"
+
+* dh_Radio only
 -------------------------------------------------------</pre>
 </div>
 
