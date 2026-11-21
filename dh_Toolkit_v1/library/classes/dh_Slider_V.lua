@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Slider_V.lua
--- Modified: 20260330
+-- Modified: 20261116b
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Slider class
@@ -11,20 +11,31 @@
 --[[ Modified by Dennis Horn.
 
      Added ability to adjust track thickness and thumb sizes.
-     2025-05-06 Changed properties font_a and font_b to font_caption and font_text, and bg to col_bg.
-     2025-05-21 Changed property col_hnd to col_thumb.
+     20250506 Changed properties font_a and font_b to font_caption and font_text, and bg to col_bg.
+     20250521 Changed property col_hnd to col_thumb.
      Note: gfx draws circle, hence roundrect, one pixel larger than design size. 
        A circle with radius of 9 will yield a diameter of 19; a radius of 10 will yield a diameter of 21.
-     2026-01-01 Removed multiple handles. If needing multiple use dh_Slider_multi.     
+     20260101 Removed multiple handles. If needing multiple use dh_Slider_multi.     
                 Renamed handle to thumbs.
-     2026-01-06 Added integrated display. Made class 'vertical' only.  
+     20260106 Added integrated display. Made class 'vertical' only.  
                 Renamed col_text to col_values.
-     2026-01-16 Added highlighting for track and optional display.
-     2026-02-04 Changed how slider is drawn.         
+     20260116 Added highlighting for track and optional display.
+     20260204 Changed how slider is drawn.         
                 Added col_backdrop to improve antialiasing for roundrect,
-                captions, and for drawing frames.        
-                                
---]]
+                captions, and for drawing frames. 
+     20261116 retval is now number.
+              Format number to string where needed.  
+              Rewrote formatretval() and moved it out on new().
+              Added property dec_places.
+              Added property default_step.                   
+              Added error checking to draw min_max_values.
+              Added some error checking and validation in places. 
+              Changed default value font to sans20. 
+              Removed CTRL from onmouser_up.
+              Changed mouse behavior.
+              Added property no_default.   
+--]] 
+--zzz
 ---------------------------------------------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
 
@@ -73,15 +84,15 @@ function GUI.dh_Slider_V:new(name, z, x, y, w, h, caption, min, max, default, in
     Slider.show_values = Slider.show_values or false
     Slider.font_values = Slider.font_values or GUI.dh_Slider_V.defaults.font_values
     Slider.pad_values = Slider.pad_values or GUI.dh_Slider_V.defaults.pad_values
-  
+    Slider.dec_places = Slider.dec_places or GUI.dh_Slider_V.defaults.dec_places
+    
     Slider.shadow_caption = Slider.shadow_caption or false
     Slider.shadow = Slider.shadow or false
 
     Slider.frame_use_outline = Slider.frame_use_outline or false
     Slider.frame_thk = Slider.frame_thk or GUI.dh_Slider_V.defaults.frame_thk
-    if Slider.allow_sel_outline == nil then
-        Slider.allow_sel_outline = GUI.dh_Slider_V.defaults.allow_sel_outline  
-    end
+
+    Slider.allow_sel_outline = Slider.allow_sel_outline or GUI.dh_Slider_H.defaults.allow_sel_outline
 
 ----colors-------------------------------------
     Slider.col_bg = Slider.col_bg or GUI.dh_Slider_V.defaults.col_bg
@@ -124,27 +135,35 @@ function GUI.dh_Slider_V:new(name, z, x, y, w, h, caption, min, max, default, in
     Slider.min, Slider.max = min, max
     Slider.inc = Slider.inc or inc or GUI.dh_Slider_V.defaults.inc
     
-    function Slider:formatretval(val)
+    Slider.no_default = Slider.no_default or false
+    
+    -- If not using default it still needs a value.
+    if Slider.no_default then
+        Slider.default = Slider.min
+        Slider.fill_from_default = false  
+    else
+       Slider.default = Slider.default or default or GUI.dh_Slider_H.defaults.default
+            
+        -- Make sure the default is valid number and in range.
+        Slider.default = GUI.clamp(min, tonumber(Slider.default), max)
 
-       local decimal = tonumber(string.match(val, "%.(.*)") or 0)
-          local places = decimal ~= 0 and string.len( decimal) or 0
-          return string.format("%." .. places .. "f", val)
-
+        Slider.fill_from_default = Slider.fill_from_default or false  
     end
-    
-    Slider.default = Slider.default or default or GUI.dh_Slider_V.defaults.default
-    
-    Slider.steps = math.abs(Slider.max - Slider.min) / Slider.inc        
-        
-    -- Make sure the default is valid
-    
-    Slider.default = math.floor( GUI.clamp(0, tonumber(Slider.default), Slider.steps) )
-    
+
+	-- steps needs to be an integer.
+    Slider.steps = math.floor(math.abs(Slider.max - Slider.min) / Slider.inc)        
    
-    Slider.curstep = Slider.default    -- Used throughout.
-    Slider.curval = Slider.default / Slider.steps    -- Used by mouse events.
-    -- Used in val.
-    Slider.retval = Slider:formatretval( ((Slider.max - Slider.min) / Slider.steps) * Slider.default + Slider.min)
+	-- curstep is integer position from 0 to steps.
+	Slider.curstep = (Slider.default - Slider.min) // Slider.inc	
+
+    -- Convenience property for drawing operations.
+    Slider.default_step = Slider.curstep
+
+	-- curval is fraction of slider travel.
+    Slider.curval = Slider.curstep / Slider.steps    -- Used by mouse events.
+    
+    -- retval is a number, initially default.
+    Slider.retval = Slider.default
     
 --zztickmarks
 
@@ -163,7 +182,7 @@ function GUI.dh_Slider_V:new(name, z, x, y, w, h, caption, min, max, default, in
 
 	Slider.show_min_max = Slider.show_min_max or false
 	Slider.min_max_values = Slider.min_max_values or GUI.dh_Slider_V.defaults.min_max_values		
---zzz
+
 --zzdisplay
 
     Slider.display_style = Slider.display_style or GUI.dh_Slider_V.defaults.display_style  -- none, box, plain   
@@ -199,8 +218,9 @@ GUI.dh_Slider_V.defaults = {
     cap_centered = false,
 
     show_values = false,
-    font_values = "sans18",
+    font_values = "sans20",
     pad_values = 4,
+	dec_places = 0,
     
     shadow_caption = false,
     shadow = false,
@@ -214,7 +234,7 @@ GUI.dh_Slider_V.defaults = {
     max = 10,
     inc = 1,
     default = 5,
---zzz                  
+                 
     show_tickmarks = false,
     tickmark_steps = 10,
     show_default_tickmarks = false,
@@ -478,25 +498,32 @@ function GUI.dh_Slider_V:init()
     
     if self.show_tickmarks then    
         
-        GUI.color(self.col_values)    
-
-        --local t1 = toff_x + thk + 2
-        local t1 = toff_x + thk + 2 + self.tickmarks_offset        
-        local t2 = math.min(w - (bw + 2), t1 + thk)        
-
-        --GUI.Msg("  ticks t2  : " .. tostring(t2))
+        if self.tickmark_steps > 0 then        
         
-        for i = 0, self.tickmark_steps do
-            -- Position along effective track.
-            local pos = ts + (i * (tl / self.tickmark_steps))
-            gfx.line(t1, pos, t2, pos)
+            GUI.color(self.col_values)    
 
+            --local t1 = toff_x + thk + 2
+            local t1 = toff_x + thk + 2 + self.tickmarks_offset        
+            local t2 = math.min(w - (bw + 2), t1 + thk)        
+    
+            --GUI.Msg("  ticks t2  : " .. tostring(t2))
+            
+            for i = 0, self.tickmark_steps do
+                -- Position along effective track.
+                local pos = ts + (i * (tl / self.tickmark_steps))
+                gfx.line(t1, pos, t2, pos)
+    
+            end
+        
         end
 
     end
     
-    if self.show_default_tickmarks then
+    -- !!! Should only do this if showing default tickmarks, and tickmark_steps > 0.    
     
+    if self.show_default_tickmarks and (self.tickmark_steps > 0) then
+
+        -- If a number convert to table.    
         if type(self.default_tickmarks) == "number" then
             self.default_tickmarks = {self.default_tickmarks}
         end    
@@ -505,11 +532,24 @@ function GUI.dh_Slider_V:init()
        
         for _, v in ipairs(self.default_tickmarks) do  
         
+            -- Validate.
+            if tonumber(v) then
+                v = tonumber(v)
+            else
+                goto skip_v
+            end
+
+            v = GUI.clamp( v, 0, self.tickmark_steps)                        
+        
             -- Position along effective track.
-            local pos = ts + (tonumber(v) * (tl / self.steps))
+            --local pos = ts + (tonumber(v) * (tl / self.steps))
+            
+            local pos = ts + (v * (tl / self.tickmark_steps))            
 
             gfx.line((bw + 1), pos, toff_x - (bw - 2), pos)
             gfx.line(toff_x + thk + 1, pos, w - (bw + 2), pos)
+            
+            ::skip_v::            
     
         end
     
@@ -570,6 +610,8 @@ function GUI.dh_Slider_V:init()
         end
     end
     
+    -- Draw box to buffer.    
+    
     if self.display_style == "box" then
     
         local frm_thk = tonumber(self.frame_thk)
@@ -621,7 +663,7 @@ function GUI.dh_Slider_V:init()
     end
 
     self.thumb_w, self.thumb_h = hw, hh 
-    
+
     -- Increase shadow.
     sd = sd + 1 
 
@@ -629,26 +671,19 @@ function GUI.dh_Slider_V:init()
     -- buffer includes space for thumb and shadow.
     gfx.dest = self.buffs[2]
     gfx.setimgdim(self.buffs[2], -1, -1)
-    --gfx.setimgdim(self.buffs[2], (hw + 1) + (hw + 1) +  * (hw + 1), hh + 1)    
     gfx.setimgdim(self.buffs[2], (hw + 1) + (hw + 2 + sd), (hh + 1 + sd))
-    
 
     -- # Thumb shadow
     
     gfx.set(0,0,0,1)
-    --GUI.roundrect(hw + 1, 0, hw + 2, hh + 2, 3, 1, 1)
-    --GUI.roundrect(hw + 1, 0, hw + sd, hh + sd, sd + 1, 1, 1)        
-    --gfx.muladdrect(hw + 1, 0, hw + (2 * sd), hh + sd, 1, 1, 1, 0.15, 0, 0, 0, 0 )
     GUI.roundrect(hw + 1, 0, (hw + 1 + sd), (hh + sd), sd + 1, 1, 1)        
     gfx.muladdrect(hw + 1, 0, (hw + 2 + sd), (hh + 1 + sd), 1, 1, 1, 0.15, 0, 0, 0, 0 )
-    
     
     gfx.set(0,0,0,0.2)    
     gfx.rect(hw + 2, 1, hw + 1, hh, 1)    
     gfx.rect(hw + 3, 2, hw - 3, hh, 1)
     gfx.set(0,0,0,0.1)                
     gfx.rect(hw + 1, 3, 2, hh - 5, 1)         
-
     
     -- # Thumb
 
@@ -659,18 +694,10 @@ function GUI.dh_Slider_V:init()
     GUI.color(self.col_thumb)
     GUI.roundrect(0, 0, hw - 1, hh, 2, 1, 1)
     
-    --if lum < 0.5 then
-    --    GUI.color(hl_color)
-    --    gfx.a = 0.5        
-    --    gfx.rect(1, 1, hw - 2, hh - 1)
-    --end
-    
---zzthumb                         
     -- Outline        
     
     GUI.color(self.col_thumb_outline)
     GUI.roundrect(0, 0, hw - 1, hh, 2, 1, 0)
-
 
     if self.thumb_style == "long" then
     
@@ -702,7 +729,6 @@ function GUI.dh_Slider_V:init()
         end          
                 
         gfx.a = a_max        
-        --GUI.Msg("ll_col gfx.a : " .. tostring(gfx.a))                
         
         local gs = dh               -- gradient start
         local ge = (hh / 2) - 3     -- gradient end
@@ -724,7 +750,6 @@ function GUI.dh_Slider_V:init()
         gfx.a = a_adj 
         
         for i = 2, gl, 1 do
-           --GUI.Msg("hl_col gfx.a : " .. tostring(gfx.a))        
            gfx.line(1, gs + i, hw - 2, gs + i)
            gfx.a = gfx.a + a_adj
         end
@@ -756,14 +781,7 @@ function GUI.dh_Slider_V:init()
         gfx.a = 0.75         
         gfx.line(1, 4, 1, hh - 4)                    
 
-
-
     else  -- wide
-    
-        --GUI.color(ll_color)
-        --gfx.a = 0.25                
-        --gfx.line( 1,      2, 1,      hh - 3)
-        --gfx.line( hw - 1, 2, hw - 1, hh - 3)
           
         GUI.color(hl_color)                
         gfx.a = 0.8
@@ -798,7 +816,6 @@ function GUI.dh_Slider_V:init()
         
         --top                                                                 
         gfx.line(1, 2, 1, hh - 2)
-
         
     end       
 
@@ -807,7 +824,6 @@ function GUI.dh_Slider_V:init()
     --GUI.color(ll_color)
     GUI.color(self.col_values)        
     gfx.a = 1
-    --gfx.line(2, hh / 2, hw - 3, hh / 2)
     gfx.line(2, hh / 2, hw - 3, hh / 2)        
 
 end
@@ -845,7 +861,6 @@ function GUI.dh_Slider_V:draw()
 
     local ts = y + self.track_start
 
-    --local tc = x + w / 2    -- track center
     local tc = (x + w / 2) + self.track_offset    -- track center
     
     local thk = self.track_thk
@@ -854,10 +869,9 @@ function GUI.dh_Slider_V:draw()
     -- Get thumb position along track, and coords.
     local pos = ts + (inc_px * self.curstep)
     self.thumb_x = tc - (self.thumb_w / 2)
-    
+
     -- Need math.floor so thumb aligns with tickmarks.
     self.thumb_y = math.floor(pos - (self.thumb_h / 2))     
-    --GUI.Msg("  thumb pos  : " .. tostring(pos))
     
     self:drawfill(ts, tc, thk, pos, inc_px)
     
@@ -906,8 +920,7 @@ function GUI.dh_Slider_V:drawdisplay()
     end
 
     -- # Draw display value  
-       
-    local output = tostring(self.retval)
+    local output = self:formatretval(self.retval)
     
     GUI.color(self.col_display_text)
     
@@ -941,17 +954,19 @@ function GUI.dh_Slider_V:drawfill(ts, tc, thk, pos, inc)
 
     -- Get the color
     self:setfill()
-    
+
     if self.fill_from_default then
         --GUI.Msg("\n#   fill from default")
-        if self.curstep == self.default then return end            
-
-        fill_default = ts + self.track_length - (inc * self.default)
+        
+        if self.curstep == self.default_step then return end
+        
+        fill_default = ts + self.track_length - (inc * self.default_step)
         fill_default = GUI.round(fill_default)
-        fill_length = math.abs(pos - fill_default) 
+        fill_length = math.abs(pos - fill_default)   
         fill_start = math.min(fill_default, pos)
 
-    else   -- fill from start
+    else   
+        -- fill from start
         --GUI.Msg("\n#   fill from start")
         fill_start = pos
         fill_length = ts + self.track_length + (thk / 2) - fill_start
@@ -994,9 +1009,6 @@ function GUI.dh_Slider_V:drawslider()
 
     --GUI.Msg("\n##  dh_Slider_V:drawslider ##")
 
-    GUI.color(self.col_values)
-    GUI.font(self.font_values)
-
     local thumb_x, thumb_y = GUI.round(self.thumb_x), GUI.round(self.thumb_y)
 
     local val_offset = self.show_outline and self.h or self.thumb_h + 4
@@ -1017,12 +1029,7 @@ function GUI.dh_Slider_V:drawslidervalue(x, y)
 
     --GUI.Msg("\n##  dh_Slider_V:drawslidervalue ##")
 
-    --??? implement output function?
-    local output = self.retval
-    --local output = self.max - self.retval
-    --GUI.Msg("    self.max : " .. tostring(self.max))          
-    --GUI.Msg("    retval   : " .. tostring(self.retval))
-    --GUI.Msg("    self.max - self.retval   : " .. tostring(self.max - self.retval))      
+    local output = self:formatretval(self.retval)
       
     -- Align value with thumb center.
     
@@ -1040,7 +1047,9 @@ function GUI.dh_Slider_V:drawslidervalue(x, y)
     
     gfx.x, gfx.y = x, y
 
-    -- font and text color set in calling function.
+    GUI.color(self.col_values)
+    GUI.font(self.font_values)    
+
     GUI.text_bg(output, self.backdrop, align + 256)
     gfx.drawstr(output, 256 + align, gfx.x, gfx.y)
 
@@ -1070,8 +1079,7 @@ function GUI.dh_Slider_V:drawsliderthumb(hx, hy, hw, hh)
                   hx + j, hy + j)
     end
     --]=]
---zzthumb 
---zzsh        
+
     -- method 2 - blit as whole
     
     gfx.blit(self.buffs[2], 1, 0, 
@@ -1081,9 +1089,7 @@ function GUI.dh_Slider_V:drawsliderthumb(hx, hy, hw, hh)
               hx - 1, hy)
               
     -- blit thumb.              
-    
-    --gfx.blit(source, scale, rotation[, srcx, srcy, srcw, srch, destx, desty, destw, desth, rotxoffs, rotyoffs] )
-    gfx.blit(self.buffs[2], 1, 0, 0, 0, hw, hh + 1, hx, hy)
+     gfx.blit(self.buffs[2], 1, 0, 0, 0, hw, hh + 1, hx, hy)
 
 end
 
@@ -1095,7 +1101,6 @@ function GUI.dh_Slider_V:draw_min_max(track_start, inc_px)
     -- gfx flag value to align text. 1=center horz; 4=center vert
     local align = 4 + 256
 
---zzsh
     -- As specified in buffer.
     local sd = self.shadow and GUI.shadow_dist or 0
 
@@ -1112,9 +1117,13 @@ function GUI.dh_Slider_V:draw_min_max(track_start, inc_px)
         
         --GUI.Msg("    data[1] : " .. tostring(data[1]) .. " ; data[2] : " .. tostring(data[2]))
     
-        local pos
+        -- Ensure a legitimate pos.
+        local pos = 0
+        if tonumber(data[1]) then
+            pos = tonumber(data[1])
+        end
 
-        pos = ts + tl - (data[1] * inc_px)
+        pos = ts + tl - (pos * inc_px)
 
         --[=[        
         -- # Use GUI.text_bg
@@ -1203,19 +1212,22 @@ end
 ------------------------------------
 ----------   Val   -------------
 ------------------------------------
+-- newval is a numerical value.
 
 function GUI.dh_Slider_V:val(newval)      
       
     if newval then
-    
-        self:setcurstep(newval)
+        -- Was a step count.          
+        --self:setcurstep(newval)
+        
+        -- number in range, rounds toward 0, only need fraction.        
+        local numval = GUI.clamp( newval, self.min, self.max)
+        self:setcurval( (numval - self.min) / (self.max - self.min) )
     
         self:redraw()
         
     else
-      
-        return tonumber(self.retval)
-      
+        return self.retval
     end  
       
 end
@@ -1224,24 +1236,56 @@ end
 -------- Input methods -------------
 ------------------------------------
 --zzmouse  
-
+--zzz
 function GUI.dh_Slider_V:onmousedown()
 
-    -- Snap the slider to the mouse pos.
-    local mouse_val = (GUI.mouse.y - (self.y + self.track_start)) / self.track_length      
+    self.drag_state = 0    -- 0 : no drag, 1 : ready to drag,
 
-    self:setcurval(GUI.clamp(mouse_val, 0, 1) )
+    -- Is mouse over thumb?
+    -- self.thumb_y gets set during draw().
+
+    if gfx.mouse_y >= self.thumb_y and
+       gfx.mouse_y <= (self.thumb_y + self.thumb_h)        
+    then
+        self.drag_state = 1
+    end
     
-    self:redraw()
+    --GUI.Msg(" DOWN drag_state : " .. self.drag_state)    
+
+end
+
+function GUI.dh_Slider_V:onmouseup()
+
+    if not GUI.IsInside(self) then 
+        
+        return 
+    end       
+
+    if self.drag_state == 0 then
+        
+        -- Snap the slider to the mouse pos.
+        local mouse_val = (GUI.mouse.y - (self.y + self.track_start)) / self.track_length      
+    
+        self:setcurval(GUI.clamp(mouse_val, 0, 1) )
+        
+        self:redraw()       
+    
+    end
+    
+    --GUI.Msg(" UP drag_state : " .. self.drag_state)        
 
 end
 
 
 function GUI.dh_Slider_V:ondrag()
 
+    --GUI.Msg(" DRAG drag_state : " .. self.drag_state)    
+    
+    if self.drag_state ~= 1 then return end  -- not ready to drag
+ 
     local mouse_val = (GUI.mouse.y - (self.y + self.track_start) / self.track_length) 
     local n, ln = GUI.mouse.y, GUI.mouse.ly
-
+    
      -- Ctrl
     local ctrl = GUI.mouse.cap&4==4
 
@@ -1269,7 +1313,8 @@ function GUI.dh_Slider_V:onwheel()
 
     -- How many steps per wheel-step
     local fine = 1
-    local coarse = math.max( GUI.round(self.steps / 30), 1)
+    --local coarse = math.max( GUI.round(self.steps / 30), 1)
+    local coarse = math.max( self.steps // 30, 1)        
 
     local adj = ctrl and fine or coarse
 
@@ -1282,13 +1327,11 @@ end
 
 function GUI.dh_Slider_V:ondoubleclick()
 
+    if self.no_default then return end
+
     -- Ctrl+click - reset the slider to the default.
     if GUI.mouse.cap & 4 == 4 then
-
-        local mouse_val = (GUI.mouse.x - (self.x + self.track_start)) / self.track_length
-
-        self:setcurstep(self.default)
-
+        self:setcurstep(self.default_step)
     end
 
     self:redraw()
@@ -1297,14 +1340,14 @@ end
 
 function GUI.dh_Slider_V:onmouser_up()
 
+    if self.no_default then return end
+
     -- Ctrl + right-click - reset the slider to the default.
-    if GUI.mouse.cap & 4 == 4 then
+    --if GUI.mouse.cap & 4 == 4 then
 
-        local mouse_val = (GUI.mouse.x - (self.x + self.track_start)) / self.track_length
+        self:setcurstep(self.default_step)
 
-        self:setcurstep(self.default)
-
-    end
+    --end
 
     self:redraw()
 
@@ -1324,6 +1367,16 @@ end
 -------- Slider helpers ------------
 ------------------------------------
 
+function GUI.dh_Slider_V:formatretval(val)
+    return string.format("%." .. self.dec_places .. "f", val)
+end
+
+-- curstep used for positioning during drawing ops.
+-- curval is current position as a fraction of full travel.
+-- retval is current value as a number.
+
+-- Called from ondoubleclick with default? and r_mouseup?
+
 function GUI.dh_Slider_V:setcurstep(step)
 
     self.curstep = step
@@ -1332,6 +1385,7 @@ function GUI.dh_Slider_V:setcurstep(step)
 
 end
 
+-- Called from val(), mousedown. ondrag, and onwheel.
 
 function GUI.dh_Slider_V:setcurval(val)
 
@@ -1344,9 +1398,6 @@ end
 
 function GUI.dh_Slider_V:setretval()
 
-    --local val = self.min - self.inc * self.curstep
-    local val = self.max - self.inc * self.curstep    
-
-    self.retval = self:formatretval(val)
+    self.retval = self.max - (self.inc * self.curstep)
 
 end
