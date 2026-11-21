@@ -1,7 +1,7 @@
 --dh_ArrangeViews.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Modified Date: 20260806
+-- Modified Date: 20261110
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -130,7 +130,7 @@ GUI.Draw_Version = function () end
 GUI.colors["shadow"] = {0,0,0,32}
 
 --!!! Disable for deployment.
-reaper.ClearConsole()
+--reaper.ClearConsole()
 
 --======================================
 -- dh_Toolkit requirements 
@@ -148,9 +148,12 @@ package.path = package.path .. ";" .. dhtk_path .. "?.lua"
 -- !!! Load GUI.overrides.
 require "common/GUI_overrides"
 
-----------------------------------------
+-----------------------------------------
+--!!! IMPORTANT
 DHTK = require "common/dh_Toolkit_core"
-----------------------------------------
+DHTK.PATH = dhtk_path  -- needed if save destination is "file"
+-----------------------------------------
+
 -- Set to true if script uses dh_Toolkit Prefs window.
 -- Set to false if script handles Prefs in its own way (as with GUI Builder).)
 DHTK.USE_DHTK_PREFS = true
@@ -988,6 +991,8 @@ end
 --zzmore
 local function btn_MoreClick()
 
+    --GUI.Msg("btn_MoreClick !!!")
+
     if GUI.mouse.cap & 16 == 16 then
 	    GUI.h = DHTK.s_PREFS_HEIGHT
 	    GUI.resized = true
@@ -1014,6 +1019,7 @@ end
 -- Opens Preferences window.
 
 local function btn_MoreRightClick()
+    --GUI.Msg("btn_MoreRightClick ")
 	GUI.h = DHTK.s_PREFS_HEIGHT
 	GUI.resized = true
 	DHTK.showPrefsWindow()
@@ -1128,7 +1134,6 @@ GUI.New("btn_More", "dh_Button", {
     col_text = "btn_txt",
     func = btn_MoreClick,
     r_func = btn_MoreRightClick,
-    r_params = {} -- Must include if using r_func or script crashes.
 })
 
 --------------------------------
