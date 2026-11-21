@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-  <!-- Modified: 20261009 -->
+  <!-- Modified: 20261116 -->
   
   <head>
     <meta charset="utf-8" />
@@ -63,6 +63,16 @@ The name of a function which is to be called when clicking the button.
 Any parameters to be passed to the function.
 </div>
 
+<div class="hanging050 top075">
+<span class="textEmphasis105">r_func:</span>
+Optional. The name of a function which is to be called when right-clicking the button. 
+</div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">r_params:</span>
+Optional. Any parameters to be passed to the right click function.
+</div>
+
 </div> <!-- end # Properties -->
 
 <div class="top150">
@@ -80,8 +90,10 @@ text:                text               "Button"
 font:                font               "sans22"
 text shadow:         shadow_text         false
 
-function:            func                function()end   
+function (click):    func                function()end   
 parameters:          params              {...}
+function (rt-click): r_func   *          function()end   
+parameters:          r_params *          {...}
 
 allow sel.outline:   allow_sel_outline   false
 
@@ -90,6 +102,8 @@ face:                col_bg             "btn_face"
 outline:             col_outline        "btn_outline"
 text:                col_text           "btn_txt"               
 elm sel.outline:     col_active         "elm_active"
+
+*  Optional.
 --------------------------------------------------------</pre>
 </div>  
 
