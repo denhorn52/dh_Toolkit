@@ -1,7 +1,7 @@
 --dh_Snapshots.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20260506
+-- Date: 20261110
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -178,9 +178,12 @@ package.path = package.path .. ";" .. dhtk_path .. "?.lua"
 -- !!! Load GUI.overrides.
 require "common/GUI_overrides"
 
-----------------------------------------
+-----------------------------------------
+--!!! IMPORTANT
 DHTK = require "common/dh_Toolkit_core"
-----------------------------------------
+DHTK.PATH = dhtk_path  -- needed if save destination is "file"
+-----------------------------------------
+
 -- Set to true if script uses dh_Toolkit Prefs window.
 -- Set to false if script handles Prefs in its own way (as with GUI Builder).)
 DHTK.USE_DHTK_PREFS = true
@@ -460,7 +463,7 @@ local function buildTrackList()
             
             local is_fx_enabled = reaper.TrackFX_GetEnabled(r_track, rfx_idx)
             fx_instance["enabled"] = is_fx_enabled
---zzz            
+           
             local params = {}
 
 		    -- No need to save params of disabled fx.
@@ -468,7 +471,7 @@ local function buildTrackList()
 		      
 		        --dh_log("> save: fx_guid : " .. fx_instance["fx_guid"])
 		        --dh_log("> save: is_fx_enabled : " .. tostring(is_fx_enabled))
-		            		          
+--zzzget		            		          
 		        -- Iterate effect params --
 		        local paramcount = reaper.TrackFX_GetNumParams(r_track, rfx_idx)
 		        --dh_log("> save: paramcount : " .. paramcount)
@@ -723,7 +726,7 @@ local function applySnapshot()
 		
 	        --??? Do I want to update track name?
 	        -- It may have been changed!
-
+--zzz
             if ss_track.use_volume and snapshot_options.use_volume then
                 reaper.SetMediaTrackInfo_Value(reaper_track, "D_VOL", ss_track.use_volume)
             end
@@ -802,11 +805,11 @@ local function applySnapshot()
 	                  
 	                                    --??? Do I need to do this?
 	                                    --local r_params = reaper.TrackFX_GetNumParams(reaper_track, fx_idx)   
-	                 
+--zzzset		                 
 	                                    --??? Should I notify (list) is param not found?
 	                                    -- Set param returns boolean.
 	                                    reaper.TrackFX_SetParam(reaper_track, rfx_idx, param["param_idx"], param["param_val"])
-	                   
+                   
 	                                end
 	              
 	                            end --<if is_fx_enabled> 
@@ -922,7 +925,9 @@ local function btn_AddSnapshotClick()
         --Shift + click : Update
         saveSnapshot(false)
         
-    elseif GUI.mouse.cap & 16 == 16 then  
+    elseif (GUI.mouse.cap & 16 == 16)
+        or (GUI.mouse.cap & 2 == 2) then  
+        
         --Alt + click : Rename
         GUI.Val("lbl_SaveSnapshotDialog", "  Rename Snapshot  ")
     	GUI.elms.btn_ConfirmSaveSnapshot.is_new = false
@@ -1097,7 +1102,8 @@ GUI.New("btn_AddSnapshot", "dh_Button", {
     font = "sans28",
     col_bg = "btn_face",	
     col_text = "btn_txt",
-	func = btn_AddSnapshotClick
+	func = btn_AddSnapshotClick,
+	r_func = btn_AddSnapshotClick,	
 })
 
 GUI.New("btn_ApplySnapshot", "dh_Button", {
