@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Options.lua
--- Date: 20261009
+-- Modified Date: 20261116
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Options class
@@ -38,7 +38,8 @@
        need to see which item was clicked.
      20251105 Added shadows.
      20251109 Removed property "pad. Replaces with "pad_x" and "pad_y".  
-
+     20261116 Added property "allow_wheel" to dh_Radio.
+     
 --]]
 ---------------------------------------------------------------------
 -- Requires that Lokasenna_GUI v2 be loaded.
@@ -607,6 +608,8 @@ function GUI.dh_Radio:new(name, z, x, y, w, h, caption, opts, dir)
     radio.type = "dh_Radio"
 
     radio.retval, radio.state = 1, 1
+    
+    radio.allow_wheel = false
 
     setmetatable(radio, self)
     self.__index = self
@@ -697,6 +700,9 @@ end
 
 
 function GUI.dh_Radio:onwheel()
+
+    if not allow_wheel then return end
+
 --[[
 	state = GUI.round(self.state +     (self.dir == "h" and 1 or -1)
                                     *   GUI.mouse.inc)
