@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-  <!-- Modified: 20261009 -->
+  <!-- Modified: 20261116 -->
   
   <head>
     <meta charset="utf-8" />
@@ -33,7 +33,9 @@
 <p class="top100"> 
 Draws a knob with optional caption and optional display. 
 Built upon the Lokasenna Knob. Changed some property names, 
-and added many customizable features.
+and added many customizable features. Changed 'retval' to be a 
+number instead of a formatted string. Formatting is now done 
+where needed for displaying values.
 </p>
 
 <div class="subHeading">Basic Properties: </div>
@@ -44,7 +46,8 @@ and added many customizable features.
 <span class="textEmphasis105">centered: </span>                       
 If false then knob is positioned with x and y as the top-left 
 of an imaginary square around knob body. 
-If true then knob is positioned with x and y as the center of knob.
+If true then knob is positioned with x and y as the center 
+of the knob.
 </div>
 
 <div class="hanging050 top075">
@@ -64,29 +67,44 @@ May be an integer or floating-point number.
 This is the value that the Knob's output changes with each 
 step of the knob's rotation. May be an integer or 
 floating-point number. The increment determines the 
-number of steps in the knob's rotation: 
-<span class='inlineBlock'>(max - min) / inc</span>
+number of steps in the knob's rotation.
+</div>
+
+<div class="hanging050 top075">
+<span class="textEmphasis105">steps: </span>                       
+This is used internally. It is an integer calculated by: <br>
+&nbsp;&nbsp; <span class='inlineBlock'>(max - min) / inc</span><br>
+It should not be set manually. <br>
+It is needed to determine layout of 'min_max_values'.
+</div>
+
+<div class="chartCont left150">
+<pre>
+  min   max   inc   steps   
+   0     10    1     10      
+   0     10    1     10      
+-100    100    1    200    
+-100    100   10     20     
+   0      1    0.1   10     
+   0      1    0.1   10      
+  -1      1    0.1   20     
+</pre>
 </div>
 
 <div class="hanging050 top075">
 <span class="textEmphasis105">default: </span>                       
 This determines the initial value of the knob, and where it 
 returns to when double-clicked. 
-The default value must be an integer corresponding to a step 
-in the knob's range (0 to steps), with 0 being fully ccw.
+The default value must be a number in the range of 'min' to 'max'.
 </div>
 
-<div class="chartCont left100">
-<pre>
-  min   max   inc   steps   def  val
-   0     10    1     10      0    0
-   0     10    1     10      5    5
--100    100    1    200    100    0
--100    100   10     20     10    0
-   0      1    0.1   10      0    0
-   0      1    0.1   10      5    0.5
-  -1      1    0.1   20     10    0
-</pre>
+<div class="hanging050 top075">                       
+<span class="textEmphasis110">retval: </span> 
+This holds the current value as a number.                      
+It is calculated internally from the knob's rotation
+and should not be set directly. 
+Set it using GUI.Val("knob-name", val) where val is a number. 
+It can be read directly, or by using GUI.Val("knob-name")                     
 </div>
 
 <div class="hanging050 top075">
@@ -122,22 +140,6 @@ The default is 270 degrees (135 left and 135 right from top).
 and 90 right.
 </div>
 
-<div class="hanging050 top075">                       
-<span class="textEmphasis110">retval: </span> 
-It holds the current value as a formatted string.                       
-It is calculated internally and should not be set directly. 
-Set it using GUI.Val("knob_name", val)
-It can be accessed directly, or by using GUI.Val("knob_name")
-It holds the current value as a formatted string. 
-</div>
-
-<div class="hanging050 top075">                       
-<span class="textEmphasis110">cur_num_val: </span>                       
-It is calculated internally and should not be set directly. 
-It can be accessed directly.
-It holds the current numerical value. 
-</div>
-
 </div> <!-- end # Basic Properties -->
 
 
@@ -159,7 +161,8 @@ increase 'pad_values', or else values may overlap.
 
 <div class="hanging050 top075">                       
 <span class="textEmphasis110">output: </span> 
-This property is used to modify how values are displayed. 
+This property can used to modify how values are displayed 
+when using 'show_values'. 
 It accepts a table or a function. See Lokasenna docs for details.        
 </div> 
 
@@ -170,13 +173,15 @@ If true then tickmarks will be drawn around the knob.
 
 <div class="hanging050 top075">                       
 <span class="textEmphasis110">tickmark_size: </span> 
-Set the size of the tickmarks.<br>
+An integer specifying the size of the tickmarks.<br>
 </div>
 
 <div class="hanging050 top075">                       
 <span class="textEmphasis110">tickmark_steps: </span> 
+An integer specifying how many tickmarks to show. 
 Tickmark steps should have some correspondence to knob steps.
-Say, knob steps is 100, tickmark_steps can be 10.
+Say, knob steps is 100, tickmark_steps can be 20. Then one 
+tickmark will be drawn for every 5 knob steps.
 </div>
  
 <div class="hanging050 top075">                       
@@ -184,22 +189,29 @@ Say, knob steps is 100, tickmark_steps can be 10.
 Hard ticks refers to a set of tickmarks which 
 can be enhanced with length and/or thickness. 
 Hard ticks are specified in a table  e.g., {0, 5, 10} 
-which indicate at which positions (knob.steps) the hard ticks 
-will be drawn.
+which indicate at which positions (tickmark steps) the 
+hard ticks will be drawn.
 If 'hard_ticks' is nil or an empty table, or 'show_tickmarks' 
 is false then no hard ticks will be drawn.
 </div>
 
 <div class="hanging050 top075">                       
 <span class="textEmphasis110">show_min_max: </span>
-If true alpha-numerical values can be drawn at specified steps. 
+If true alpha-numerical values will be drawn at the specified 
+knob steps as defined in 'min_max_values'. 
+</div>
+
+<div class="hanging050 top075">   
+<span class="textEmphasis110">min_max_values: </span>
+These are actually labels to be displayed at certain positions 
+around the knob's perimeter. 
 Although the property is called 'min_max_values' it can also 
 display values beside the minimum and maximum. 
-They are specified in the a table, e.g., 
+They are specified in a table, e.g., 
 <span class='inlineBlock'>{{0,"0"}, {5,"5"}, {10,"10"}}.</span> 
-Each item in the table contains the position and the value 
-to be displayed. The position is an integer corresponding to a 
-knob step. The value is a string so anything alpha-numerical is valid. 
+Each item in the table contains a {position, value} pair. 
+The position is an integer corresponding to a knob step. 
+The value is a string so anything alpha-numerical is valid. 
 </div> 
 
 <div class="hanging050 top075">                       
@@ -215,6 +227,12 @@ the knob is placed.
 'display_align' is used to position the value text inside the box. 
 It can be "left", "center", or "right".
 </div> 
+
+<div class="hanging050 top075">                       
+<span class="textEmphasis110">dec_places: </span>   
+This is an integer specifying how many decimal places to 
+show in displayed values.
+</div>
 
 <div class="hanging050 top075">                       
 <span class="textEmphasis110">col_frame: </span> 	  
@@ -243,8 +261,7 @@ increment size:       inc                 1
 default setting:      default             5
 shadow element:       shadow              false
 
-formatted value:      retval             [read only]
-numerical value:      cur_num_val        [read only]
+knob value: [1]       retval             [read only]
 
 caption (string):     caption             ""
 caption position:     cap_pos            "top" 
@@ -255,7 +272,7 @@ shadow caption:       shadow_caption      false
 show values:          show_values         false
 values font:          font_values        "sans18"
 values padding:       pad_values          4 
-displayed vals: *     output              nil
+displayed vals: [2]   output              nil
 
 show tickmarks:       show_tickmarks      false
 tickmark steps:       tickmark_steps      10 
@@ -276,16 +293,17 @@ display font:         font_display       "sans24"
 display pad x:        display_pad_x       0
 display pad y:        display_pad_y       8
 display align:        display_align      "center"
+decimal places:       dec_places          0
 
 frame outline:        frame_use_outline   false
-frame thickness: **   frame_thk           2
+frame thickness: [3]  frame_thk           2
 allow sel.outline:    allow_sel_outline   false
 
 -- colors --
 background:           col_bg             "wnd_bg" 
 knob body:            col_body           "btn_face" 
 knob outline:         col_outline        "btn_outline"
-knob pointer: ***     col_indicator      "btn_txt"
+knob pointer: [4]     col_indicator      "btn_txt"
 caption text:         col_cap_text       "txt"
 
 values text:          col_values         "txt"
@@ -295,13 +313,15 @@ display text:         col_display_text   "elm_txt"
 display box frame:    col_frame          "elm_frame"
 elm sel.outline:      col_active         "elm_active"
 
-*    Used to modify/format displayed value. 
+[1] Set using GUI("knob-name", value)
+[2] Used to modify/format displayed value. 
        Accepts table or function.
        Refer to Lokasenna documentation for details.
-**   Display box frame. 
-***  As of 04-16-2026 automatically derived from body color 
+[3] Display box frame. 
+[4] As of 04-16-2026 automatically derived from body color 
        except 'flange' style uses white.      
----------------------------------------------------------</pre>
+---------------------------------------------------------
+</pre>
 </div> 
 
 </div><!-- end # MAIN -->  
