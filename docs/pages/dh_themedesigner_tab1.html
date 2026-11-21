@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-  <!-- Modified: 20261009 -->
+  <!-- Modified: 20261114 -->
   
   <head>
     <meta charset="utf-8" />
@@ -116,6 +116,18 @@ It can be used as a basis for a new name when saving the
 currently edited theme.
 Type in or edit the name as you see fit.
 </p>
+<p><span class="textEmphasis110">"Save Theme"</span> 
+button is used to save the current 'edit state' 
+of the theme being edited. It will be saved  
+using the name in the "User Theme Name" textbox. 
+If the "User Theme Name" already exists it will attempt to 
+overwrite the existing user theme. 
+You will be prompted to confirm an overwrite.
+</p>
+<p><span class="textEmphasis110">"Save To Console"</span> 
+If checked the current theme edit will also be displayed in 
+Reaper's script console when saving. 
+</p>
 
 <p><span class="textEmphasis110">"Rename"</span> 
 button is used to rename the current user theme 
@@ -128,18 +140,36 @@ button is used to delete the user theme (the one displayed in
 the "Current User theme" menubox). 
 You will be prompted to confirm.
 </p>
-<p><span class="textEmphasis110">"Save Theme"</span> 
-button is used to save the current 'edit state' 
-of the theme being edited. It will be saved  
-using the name in the "User Theme Name" textbox. 
-If the "User Theme Name" already exists it will attempt to 
-overwrite the existing user theme. 
-You will be prompted to confirm an overwrite.
+
+<p><span class="textEmphasis110">Save Destination </span> 
+radio box allows you to choose where to save the user themes.
+The first option, "Reaper ext_state", is the default. 
+If selected the user themes are saved to the 
+"reaper-extstate.ini" file. 
+If the second option "User theme file" is selected then the 
+user themes will be saved to the "dh_Toolkit_user_themes.lua" 
+file. 
 </p>
-<p><span class="textEmphasis110">"Save To Console"</span> 
-If checked the current theme edit will also be displayed in 
-Reaper's script console when saving to file. 
+<p>
+The primary difference is that the user theme file is in an 
+easier to read format as it is in a table format (although 
+that does make it more accessible to corrupt if one tries to 
+manually edit it). You can choose this option if you desire 
+to be able to view the content of the user themes.
+</p> 
+<p> 
+The main functional difference is when 
+saving reaper configuration files (Options -> Preferences -> 
+Export configuration -> General). 
+The "reaper-extstate.ini" file is added to the configuration 
+file if the "Configuration" option is selected. 
+The "dh_Toolkit_user_themes.lua" file will be added to the 
+configuration file if the "ReaScripts" option is selected. 
+(Alternatenately, the "dh_Toolkit_user_themes.lua" can be 
+manually copied to a new location.)
+
 </p>
+
 </div>
 
 </div> <!-- end section # 3.01 -->
