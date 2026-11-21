@@ -1,7 +1,7 @@
 -- NoIndex: true
 
 -- dh_Tabs.lua
--- Date: 20260330
+-- Date: 20261009
 
 ---------------------------------------------------------------------
 -- Lokasenna_GUI - Tabs class
@@ -16,7 +16,8 @@
          Use Tab.tabs_w for actual Tabs width.
          Use Tab.w to allow limiting fullwidth to maximum..
          Added property Tab.limit_w.
-     20260420 Changed update_sets to ensure Tabs z-layer doesn't get hidden.         
+     20260420 Changed update_sets to ensure Tabs z-layer doesn't get hidden.
+     20261026 Added col_text_inactive. Renamed col_text to col_text_active.         
 ]]--
 ---------------------------------------------------------------------
 if not GUI then
@@ -78,9 +79,11 @@ function GUI.dh_Tabs:new(name, z, x, y, tab_w, tab_h, opts, pad)
 
 ----colors--------------------------------------------------    
     Tab.col_bg = Tab.col_bg or GUI.dh_Tabs.defaults.col_bg
-    Tab.col_text = Tab.col_text or GUI.dh_Tabs.defaults.col_text
     Tab.col_tab_active = Tab.col_tab_active or GUI.dh_Tabs.defaults.col_tab_active
-    Tab.col_tab_inactive = Tab.col_tab_inactive or GUI.dh_Tabs.defaults.col_tab_inactive
+    Tab.col_tab_inactive = Tab.col_tab_inactive or GUI.dh_Tabs.defaults.col_tab_inactive    
+    Tab.col_text_active = Tab.col_text_active or GUI.dh_Tabs.defaults.col_text_active
+    Tab.col_text_inactive = Tab.col_text_inactive or GUI.dh_Tabs.defaults.col_text_inactive    
+
 ------------------------------------------------------------
 
     -- Placeholder for if I ever figure out downward tabs
@@ -137,7 +140,8 @@ GUI.dh_Tabs.defaults = {
     dir = "u",  -- currently not used
 
     col_bg = "elm_bg",
-    col_text = "btn_txt",
+    col_text_active = "tab_txt_active",
+    col_text_inactive = "tab_txt_inactive",    
     col_tab_active = "tab_active",
     col_tab_inactive = "tab_inactive",    
 }
@@ -178,7 +182,6 @@ function GUI.dh_Tabs:draw()
 	local x, y = self.x + 16, self.y
     local tab_w, tab_h = self.tab_w, self.tab_h
 	local pad = self.pad
-	local font = self.font_tab_inactive
 	local dir = self.dir
 	local state = self.state
 
@@ -195,13 +198,13 @@ function GUI.dh_Tabs:draw()
 			local tab_x, tab_y = x + GUI.shadow_dist + (i - 1) * x_adj,
 								 y + GUI.shadow_dist * (dir == "u" and 1 or -1)
 
-			self:draw_tab(tab_x, tab_y, tab_w, tab_h, dir, font, self.col_text, self.col_tab_inactive, self.optarray[i])
+			self:draw_tab(tab_x, tab_y, tab_w, tab_h, dir, self.font_tab_inactive, self.col_text_inactive, self.col_tab_inactive, self.optarray[i])
 
 		end
 
 	end
 
-	self:draw_tab(x + (state - 1) * x_adj, y, tab_w, tab_h, dir, self.font_tab_active, self.col_text, self.col_tab_active, self.optarray[state])
+	self:draw_tab(x + (state - 1) * x_adj, y, tab_w, tab_h, dir, self.font_tab_active, self.col_text_active, self.col_tab_active, self.optarray[state])
 
     -- Keep the active tab's top separate from the window background
 	GUI.color(self.col_bg)
@@ -350,7 +353,7 @@ function GUI.dh_Tabs:draw_tab(x, y, w, h, dir, font, col_txt, col_bg, lbl)
 
 
 	-- Draw the tab's label
-	GUI.color(col_txt)
+	GUI.color(col_txt or "white")
 	GUI.font(font)
 
 	local str_w, str_h = gfx.measurestr(lbl)
