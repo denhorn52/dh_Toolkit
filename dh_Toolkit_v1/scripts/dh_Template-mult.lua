@@ -1,7 +1,7 @@
 --dh_Template-mult.lua 
 -- version 1.0 
 -- Author: Dennis R. Horn
--- Date: 2026-03-30
+-- Date: 20261110
 
 ---------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -159,7 +159,9 @@ require "common/GUI_overrides"
 ----------------------------------------
 --[[ DEV NOTE: !!! Necessary. ]]--
 DHTK = require "common/dh_Toolkit_core"
-----------------------------------------
+DHTK.PATH = dhtk_path  -- needed if save destination is "file"
+-----------------------------------------
+
 --[[ DEV NOTE: 
      Set to true if script uses dh_Toolkit Prefs window.
      Set to false if script handles Prefs in its own way (as with GUI Builder). ]]--
