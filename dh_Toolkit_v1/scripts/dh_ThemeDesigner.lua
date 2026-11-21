@@ -1,7 +1,7 @@
 --dh_ThemeDesigner.lua 
 -- version 1.0
 -- Author: Dennis R. Horn
--- Date: 20261009a
+-- Date: 20261116
 
 ------------------------------------------------------------
 -- Copyright (c) 2025 Dennis R. Horn
@@ -33,6 +33,9 @@
 -- 2025-06-20 Revised saving and loading of current edit state.
 -- 2025-08-28 Many tweaks, improvements, and bug fixes.
 -- 2026-02-04 Many tweaks, improvements, and bug fixes.
+-- 2026-10-27 Changed dh_Tabs text color properties.
+-- 2026-10-29 Added ability to save user themes to a file.
+-- 2026-11-10 DHTK core added window_settings.save_destination.
 
 ------------------------------------------------------------
 -- CONVENTIONS USED:
@@ -120,13 +123,14 @@ GUI.name = "dh_ThemeDesigner v1.0"
 --====================================
 -- Adds current directory to path.
 
--- Can use this if script is in dh_Toolkit directory.
+-- Need this to access dh_ThemeDesigner_data.
 local script_folder = debug.getinfo(1).source:match("@?(.*[\\|/])")
---GUI.Msg("script_folder : " .. script_folder)
---reaper.ShowConsoleMsg("script_folder : ")
 package.path = package.path .. ";" .. script_folder .. "?.lua"
+--GUI.Msg("script_folder : " .. script_folder)
+--GUI.Msg("GUI.script_path : " .. GUI.script_path)
 
 -- Use this when scripts are not in dh_Toolkit directory.
+-- Get dh_Toolkit library directory.
 -- Must have run "Set dh_Toolkit v1 library path.lua" first to set path to reaper ext state. 
 local dhtk_path = reaper.GetExtState("dh_Toolkit", "lib_path_v1")
 if not dhtk_path or dhtk_path == "" then
@@ -134,14 +138,19 @@ if not dhtk_path or dhtk_path == "" then
     return
 end
 
+--GUI.Msg("dhtk_path : " .. dhtk_path)
+
 package.path = package.path .. ";" .. dhtk_path .. "?.lua"
 
 -- !!! Load GUI.overrides.
 require "common/GUI_overrides"
 
 -----------------------------------------
+--!!! IMPORTANT
 DHTK = require "common/dh_Toolkit_core"
+DHTK.PATH = dhtk_path  -- needed if save destination is "file"
 -----------------------------------------
+
 -- Set to true if script uses dh_Toolkit Prefs window.
 -- Set to false if script handles Prefs in its own way (as with GUI Builder).)
 DHTK.USE_DHTK_PREFS = true
@@ -174,6 +183,7 @@ DHTK.init_DHTK()
 local dhth = require "common/dh_Toolkit_themes"
 local dhtd = require "dh_ThemeDesigner_data"
 local json = require "common/json"
+
 --====================================
   --------    My Data    --------
 --====================================
@@ -187,7 +197,7 @@ local TOOLS_TOP = 300
 local TOOLS_HEIGHT = 340
 
 --------------------------------------
---zzthemes 
+--zzthemes  --zzz
 
 local DH_THEMES = dhth.DH_THEMES
 local DH_THEME_NAMES = dhth.DH_THEME_NAMES
@@ -301,20 +311,79 @@ local tab3_display_assignments = dhtd.tab3_display_assignments
 --====================================
   ------     My Functions    ------
 --====================================
---zzfunc
+--zzfunc  
 -- Functions called from within functions that are initiated by an element action, e.g.,button click,
 -- (Need to be here before elements creation.)
+-- Added choice of save to ext_state or file.
 
+--zzz
 local function dh_save_user_themes_ext()
-    local json_string = json.encode(USER_THEMES)
-    reaper.SetExtState("dh_Toolkit", "user-themes", json_string, true)
+
+    if DHTK.window_settings.save_destination == "ext_state" then
+
+        local json_string = json.encode(USER_THEMES)
+        reaper.SetExtState("dh_Toolkit", "user-themes", json_string, true)
+
+        --xxx FOR TESTING, not to overwrite existing.
+        --reaper.SetExtState("dh_Toolkit", "user-themes-test", json_string, true)
+
+    else
+
+        -- # Save as file in common dir as json or formatted table.
+
+        local content = "dh_Toolkit_user_themes = {\n"
     
-    --xxx FOR TESTING, not to overwrite existing.
-    --reaper.SetExtState("dh_Toolkit", "user-themes-test", json_string, true)
+        for _, ut_name in ipairs(USER_THEME_NAMES) do
     
+            local user_theme = USER_THEMES[ut_name]
+        
+            content = content .. "    " .. ut_name .. " = {\n"
+           
+            --!!! Careful, user theme may have an obsolete name,
+            --    or be missing a color.   
+           
+            for i, col_name in ipairs(COLOR_NAMES) do
+        
+                local cstr = ""
+        
+                if user_theme[col_name] then
+                    cstr = "        " .. col_name .. " = {" .. GUI.clamp(user_theme[col_name][1],0,255) .. ", " .. GUI.clamp(user_theme[col_name][2],0,255) .. ", " .. GUI.clamp(user_theme[col_name][3],0,255) .. ", " .. GUI.clamp(user_theme[col_name][4],0,255) .. "},\n" 
+
+                else
+                    cstr = "        " .. col_name .. " = {128, 128, 128, 255},\n"
+                end
+            
+                content = content .. cstr
+    
+            end
+
+            content = content .. "    },\n"
+        
+        end
+    
+        content = content .. "\n}"
+    
+        --GUI.Msg(content)
+
+        --local file_name = dhtk_path .. "common/dh_Toolkit_user_themes.lua"
+        local file_name = dhtk_path .. "common/dh_Toolkit_user_themes.lua"
+    
+        local file, err = io.open(file_name, "w")
+    
+        if not file then
+            reaper.MB("Could't open file to write:\n" .. tostring(err), "Oops!", 0)
+            return
+        end
+    
+        --file:write(json_string)    
+        file:write(content)    
+        file:close()
+
+    end
+
 end
 
---zzsave
+--zzsave 
 local function saveUserTheme()
 
     local isReplacing = false    
@@ -362,19 +431,46 @@ local function saveUserTheme()
     
     DHTK.window_settings.user_theme = new_name
     
-    -- # If checked then write formatted theme to console.
-        
-    if GUI.Val("chkl_SaveToConsole") then
-        local msg = "    " .. new_name .. " = {\n"
-        for i, col_name in ipairs(COLOR_NAMES) do
-            --local fmsg = "        " .. col_name .. " = {" .. new_theme[col_name][1] .. ", " .. new_theme[col_name][2] .. ", " .. new_theme[col_name][3] .. ", " .. new_theme[col_name][4] .. "},\n"             
-            local fmsg = "        " .. col_name .. " = {" .. GUI.clamp(new_theme[col_name][1],0,255) .. ", " .. GUI.clamp(new_theme[col_name][2],0,255) .. ", " .. GUI.clamp(new_theme[col_name][3],0,255) .. ", " .. GUI.clamp(new_theme[col_name][4],0,255) .. "},\n"                         
-            msg = msg .. fmsg
-        end
-        msg = msg .. "    },"
-        GUI.Msg(msg)    
-    end 
+    --[[ 
+        ################################################ 
+        If checked then write formatted theme to console.
+        This is useful for creating or updating
+          dh_Toolkit themes -> copy and paste.
+        ################################################  
+    --]]
 
+    if GUI.Val("chkl_SaveToConsole") then
+    
+        local msg = "    " .. new_name .. " = {\n"
+        local col_cnt = 0
+                
+        for i, col_name in ipairs(COLOR_NAMES) do
+        
+            --local fmsg = "        " .. col_name .. " = {" .. new_theme[col_name][1] .. ", " .. new_theme[col_name][2] .. ", " .. new_theme[col_name][3] .. ", " .. new_theme[col_name][4] .. "},\n"             
+            local fmsg = "        " .. col_name .. " = {" .. GUI.clamp(new_theme[col_name][1],0,255) .. ", " .. GUI.clamp(new_theme[col_name][2],0,255) .. ", " .. GUI.clamp(new_theme[col_name][3],0,255) .. ", " .. GUI.clamp(new_theme[col_name][4],0,255) .. "},\n" 
+
+            -- Add a space after seven counts.
+            
+            local space = ""
+
+            col_cnt = col_cnt + 1
+            
+            if col_cnt == 8 then
+                space = "\n"  
+                col_cnt = 1
+            end            
+                                    
+            msg = msg .. fmsg .. space
+            
+        end
+        
+        msg = msg .. "    },"
+        
+        -- This is the theme.
+        GUI.Msg(msg)
+            
+    end
+    
     dh_save_user_themes_ext()
     
 end --<save_user_theme>
@@ -387,7 +483,7 @@ end --<save_user_theme>
 -- (Needs to be here before elements creation.)
 -- Some of this is duplication of core setTheme().
 -- Theme is selected from either mbx_dhThemes or mbx_UserThemes.
---zzz
+
 local function setTheme(theme_type)
 
     --GUI.Msg("## setTheme:  ")
@@ -1266,7 +1362,7 @@ GUI.New("pnl_UserThemesSection", "dh_Panel", {
     z = 487, 
     x = 368,
     y = 56,
-    w = 184,
+    w = 192, -- 184,
     h = 240,
     shadow = false,
     border_width = 2, 
@@ -1278,7 +1374,7 @@ GUI.New("pnl_UserThemesSection", "dh_Panel", {
 
 GUI.New("lbl_UserThemeTitle", "dh_Label", {
     z = 486, 
-    x = 380, 
+    x = 384, --380, 
     y = 28 + TAB_HEIGHT, 
     text = "User Theme Name",
     col_bg = "panel_bg",
@@ -1288,7 +1384,7 @@ GUI.New("lbl_UserThemeTitle", "dh_Label", {
 
 GUI.New("tbx_UserThemeName", "dh_Textbox", {
     z = 485, 
-    x = 376, 
+    x = 380, --376, 
     y = 52 + TAB_HEIGHT, 
     w = 168, 
     h = 28,  --32, 
@@ -1300,9 +1396,9 @@ GUI.New("tbx_UserThemeName", "dh_Textbox", {
 
 GUI.New("btn_RenameUserTheme", "dh_Button", {
     z = 484, 
-    x = 408, 
-    y = 92 + TAB_HEIGHT,  
-    w = 104, 
+    x = 384, --408, --368 + 16
+    y = 160 + TAB_HEIGHT, --88 + TAB_HEIGHT, --92 + TAB_HEIGHT,  
+    w = 72, --104, 
     h = 28,  --32, 
     text = "Rename",
     font = "sans22",
@@ -1313,9 +1409,9 @@ GUI.New("btn_RenameUserTheme", "dh_Button", {
 
 GUI.New("btn_DeleteUserTheme", "dh_Button", {
     z = 483, 
-    x = 408, 
-    y = 136 + TAB_HEIGHT, 
-    w = 104, 
+    x = 474, --408, 
+    y = 160 + TAB_HEIGHT, --136 + TAB_HEIGHT, 
+    w = 72, --104, 
     h = 28,  --32, 
     text = "Delete",
     font = "sans22",
@@ -1327,7 +1423,7 @@ GUI.New("btn_DeleteUserTheme", "dh_Button", {
 GUI.New("btn_SaveUserTheme", "dh_Button", {
     z = 482,
     x = 408, 
-    y = 180 + TAB_HEIGHT, 
+    y = 88 + TAB_HEIGHT,124 + TAB_HEIGHT, --180 + TAB_HEIGHT, 
     w = 104, 
     h = 28,  --32, 
     text = "Save Theme",
@@ -1337,10 +1433,20 @@ GUI.New("btn_SaveUserTheme", "dh_Button", {
     func = saveUserTheme,
 })
 
+-- panel y 56(28), height 240, width 194
+-- label   28   24   52
+-- tbx     52*  28*  80    8
+-- btn     88   28* 116    8
+-- btn    124   28* 152    8
+-- chk    160   32  192    8
+-- radio  200   64  264    4
+-- end    268*
+-- * firm
+
 GUI.New("chkl_SaveToConsole", "dh_Checklist", {
     z = 481, 
     x = 376, 	
-    y = 220 + TAB_HEIGHT,  
+    y = 120 + TAB_HEIGHT, --160 + TAB_HEIGHT, --220 + TAB_HEIGHT,  
     w = 156, 
     h = 32,
     caption = "", 
@@ -1358,6 +1464,32 @@ GUI.New("chkl_SaveToConsole", "dh_Checklist", {
     font_text = "sans22",
     opt_size = 16,
 })
+
+--zzzradio
+GUI.New("radio_Destination", "dh_Radio", {
+    z = 481, 
+    x = 376, 	
+    y = 192 + TAB_HEIGHT,  
+    w = 168, 
+    h = 64,
+    caption = "",
+    opts = {"Reaper ext_state","User theme file"},
+	dir = "v", 
+	pad_x = 8,
+    pad_y = 12,
+    
+    border_width = 0, 
+    radius = 0,
+    
+    col_border = "panel_border", 
+    col_bg = "panel_bg", 
+    col_text = "panel_txt",
+    col_backdrop = "panel_bg",        
+    font_text = "sans22",         
+	shadow = false,
+    --opt_size = 16,
+})
+
 
 --!!! Adjustments to core "Prefs" elements where they differ from core.
 
@@ -1947,10 +2079,18 @@ GUI.New("menu_Tab3_Toolkit", "dh_Menubar", {
           {"tab_inactive", update_tab3_elms, {"tabs_ThemeDesigner", "col_tab_inactive", "tab_inactive", "tab_inactive"}, 2},
           {"<tab_bg", update_tab3_elms, {"tabs_ThemeDesigner", "col_tab_inactive", "tab_bg", "tab_inactive"}, 2},
 
-        {">Text color"},
-          {"btn_txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text", "btn_txt", "tabs_text"}, 3},              
-          {"txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text", "txt", "tabs_text"}, 3},
-          {"<panel_txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text", "panel_txt", "tabs_text"}, 3},
+        {">Text color active"},
+          {"tab_txt_active", update_tab3_elms, {"tabs_ThemeDesigner", "col_text_active", "tab_txt_active", "tab_text_active"}, 3},
+          {"btn_txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text_active", "btn_txt", "tab_text_active"}, 3},              
+          {"txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text_active", "txt", "tab_text_active"}, 3},
+          {"<panel_txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text_active", "panel_txt", "tab_text_active"}, 3},
+
+        {">Text color inactive"},
+          {"tab_txt_inactive", update_tab3_elms, {"tabs_ThemeDesigner", "col_text_inactive", "tab_txt_inactive", "tab_text_inactive"}, 4},
+          {"btn_txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text_inactive", "btn_txt", "tab_text_inactive"}, 4},              
+          {"txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text_inactive", "txt", "tab_text_inactive"}, 4},
+          {"<panel_txt", update_tab3_elms, {"tabs_ThemeDesigner", "col_text_inactive", "panel_txt", "tab_text_inactive"}, 4},
+
          
       }},                              
 
@@ -2336,7 +2476,10 @@ end
 for _, col_name in ipairs(COLOR_NAMES) do
 
     -- Until I implement col_active...
-    if (col_name == "elm_active") or (col_name == "metadata") then
+    if (col_name == "aux_bg") or 
+       (col_name == "aux_text") or
+       (col_name == "elm_active") or
+       (col_name == "metadata") then
         goto skipped
     end
     
@@ -2472,8 +2615,8 @@ GUI.New("pnl_Tab4_Colors2", "dh_Panel", {
       "Button face",
       "Button outline",      
       "Button text",
-      "Aux background",
-      "Aux text",
+      "Element text",           
+      "Selected text",
       "Slider thumb",            
       --"Element active",
       --"Element thumb",
@@ -2499,11 +2642,10 @@ GUI.New("pnl_Tab4_Colors3", "dh_Panel", {
       "Panel background",
       "Panel border",
       "Panel text", 
-      "Element text",           
-      "Selected text",
       "Tab active",
       "Tab inactive",
-
+      "Tab text active",
+      "Tab text inactive",
     },       
 })
 
@@ -2986,6 +3128,32 @@ function GUI.oncrash()
 
 end 
 --]=]
+
+
+function GUI.elms.radio_Destination:onmouseup()
+
+    local in_val = self.retval
+    
+    -- Run the element's normal method --
+    GUI.Radio.onmouseup(self)
+    
+    -- # Ignore if current option clicked.    
+    if self.retval == in_val then return end 
+
+    local retval reaper.MB("Are you sure you want to change the user theme save destination?", "Caution!", 4)
+     
+    if retval == 5 then
+        self:val(in_val)
+        return 
+    end
+
+	if self.retval == 1 then
+	    DHTK.window_settings.save_destination = "ext_state"
+    else
+	    DHTK.window_settings.save_destination = "file"
+    end	
+
+end
  
 -- Override Menubar onmouseup.  
 -- menuitem[1] is display name.
@@ -3176,8 +3344,14 @@ function GUI.dh_Slider_H:onmouseup()
 
 end
 
--- Disable doubleclick.
+-- Disable doubleclick. No slider defaults.
+-- (20261116 Can now use slider no_default)
 function GUI.dh_Slider_H:ondoubleclick()
+    return
+end
+
+-- Disable onmouser_up. No slider defaults.
+function GUI.dh_Slider_H:onmouser_up()
     return
 end
 
@@ -3697,7 +3871,7 @@ function GUI.elms.tabs_ThemeDesigner:onmouseup()
 end
 
 -- !!! Override core methods to add warning.
---zzz
+
 function GUI.elms.mbx_dhThemes:onmouseup()
 
      local prev_opt = self.curr_opt
@@ -3769,7 +3943,7 @@ function GUI.elms.mbx_dhThemes:onmouseup()
 
 end
 
---zzz
+
 function GUI.elms.mbx_UserThemes:onmouseup()
 
     local prev_opt = self.curr_opt
@@ -3912,7 +4086,7 @@ Selecting a theme from a theme menubox will load the selected theme, resetting t
 --====================================
   --------      EXIT      --------
 --====================================
---zzexit  
+--zzexit  --zzz
 -- Code to execute before window closes, such as saving states and window position.
 
 -- Save current edit state to proj extstate.
@@ -3951,7 +4125,8 @@ local function Exit()
     local json_string = json.encode(curr_proj)
     --GUI.Msg(json_string)
     reaper.SetExtState("dh_ThemeDesigner", "curr_proj", json_string, true)
-    
+
+--zzx
     --xxx FOR TESTING: So not to mess up existing project.
     -- Clears "user-themes-test" so that next start is as if there are no saved user themes. 
     --reaper.SetExtState("dh_Toolkit", "user-themes-test", "", true)
@@ -4211,6 +4386,12 @@ else
     GUI.Val("tbx_UserThemeName", DHTK.window_settings.theme)
 end
 
+if DHTK.window_settings.save_destination == "ext_state" then
+    GUI.Val("radio_Destination", 1)
+else
+    GUI.Val("radio_Destination", 2)
+end
+
 -------------------------------
 -- Set color panels colors.
 GUI.colors.start_color = dhth.set_color(GUI.colors.wnd_bg)
@@ -4397,7 +4578,7 @@ lbl_CurrDhThemeTitle   (498) from core
 mbx_dhThemes           (491) from core 
 lbl_CurrUserThemeTitle (498) from core 
 mbx_UserThemes *       (490) from core 
-
+--zzz
 -- toolkit elements
 pnl_UserThemesSection  487
 lbl_UserThemeTitle     486
