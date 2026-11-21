@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-  <!-- Modified: 20261009 -->
+  <!-- Modified: 20261114 -->
   
   <head>
     <meta charset="utf-8" />
@@ -29,7 +29,8 @@
 The library/common directory contains the files used to 
 implement scaling and theming of scripts utilizing 
 the Lokasenna GUI library, and the dh_Toolkit library. 
-The library/classes directory contain modified Lokasenna classes (see Classes section). 
+The library/classes directory contain modified Lokasenna 
+classes (see Classes section). 
 </p>
 
 <div class="heading top150">5.00.1 library/common directory</div>
@@ -50,7 +51,8 @@ to the highly commented dh_Template files in the "scripts" directory.
 </p>
                 
 <p>  
-This file also contains some utility functions that may be of use to adeveloper. See the file for further explanation. 
+This file also contains some utility functions that may be 
+of use to a developer. See the file for further explanation. 
 The most likely to be used by the developer are:
 </p>
 
@@ -72,7 +74,8 @@ The most likely to be used by the developer are:
 <p>   
   There are several other functions which are used 
   by dh_ThemeDesigner which are made public. 
-  You probably won't need to use them, but see file for description.
+  You probably won't need to use them, but if you do, 
+  see file for description.
 </p>
     
 
@@ -88,6 +91,14 @@ for handling colors and setting the theme.
 You probably will not need to directly access any of these.
 </p>
 
+<div class="subHeading">dh_Toolkit_user_themes.lua:</div>
+            
+<p class="left100">  
+This module will contain user-defined themes. It will be created 
+if the save to "User themes file" option is selected when saving
+while using dh_ThemeDesigner.
+</p>
+
 <div class="subHeading">gui_overrides.lua:</div>
             
 <div class="sectionIndent100"> 
@@ -98,12 +109,14 @@ modifications to the Lokasenna GUI, I eventually found it
 necessary. The Lokasenna text elements classes do not reuse 
 their drawing buffers if re-initialized while a script is 
 running. This can result in a script crashing due to a lack of 
-buffers. I have overridden those classes' init( ) functions 
-to overcome that.
+buffers. This file contains those classes' overridden init( ) 
+functions to overcome that. In actuality, this is only needed 
+if using Lokasenna text elements, and those elements get 
+re-initialized during script run.
 </p> 
 <p>  
-GUI.GetBuffer( ) function limits buffer assignment to the range of 
-1023 to z-layer max + 1. This made no sense to me. Buffers 
+GUI.GetBuffer( ) function limits buffer assignment to the range 
+of 1023 to z-layer max + 1. This made no sense to me. Buffers 
 shouldn't need to be tied to z-layers. So I have also overridden 
 that function. Ideally, I think the Lokasenna GUI should be 
 updated, but in the interim this works fine. 
